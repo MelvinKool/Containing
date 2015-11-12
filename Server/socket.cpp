@@ -4,3 +4,8 @@ Socket::Socket()
 {
 
 }
+
+void Socket::Write(string message)
+{
+
+}

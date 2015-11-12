@@ -2,6 +2,7 @@
 
 int main(int argc, char** argv)
 {
-	Server();
+	Server *server = new Server();
+	delete server;
 	return 0;
 }

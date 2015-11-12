@@ -1,7 +1,10 @@
 #include "server.h"
+
 #include <iostream>
 
 Server::Server()
 {
-	std::cout << "hello world" << std::endl;
+	cout << "hello world" << endl;
+	//this.socket = new Socket();
+	this->socket = new Socket();
 }
