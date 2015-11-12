@@ -34,6 +34,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.h" />
+		<Unit filename="socket.cpp" />
+		<Unit filename="socket.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
