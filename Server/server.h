@@ -6,7 +6,7 @@ class Server
 public:
 	Server();
 private:
-	
+
 };
 
 #endif //SERVER_H
