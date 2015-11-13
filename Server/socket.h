@@ -2,16 +2,38 @@
 #define SOCKET_H
 
 #include <string>
+//#include <string>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+//#include <stdexcept>
 
 using namespace std;
 
-class Socket
+#define bufsize 4096
+
+class ClientSocket
 {
 public:
-	Socket();
-	void Write(string message);
+	ClientSocket(string ip, int port);
+	ClientSocket(int sock);
+	~ClientSocket();
+	string read();
+	void write(string message);
 private:
+	int sock;
+};
 
+class ServerSocket
+{
+public:
+	ServerSocket(int port);
+	~ServerSocket();
+	int accept();
+private:
+	int sock;
 };
 
 #endif //SOCKET_H

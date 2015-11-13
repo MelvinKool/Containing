@@ -1,16 +1,15 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "socket.h"
-
-using namespace std;
+#include "connections.h"
 
 class Server
 {
 public:
 	Server();
+	~Server();
 private:
-	Socket *socket;
+    Connections* connections;
 };
 
 #endif //SERVER_H

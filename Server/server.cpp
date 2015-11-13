@@ -4,7 +4,10 @@
 
 Server::Server()
 {
-	cout << "hello world" << endl;
-	//this.socket = new Socket();
-	this->socket = new Socket();
+	this->connections = new Connections();
+}
+
+Server::~Server()
+{
+	delete this->connections;
 }
