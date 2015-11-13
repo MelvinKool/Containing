@@ -36,7 +36,9 @@ public class Main extends SimpleApplication
     public void simpleUpdate(float tpf)
     {
         //TODO Depending on wich way you're going (XYZ) 
-        //AGV.SetLocalTranslation(AGV.GetMaxSpeed()*tpf)
+        //float afstand = AGV.GetMaxSpeed()*tpf;
+        //AGV.SetLocalTranslation(afstand);
+        //AGV.afstandToGo -= afstand;
         //This kinda works, but it doesn't, since I don't specify the X, Y or Z
     }
 
