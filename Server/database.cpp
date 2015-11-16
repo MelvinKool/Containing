@@ -1,0 +1,5 @@
+class database
+{
+    private:
+    public:
+};
