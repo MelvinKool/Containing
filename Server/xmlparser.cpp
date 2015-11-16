@@ -1,5 +1,1 @@
-class xmlparser
-{
-    private:
-    public:
-};
+
