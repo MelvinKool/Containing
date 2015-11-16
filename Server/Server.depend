@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1447325039 source:/home/jeffrey/Containing/Server/server.cpp
+	"server.h"
+	<iostream>
+
+1447274285 /home/jeffrey/Containing/Server/server.h
+
+1447325039 source:/home/jeffrey/Containing/Server/main.cpp
+	"server.h"
+
