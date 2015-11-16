@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Transporter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Transporter.java</span></div><h1>Transporter.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.CustomVector3f;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author Hendrik
+ */
+class Transporter {
+
+    public HashMap&lt;Container, CustomVector3f&gt; reservedSpace;
+
+    private List&lt;Container&gt; containers;
+    private int transportType;
+    String id;
+<span class="nc" id="L25">    static int tranporterID = 0;</span>
+    private Crane dockingPoint;
+    private Date dateArrival;
+
+<span class="nc" id="L29">    public Transporter(int transportType, Date dateArrival) {</span>
+<span class="nc" id="L30">        this.transportType = transportType;</span>
+<span class="nc" id="L31">        this.id = &quot;TRS&quot; + String.format(&quot;%03d&quot;, tranporterID++);</span>
+<span class="nc" id="L32">        this.dateArrival = dateArrival;</span>
+<span class="nc" id="L33">        this.reservedSpace = new HashMap&lt;Container, CustomVector3f&gt;();</span>
+<span class="nc" id="L34">        this.containers = new ArrayList&lt;Container&gt;();</span>
+<span class="nc" id="L35">    }</span>
+
+    public int getTransportType() {
+<span class="nc" id="L38">        return transportType;</span>
+    }
+
+    public CustomVector3f getFreeLocation(int start, int range) {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (transportType == TransportTypes.SEASHIP) {</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            for (int x = start; x &lt; start + range; x++) {</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">                for (int z = 0; z &lt; 20; z++) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                    for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc" id="L46">                        CustomVector3f currentposition = new CustomVector3f(x, y, z);</span>
+<span class="nc" id="L47">                        boolean posistionTaken = false;</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">                        for (Container c : containers) {</span>
+<span class="nc bnc" id="L49" title="All 6 branches missed.">                            if (c.getPosition().x == currentposition.x</span>
+                                    &amp;&amp; c.getPosition().y == currentposition.y
+                                    &amp;&amp; c.getPosition().z == currentposition.z) {
+<span class="nc" id="L52">                                posistionTaken = true;</span>
+<span class="nc" id="L53">                                break;</span>
+                            }
+<span class="nc" id="L55">                        }</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">                        if (!posistionTaken) {</span>
+<span class="nc" id="L57">                            return currentposition;</span>
+                        }
+                    }
+                }
+            }
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        } else if (transportType == TransportTypes.BARGE) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            for (int x = start; x &lt; start + range; x++) {</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                for (int z = 0; z &lt; 4; z++) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    for (int y = 0; y &lt; 4; y++) {</span>
+<span class="nc" id="L66">                        CustomVector3f currentposition = new CustomVector3f(x, y, z);</span>
+<span class="nc" id="L67">                        boolean posistionTaken = false;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                        for (Container c : containers) {</span>
+<span class="nc bnc" id="L69" title="All 6 branches missed.">                            if (c.getPosition().x == currentposition.x</span>
+                                    &amp;&amp; c.getPosition().y == currentposition.y
+                                    &amp;&amp; c.getPosition().z == currentposition.z) {
+<span class="nc" id="L72">                                posistionTaken = true;</span>
+<span class="nc" id="L73">                                break;</span>
+                            }
+<span class="nc" id="L75">                        }</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                        if (!posistionTaken) {</span>
+<span class="nc" id="L77">                            return currentposition;</span>
+                        }
+                    }
+                }
+            }
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (transportType == TransportTypes.TRAIN) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            for (int x = start; x &lt; start + range; x++) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                for (Container c : containers) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                    if (c.getPosition().x != x) {</span>
+<span class="nc" id="L87">                        return new CustomVector3f(x, 0, 0);</span>
+                    }
+<span class="nc" id="L89">                }</span>
+            }
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        } else if (transportType == TransportTypes.LORREY) {</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (containers.size() &gt; 0) {</span>
+<span class="nc" id="L93">                return null;</span>
+            } else {
+<span class="nc" id="L95">                return new CustomVector3f(0, 0, 0);</span>
+            }
+        } else {
+<span class="nc" id="L98">            return null;</span>
+        }
+<span class="nc" id="L100">        return null;</span>
+    }
+
+    public boolean checkSpaceReserved(float x, float y, float z) {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        for (Map.Entry&lt;Container, CustomVector3f&gt; e : reservedSpace.entrySet()) {</span>
+<span class="nc" id="L105">            CustomVector3f value = e.getValue();</span>
+<span class="nc bnc" id="L106" title="All 6 branches missed.">            if (value.x == x &amp;&amp; value.y == y &amp;&amp; value.z == z) {</span>
+<span class="nc" id="L107">                return true;</span>
+            }
+<span class="nc" id="L109">        }</span>
+<span class="nc" id="L110">        return false;</span>
+    }
+
+    public void loadContainer(Container container) {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (containers == null) {</span>
+<span class="nc" id="L115">            containers = new ArrayList&lt;Container&gt;();</span>
+        }
+        /*
+         boolean posistionTaken = false;
+         for (Container c : containers) {
+         if (c.getPosition().x == container.getPosition().x
+         &amp;&amp; c.getPosition().y == container.getPosition().y
+         &amp;&amp; c.getPosition().z == container.getPosition().z) {
+         posistionTaken = true;
+         break;
+         }
+         }
+         */
+
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (reservedSpace.containsKey(container)) {</span>
+
+<span class="nc" id="L131">            containers.add(container);</span>
+<span class="nc" id="L132">            reservedSpace.remove(container);</span>
+
+        }
+
+<span class="nc" id="L136">    }</span>
+
+    public void RemoveContainer(Container c)
+    {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        for(int i =0;i&lt; containers.size(); i++)</span>
+        {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if(containers.get(i).getId().trim().equalsIgnoreCase(c.getId().trim()))</span>
+            {
+<span class="nc" id="L144">                containers.remove(i);</span>
+<span class="nc" id="L145">                i--;</span>
+            }
+        }
+<span class="nc" id="L148">    }</span>
+    public int getContainerCount() {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (containers != null) {</span>
+<span class="nc" id="L151">            return containers.size();</span>
+        } else {
+<span class="nc" id="L153">            return 0;</span>
+        }
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L159">        String s = &quot;Transporter{ ID=&quot; + id + &quot;,containers={&quot;;</span>
+
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (containers != null) {</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">            for (Container c : containers) {</span>
+<span class="nc" id="L163">                s += c.toString() + &quot;,&quot;;</span>
+<span class="nc" id="L164">            }</span>
+        }
+<span class="nc" id="L166">        s = s.substring(0, s.length() - 1);</span>
+<span class="nc" id="L167">        s += &quot;}, transportType=&quot; + TransportTypes.getTransportType(transportType) + '}';</span>
+<span class="nc" id="L168">        return s;</span>
+    }
+
+    /**
+     * Get containers from transporter
+     *
+     * @return
+     */
+    public List&lt;Container&gt; getContainers() {
+<span class="nc" id="L177">        return containers;</span>
+    }
+
+    /**
+     * Get specific container from transporter
+     *
+     * @param i
+     * @return
+     */
+    public Container getContainer(int i) {
+<span class="nc bnc" id="L187" title="All 6 branches missed.">        if (containers != null &amp;&amp; i &lt; containers.size() &amp;&amp; i &gt;= 0) {</span>
+<span class="nc" id="L188">            return containers.get(i);</span>
+        } else {
+<span class="nc" id="L190">            return null;</span>
+        }
+    }
+
+    public Crane getDockingPoint() {
+<span class="nc" id="L195">        return dockingPoint;</span>
+    }
+
+    public void setDockingPoint(Crane dockingPoint) {
+<span class="nc" id="L199">        this.dockingPoint = dockingPoint;</span>
+<span class="nc" id="L200">    }</span>
+
+    int getLenghtTransporter() {
+<span class="nc" id="L203">        int maxX = 0;</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        for (Container c : containers) {</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">            if (c.getPosition().x &gt; maxX) {</span>
+<span class="nc" id="L206">                maxX = (int) c.getPosition().x;</span>
+            }
+<span class="nc" id="L208">        }</span>
+<span class="nc" id="L209">        return maxX;</span>
+    }
+
+    public boolean reservePosition(Container container) {
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (container.getDateArrival().before(container.getDateDeparture())) {</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">           if(containers==null)</span>
+           {
+<span class="nc" id="L216">               containers= new ArrayList&lt;Container&gt;();</span>
+           }
+<span class="nc" id="L218">            boolean posistionTaken = false;</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            for (Container c : containers) {</span>
+<span class="nc bnc" id="L220" title="All 6 branches missed.">                if (c.getPosition().x == container.getPosition().x</span>
+                        &amp;&amp; c.getPosition().y == container.getPosition().y
+                        &amp;&amp; c.getPosition().z == container.getPosition().z) {
+<span class="nc" id="L223">                    posistionTaken = true;</span>
+<span class="nc" id="L224">                    break;</span>
+                }
+<span class="nc" id="L226">            }</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">            if (!posistionTaken) {</span>
+<span class="nc" id="L228">                reservedSpace.put(container, container.getBufferPosition());</span>
+<span class="nc" id="L229">                return true;</span>
+            } else {
+<span class="nc" id="L231">                return false;</span>
+            }
+
+        }
+        else
+        {
+<span class="nc" id="L237">         return false;   </span>
+        }
+    }
+
+    public Date getDateArrival() {
+<span class="nc" id="L242">        return this.dateArrival;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

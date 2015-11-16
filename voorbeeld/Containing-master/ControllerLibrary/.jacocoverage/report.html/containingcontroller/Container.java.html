@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Container.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Container.java</span></div><h1>Container.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.CustomVector3f;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+
+/**
+ *
+ * @author Wessel
+ */
+public class Container {
+    //Properties
+
+    private String id;                      //Container id
+    private Date dateArrival;               //Date of arrival
+    private Date dateDeparture;             //Date of scheduled departure
+    private int transportTypeArrival;       //Type of container arrival
+    private int transportTypeDeparture;     //Type of container departure
+    private String cargoCompanyArrival;     //Company handling container arrival
+    private String cargoCompanyDeparture;   //Company handling container departure
+    private CustomVector3f position;              //Position on arrival transport
+    private CustomVector3f bufferPosition;        //Position of container inside buffer
+    private String owner;                   //Owner of this container
+    private int containerNumber;            //Container number
+    private String height;                 //Only length and width?
+    private String width;
+    private String lenght;
+    private int weightEmpty;                //Container weight when empty
+    private int weightLoaded;               //Container weight when loaded
+    private String contents;                //Contents of this container
+    private String contentType;             //Type of contents
+    private String contentDanger;           //Danger of contents
+    private String iso;                     //Container standard
+
+    //Constructor
+    /**
+     *
+     * @param id
+     * @param dateArrival
+     * @param dateDeparture
+     * @param transportTypeArrival
+     * @param transportTypeDeparture
+     * @param cargoCompanyArrival
+     * @param cargoCompanyDeparture
+     * @param position
+     * @param owner
+     * @param containerNumber
+     * @param height
+     * @param width
+     * @param weightEmpty
+     * @param lenght
+     * @param weightLoaded
+     * @param contents
+     * @param contentType
+     * @param contentDanger
+     * @param iso
+     */
+    public Container(String id, Date dateArrival, Date dateDeparture,
+            int transportTypeArrival, int transportTypeDeparture,
+            String cargoCompanyArrival, String cargoCompanyDeparture,
+            CustomVector3f position, String owner, int containerNumber,
+            String height,
+            String width,
+            String lenght, int weightEmpty, int weightLoaded,
+            String contents, String contentType, String contentDanger,
+<span class="nc" id="L72">            String iso) {</span>
+<span class="nc" id="L73">        this.id = id;</span>
+<span class="nc" id="L74">        this.dateArrival = dateArrival;</span>
+<span class="nc" id="L75">        this.dateDeparture = dateDeparture;</span>
+<span class="nc" id="L76">        this.transportTypeArrival = transportTypeArrival;</span>
+<span class="nc" id="L77">        this.transportTypeDeparture = transportTypeDeparture;</span>
+<span class="nc" id="L78">        this.cargoCompanyArrival = cargoCompanyArrival;</span>
+<span class="nc" id="L79">        this.cargoCompanyDeparture = cargoCompanyDeparture;</span>
+<span class="nc" id="L80">        this.position = position;</span>
+        //NOTE: bufferPosition remains null until container is assigned to a buffer!
+<span class="nc" id="L82">        this.owner = owner;</span>
+<span class="nc" id="L83">        this.containerNumber = containerNumber;</span>
+
+<span class="nc" id="L85">        this.weightEmpty = weightEmpty;</span>
+<span class="nc" id="L86">        this.weightLoaded = weightLoaded;</span>
+<span class="nc" id="L87">        this.contents = contents;</span>
+<span class="nc" id="L88">        this.contentType = contentType;</span>
+<span class="nc" id="L89">        this.contentDanger = contentDanger;</span>
+<span class="nc" id="L90">        this.iso = iso;</span>
+<span class="nc" id="L91">        this.height = height;                 //Only length and width?</span>
+<span class="nc" id="L92">        this.width = width;</span>
+<span class="nc" id="L93">        this.lenght = lenght;</span>
+<span class="nc" id="L94">    }</span>
+
+    /**
+     *
+     */
+<span class="nc" id="L99">    public Container() {</span>
+<span class="nc" id="L100">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getId() {
+<span class="nc" id="L107">        return id;</span>
+    }
+
+    /**
+     *
+     * @param id
+     */
+    public void setId(String id) {
+<span class="nc" id="L115">        this.id = id;</span>
+<span class="nc" id="L116">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public Date getDateArrival() {
+<span class="nc" id="L123">        return dateArrival;</span>
+    }
+
+    /**
+     *
+     * @param dateArrival
+     */
+    public void setDateArrival(Date dateArrival) {
+<span class="nc" id="L131">        this.dateArrival = dateArrival;</span>
+<span class="nc" id="L132">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public Date getDateDeparture() {
+<span class="nc" id="L139">        return dateDeparture;</span>
+    }
+
+    /**
+     *
+     * @param dateDeparture
+     */
+    public void setDateDeparture(Date dateDeparture) {
+<span class="nc" id="L147">        this.dateDeparture = dateDeparture;</span>
+<span class="nc" id="L148">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public int getTransportTypeArrival() {
+<span class="nc" id="L155">        return transportTypeArrival;</span>
+    }
+
+    /**
+     *
+     * @param transportTypeArrival
+     */
+    public void setTransportTypeArrival(int transportTypeArrival) {
+<span class="nc" id="L163">        this.transportTypeArrival = transportTypeArrival;</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public int getTransportTypeDeparture() {
+<span class="nc" id="L171">        return transportTypeDeparture;</span>
+    }
+
+    /**
+     *
+     * @param transportTypeDeparture
+     */
+    public void setTransportTypeDeparture(int transportTypeDeparture) {
+<span class="nc" id="L179">        this.transportTypeDeparture = transportTypeDeparture;</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getCargoCompanyArrival() {
+<span class="nc" id="L187">        return cargoCompanyArrival;</span>
+    }
+
+    /**
+     *
+     * @param cargoCompanyArrival
+     */
+    public void setCargoCompanyArrival(String cargoCompanyArrival) {
+<span class="nc" id="L195">        this.cargoCompanyArrival = cargoCompanyArrival;</span>
+<span class="nc" id="L196">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getCargoCompanyDeparture() {
+<span class="nc" id="L203">        return cargoCompanyDeparture;</span>
+    }
+
+    /**
+     *
+     * @param cargoCompanyDeparture
+     */
+    public void setCargoCompanyDeparture(String cargoCompanyDeparture) {
+<span class="nc" id="L211">        this.cargoCompanyDeparture = cargoCompanyDeparture;</span>
+<span class="nc" id="L212">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public CustomVector3f getPosition() {
+<span class="nc" id="L219">        return position;</span>
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void setPosition(CustomVector3f position) {
+<span class="nc" id="L227">        this.position = position;</span>
+<span class="nc" id="L228">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public CustomVector3f getBufferPosition() {
+<span class="nc" id="L235">        return bufferPosition;</span>
+    }
+
+    /**
+     *
+     * @param bufferPosition
+     */
+    public void setBufferPosition(CustomVector3f bufferPosition) {
+<span class="nc" id="L243">        this.bufferPosition = bufferPosition;</span>
+<span class="nc" id="L244">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getOwner() {
+<span class="nc" id="L251">        return owner;</span>
+    }
+
+    /**
+     *
+     * @param owner
+     */
+    public void setOwner(String owner) {
+<span class="nc" id="L259">        this.owner = owner;</span>
+<span class="nc" id="L260">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public int getContainerNumber() {
+<span class="nc" id="L267">        return containerNumber;</span>
+    }
+
+    /**
+     *
+     * @param containerNumber
+     */
+    public void setContainerNumber(int containerNumber) {
+<span class="nc" id="L275">        this.containerNumber = containerNumber;</span>
+<span class="nc" id="L276">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getHeight() {
+<span class="nc" id="L283">        return height;</span>
+    }
+
+    /**
+     *
+     * @param height
+     */
+    public void setHeight(String height) {
+<span class="nc" id="L291">        this.height = height;</span>
+<span class="nc" id="L292">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getWidth() {
+<span class="nc" id="L299">        return width;</span>
+    }
+
+    /**
+     *
+     * @param width
+     */
+    public void setWidth(String width) {
+<span class="nc" id="L307">        this.width = width;</span>
+<span class="nc" id="L308">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getLenght() {
+<span class="nc" id="L315">        return lenght;</span>
+    }
+
+    /**
+     *
+     * @param lenght
+     */
+    public void setLenght(String lenght) {
+<span class="nc" id="L323">        this.lenght = lenght;</span>
+<span class="nc" id="L324">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public int getWeightEmpty() {
+<span class="nc" id="L331">        return weightEmpty;</span>
+    }
+
+    /**
+     *
+     * @param weightEmpty
+     */
+    public void setWeightEmpty(int weightEmpty) {
+<span class="nc" id="L339">        this.weightEmpty = weightEmpty;</span>
+<span class="nc" id="L340">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public int getWeightLoaded() {
+<span class="nc" id="L347">        return weightLoaded;</span>
+    }
+
+    /**
+     *
+     * @param weightLoaded
+     */
+    public void setWeightLoaded(int weightLoaded) {
+<span class="nc" id="L355">        this.weightLoaded = weightLoaded;</span>
+<span class="nc" id="L356">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getContents() {
+<span class="nc" id="L363">        return contents;</span>
+    }
+
+    /**
+     *
+     * @param contents
+     */
+    public void setContents(String contents) {
+<span class="nc" id="L371">        this.contents = contents;</span>
+<span class="nc" id="L372">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getContentType() {
+<span class="nc" id="L379">        return contentType;</span>
+    }
+
+    /**
+     *
+     * @param contentType
+     */
+    public void setContentType(String contentType) {
+<span class="nc" id="L387">        this.contentType = contentType;</span>
+<span class="nc" id="L388">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getContentDanger() {
+<span class="nc" id="L395">        return contentDanger;</span>
+    }
+
+    /**
+     *
+     * @param contentDanger
+     */
+    public void setContentDanger(String contentDanger) {
+<span class="nc" id="L403">        this.contentDanger = contentDanger;</span>
+<span class="nc" id="L404">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getIso() {
+<span class="nc" id="L411">        return iso;</span>
+    }
+
+    /**
+     *
+     * @param iso
+     */
+    public void setIso(String iso) {
+<span class="nc" id="L419">        this.iso = iso;</span>
+<span class="nc" id="L420">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L424">        SimpleDateFormat timeFormat = new SimpleDateFormat(&quot; dd-MM-yyyy HH:mm:ss&quot;);</span>
+<span class="nc" id="L425">        return &quot;Container{&quot; + &quot;id=&quot; + id + &quot;, dateArrival=&quot; + timeFormat.format(dateArrival) + &quot;, dateDeparture=&quot; + dateDeparture + &quot;, transportTypeArrival=&quot; + transportTypeArrival + &quot;, transportTypeDeparture=&quot; + transportTypeDeparture + &quot;, cargoCompanyArrival=&quot; + cargoCompanyArrival + &quot;, cargoCompanyDeparture=&quot; + cargoCompanyDeparture + &quot;, position=&quot; + position + &quot;, bufferPosition=&quot; + bufferPosition + &quot;, owner=&quot; + owner + &quot;, containerNumber=&quot; + containerNumber + &quot;, height=&quot; + height + &quot;, width=&quot; + width + &quot;, lenght=&quot; + lenght + &quot;, weightEmpty=&quot; + weightEmpty + &quot;, weightLoaded=&quot; + weightLoaded + &quot;, contents=&quot; + contents + &quot;, contentType=&quot; + contentType + &quot;, contentDanger=&quot; + contentDanger + &quot;, iso=&quot; + iso + '}';</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (obj == null) {</span>
+<span class="nc" id="L431">            return false;</span>
+        }
+<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
+<span class="nc" id="L434">            return false;</span>
+        }
+<span class="nc" id="L436">        final Container other = (Container) obj;</span>
+       /* if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }*/
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        if (this.containerNumber != other.containerNumber) {</span>
+<span class="nc" id="L441">            return false;</span>
+        }
+<span class="nc" id="L443">        return true;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

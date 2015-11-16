@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PathFinder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">PathFinder.java</span></div><h1>PathFinder.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * @author Len Class that creates map of all PathNodes contains method for
+ * calculating shortest Path (Dijkstra algorithm)
+ */
+public class PathFinder {
+
+<span class="nc" id="L17">    private List&lt;PathNode&gt; map = new ArrayList(); //complete map</span>
+<span class="nc" id="L18">    private List&lt;PathNode&gt; mapCSE = new ArrayList();  //seacranes</span>
+<span class="nc" id="L19">    private List&lt;PathNode&gt; mapCBA = new ArrayList(); //bargecranes</span>
+<span class="nc" id="L20">    private List&lt;PathNode&gt; mapCTR = new ArrayList(); //traincranes</span>
+<span class="nc" id="L21">    private List&lt;PathNode&gt; mapCLO = new ArrayList(); // lorrycranes</span>
+<span class="nc" id="L22">    private List&lt;PathNode&gt; mapMR = new ArrayList();  //main points</span>
+<span class="nc" id="L23">    private List&lt;PathNode&gt; mapBA = new ArrayList(); //buffer a</span>
+<span class="nc" id="L24">    private List&lt;PathNode&gt; mapBB = new ArrayList(); //buffer b</span>
+<span class="nc" id="L25">    private static String lblBA = &quot;bfa&quot;;//buffer a points</span>
+<span class="nc" id="L26">    private static String lblBB = &quot;bfb&quot;;//buffer b points</span>
+<span class="nc" id="L27">    private static String lblCTR = &quot;ctr&quot;;//cranes train points</span>
+<span class="nc" id="L28">    private static String lblCLO = &quot;clo&quot;; //cranes lorry points</span>
+<span class="nc" id="L29">    private static String lblCSE = &quot;cse&quot;;//cranes sea points</span>
+<span class="nc" id="L30">    private static String lblCBA = &quot;cba&quot;; //cranes barge points</span>
+<span class="nc" id="L31">    private static String lblM = &quot;m&quot;; //main points</span>
+<span class="nc" id="L32">    private float smallCost = 0.5f; //smallest cost (the lorry points)</span>
+
+    /**
+     *
+     */
+<span class="nc" id="L37">    public PathFinder() {</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Creates map in steps
+     */
+    public void createMap() {
+<span class="nc" id="L44">        createBPoints(); //create buffer</span>
+<span class="nc" id="L45">        createCBA(); //create barge</span>
+<span class="nc" id="L46">        createCLO(); //create lorry</span>
+<span class="nc" id="L47">        createCTR(); //create train</span>
+<span class="nc" id="L48">        createCSE(); //create sea</span>
+<span class="nc" id="L49">        connectGreen(); //create mainpoints and if necessary connect to other points</span>
+<span class="nc" id="L50">    }</span>
+
+    /**
+     * Creates all PathNodes connected to buffers
+     */
+    private void createBPoints() {
+<span class="nc" id="L56">        float cost = smallCost * 2;</span>
+<span class="nc" id="L57">        PathNode previousA = new PathNode(lblBA + &quot;001&quot;);</span>
+<span class="nc" id="L58">        PathNode previousB = new PathNode(lblBB + &quot;001&quot;);</span>
+<span class="nc" id="L59">        getMapBA().add(previousA);</span>
+<span class="nc" id="L60">        getMapBB().add(previousB);</span>
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        for (int i = 2; i &lt;= 63; i++) {</span>
+<span class="nc" id="L63">            PathNode BAi = new PathNode(lblBA + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L64">            PathNode BBi = new PathNode(lblBB + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L65">            getMapBA().add(BAi);</span>
+<span class="nc" id="L66">            getMapBB().add(BBi);</span>
+
+<span class="nc" id="L68">            link(previousA, BAi, cost);</span>
+<span class="nc" id="L69">            link(previousB, BBi, cost);</span>
+
+<span class="nc" id="L71">            previousA = BAi;</span>
+<span class="nc" id="L72">            previousB = BBi;</span>
+        }
+
+<span class="nc" id="L75">        getMap().addAll(getMapBA());</span>
+<span class="nc" id="L76">        getMap().addAll(getMapBB());</span>
+<span class="nc" id="L77">    }</span>
+
+    /**
+     * Creates all PathNodes of the BargeCranes
+     */
+    private void createCBA() {
+<span class="nc" id="L83">        float cost = smallCost * 6;</span>
+<span class="nc" id="L84">        PathNode previousNode = new PathNode(lblCBA + &quot;001&quot;);</span>
+<span class="nc" id="L85">        int i = 2;</span>
+<span class="nc" id="L86">        getMapCBA().add(previousNode);</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        while (i &lt;= 8) {</span>
+<span class="nc" id="L89">            PathNode CLi = new PathNode(lblCBA + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L90">            getMapCBA().add(CLi);</span>
+
+<span class="nc" id="L92">            link(CLi, previousNode, cost);</span>
+<span class="nc" id="L93">            previousNode = CLi;</span>
+<span class="nc" id="L94">            i++;</span>
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        getMap().addAll(getMapCBA());</span>
+<span class="nc" id="L97">    }</span>
+
+    /**
+     * Inserts a PathNode between two connected PathNodes
+     *
+     * @param idA = connection 1
+     * @param idC = connection 2
+     * @param b = the insertion node
+     * @param costA = cost of connection 1 to insertion node
+     * @param costC = cost of connection 2 to insertion node
+     */
+    private void insertNode(String idA, String idC, PathNode b, float costA, float costC) {
+<span class="nc" id="L109">        PathNode tmpNode = null;</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        for (PathNode nodeA : getMap()) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            if (nodeA.getId().equals(idA)) {</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                for (PathNode cNode : nodeA.getNeighbours()) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                    if (cNode.getId().equals(idC)) {</span>
+<span class="nc" id="L114">                        tmpNode = cNode;</span>
+<span class="nc" id="L115">                        link(nodeA, b, costA);</span>
+<span class="nc" id="L116">                        link(b, tmpNode, costC);</span>
+<span class="nc" id="L117">                        delink(nodeA, cNode);</span>
+                    }
+<span class="nc" id="L119">                }</span>
+            }
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">    }</span>
+
+    /**
+     * Creates PathNodes of all SeaCranes
+     */
+    private void createCSE() {
+<span class="nc" id="L128">        float cost = smallCost * 4;</span>
+<span class="nc" id="L129">        int i = 2;</span>
+<span class="nc" id="L130">        PathNode previousNode = new PathNode(lblCSE + &quot;001&quot;);</span>
+<span class="nc" id="L131">        getMapCSE().add(previousNode);</span>
+
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        while (i &lt;= 10) {</span>
+<span class="nc" id="L134">            PathNode cseNode = new PathNode(lblCSE + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L135">            getMapCSE().add(cseNode);</span>
+
+<span class="nc" id="L137">            link(cseNode, previousNode, cost);</span>
+<span class="nc" id="L138">            previousNode = cseNode;</span>
+<span class="nc" id="L139">            i++;</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">        getMap().addAll(getMapCSE());</span>
+<span class="nc" id="L142">    }</span>
+
+    /**
+     * Creates PathNodes of all TrainCranes
+     */
+    private void createCTR() {
+<span class="nc" id="L148">        float cost = smallCost * 18; //was 18</span>
+<span class="nc" id="L149">        int i = 2;</span>
+<span class="nc" id="L150">        PathNode previousNode = new PathNode(lblCTR + &quot;001&quot;);</span>
+<span class="nc" id="L151">        getMapCTR().add(previousNode);</span>
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        while (i &lt;= 4) {</span>
+<span class="nc" id="L154">            PathNode ctrNode = new PathNode(lblCTR + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L155">            getMapCTR().add(ctrNode);</span>
+<span class="nc" id="L156">            link(ctrNode, previousNode, cost);</span>
+<span class="nc" id="L157">            previousNode = ctrNode;</span>
+<span class="nc" id="L158">            i++;</span>
+<span class="nc" id="L159">        }</span>
+<span class="nc" id="L160">        getMap().addAll(getMapCTR());</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Creates PathNodes of all LorryCranes
+     */
+    private void createCLO() {
+<span class="nc" id="L167">        float cost = smallCost;</span>
+<span class="nc" id="L168">        PathNode previousNode = new PathNode(lblCLO + &quot;001&quot;);</span>
+<span class="nc" id="L169">        int i = 2;</span>
+<span class="nc" id="L170">        getMapCLO().add(previousNode);</span>
+
+<span class="nc bnc" id="L172" title="All 2 branches missed.">        while (i &lt;= 20) {</span>
+<span class="nc" id="L173">            PathNode cloNode = new PathNode(lblCLO + String.format(&quot;%03d&quot;, i));</span>
+<span class="nc" id="L174">            getMapCLO().add(cloNode);</span>
+<span class="nc" id="L175">            link(cloNode, previousNode, cost);</span>
+<span class="nc" id="L176">            previousNode = cloNode;</span>
+<span class="nc" id="L177">            i++;</span>
+<span class="nc" id="L178">        }</span>
+<span class="nc" id="L179">        getMap().addAll(getMapCLO());</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Creates all MainRoad PathNodes and connects all existing PathNodes to
+     * these MainRoad PathNodes
+     */
+    private void connectGreen() {
+        //green boundary points connecting buffer row A
+<span class="nc" id="L188">        PathNode[] greenR = new PathNode[16];</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        for (int i = 0; i &lt; greenR.length; i++) {</span>
+<span class="nc" id="L190">            greenR[i] = new PathNode(lblM + (i + 1));</span>
+<span class="nc" id="L191">            getMapMR().add(greenR[i]);</span>
+        }
+
+        //connect row BB with green dots
+<span class="nc" id="L195">        link(greenR[0], getMapBB().get(0), smallCost * 2);</span>
+<span class="nc" id="L196">        this.insertNode(lblBB + &quot;030&quot;, lblBB + &quot;031&quot;, greenR[3], smallCost, smallCost);</span>
+<span class="nc" id="L197">        this.insertNode(lblBB + &quot;034&quot;, lblBB + &quot;035&quot;, greenR[4], smallCost, smallCost);</span>
+       // this.insertNode(lblBB + &quot;044&quot;, lblBB + &quot;045&quot;, greenR[5], smallCost, smallCost);
+      
+<span class="nc" id="L200">        link(greenR[6], getMapBB().get(62), smallCost * 6);</span>
+
+        //connect green dots counter clockwise
+<span class="nc" id="L203">        link(greenR[0], greenR[1], smallCost * 3);// s</span>
+<span class="nc" id="L204">        link(greenR[1], getMapCBA().get(0), smallCost * 14);//e</span>
+<span class="nc" id="L205">        link(greenR[2], getMapCBA().get(7), smallCost * 6);// n</span>
+<span class="nc" id="L206">        link(greenR[2], greenR[3], smallCost * 3);</span>
+<span class="nc" id="L207">        link(greenR[4], getMapCLO().get(0), smallCost * 2);</span>
+<span class="nc" id="L208">        link(getMapCLO().get(19),getMapBB().get(43), smallCost);</span>
+        //link(greenR[5], getMapCLO().get(19), smallCost * 2);
+<span class="nc" id="L210">        link(greenR[6], greenR[7], smallCost * 40);</span>
+<span class="nc" id="L211">        link(greenR[7], greenR[8], smallCost * 4);</span>
+<span class="nc" id="L212">        link(greenR[8], greenR[9], smallCost * 3);</span>
+<span class="nc" id="L213">        link(greenR[8], getMapBA().get(62), smallCost);</span>
+<span class="nc" id="L214">        link(greenR[9], getMapCTR().get(3), smallCost * 28);</span>
+<span class="nc" id="L215">        link(greenR[10], getMapCTR().get(0), smallCost * 68);</span>
+<span class="nc" id="L216">        link(greenR[10], greenR[11], smallCost * 3);</span>
+<span class="nc" id="L217">        this.insertNode(lblBA + &quot;001&quot;, lblBA + &quot;002&quot;, greenR[11], smallCost, smallCost);</span>
+<span class="nc" id="L218">        link(greenR[12], getMapBA().get(0), smallCost * 2); //</span>
+<span class="nc" id="L219">        link(greenR[12], greenR[15], smallCost * 38);</span>
+<span class="nc" id="L220">        link(greenR[12], greenR[13], smallCost * 3);</span>
+<span class="nc" id="L221">        link(greenR[13], getMapCSE().get(0), smallCost * 4); </span>
+<span class="nc" id="L222">        link(greenR[14], getMapCSE().get(9), smallCost * 4);</span>
+<span class="nc" id="L223">        link(greenR[14], greenR[15], smallCost * 3);</span>
+<span class="nc" id="L224">        link(greenR[15], greenR[0], smallCost * 3);</span>
+
+<span class="nc" id="L226">        getMap().addAll(getMapMR());</span>
+<span class="nc" id="L227">    }</span>
+
+    /**
+     * Connects two PathNodes to each other
+     *
+     * @param a = PathNode 1
+     * @param b = PathNode 2
+     * @param cost = cost of 1 to 2
+     */
+    private void link(PathNode a, PathNode b, float cost) {
+<span class="nc" id="L237">        a.addNeighbour(b, cost);</span>
+<span class="nc" id="L238">        b.addNeighbour(a, cost);</span>
+<span class="nc" id="L239">    }</span>
+
+    /**
+     * De-connects two PathNodes from each other
+     *
+     * @param a = PathNode 1
+     * @param b = PathNode 2
+     */
+    private void delink(PathNode a, PathNode b) {
+<span class="nc" id="L248">        a.removeNeighbour(b);</span>
+<span class="nc" id="L249">        b.removeNeighbour(a);</span>
+<span class="nc" id="L250">    }</span>
+
+    /**
+     * Overload of getShortestPath(String,String,boolean)
+     *
+     * @param srce
+     * @param dest
+     * @return
+     * @throws Exception
+     */
+    public List&lt;PathNode&gt; getShortestPath(PathNode srce, PathNode dest) throws Exception {
+        try {
+<span class="nc" id="L262">            return getShortestPath(srce, dest, false);</span>
+<span class="nc" id="L263">        } catch (Exception ex) {</span>
+<span class="nc" id="L264">            throw ex;</span>
+        }
+    }
+
+    /**
+     * Calculates the shortest Path from a source to a destination by using the
+     * Dijkstra Algorithm Checks each neighbor of a PathNode starting from
+     * source if neighbor-cost is larger than current-cost, neighbor-cost is
+     * current-cost, neighbor-parent is current PathNode in the end loop back
+     * from destination to source by adding all parents to list the list is the
+     * shortest path
+     *
+     * @param srce
+     * @param dest
+     * @param optimize = if true-&gt; method-call to optimize() to optimize the
+     * path
+     * @return
+     * @throws Exception
+     */
+    public List&lt;PathNode&gt; getShortestPath(PathNode srce, PathNode dest, boolean optimize) throws Exception {
+<span class="nc" id="L284">        List&lt;PathNode&gt; alreadyChecked = new ArrayList();</span>
+<span class="nc" id="L285">        List&lt;PathNode&gt; shortestRoute = new ArrayList();</span>
+<span class="nc" id="L286">        List&lt;PathNode&gt; unSettledNodes = new ArrayList();</span>
+        
+      
+        
+<span class="nc" id="L290">        PathNode srceNode = srce;</span>
+<span class="nc" id="L291">        PathNode destNode = dest;</span>
+
+<span class="nc bnc" id="L293" title="All 4 branches missed.">        if (srceNode != null &amp;&amp; destNode != null) {</span>
+<span class="nc" id="L294">            srceNode.setCost(0, null); //start cost}</span>
+<span class="nc" id="L295">            unSettledNodes.add(srceNode);</span>
+<span class="nc" id="L296">            float totalCost = 1000;</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">            while (unSettledNodes.size() &gt; 0) {</span>
+<span class="nc" id="L298">                PathNode node = getMinimum(unSettledNodes);</span>
+<span class="nc" id="L299">                alreadyChecked.add(node);</span>
+<span class="nc" id="L300">                unSettledNodes.remove(node);</span>
+
+<span class="nc bnc" id="L302" title="All 2 branches missed.">                for (PathNode neighbour : node.getNeighbours()) {</span>
+<span class="nc" id="L303">                    float curCost = node.getCost() + node.getCostNeighb(neighbour);</span>
+<span class="nc bnc" id="L304" title="All 4 branches missed.">                    if (alreadyChecked.contains(neighbour) || curCost &gt; totalCost) {</span>
+<span class="nc" id="L305">                        continue;</span>
+                    }
+
+<span class="nc bnc" id="L308" title="All 4 branches missed.">                    if (neighbour.getCost() == -1 || neighbour.getCost() &gt; curCost) {</span>
+<span class="nc" id="L309">                        neighbour.setCost(curCost, node);</span>
+                    }
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                    if (neighbour.equals(destNode)) {</span>
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                        if (neighbour.getCost() &lt; curCost) {</span>
+<span class="nc" id="L313">                            totalCost = curCost;</span>
+                        }
+                    }
+<span class="nc" id="L316">                    unSettledNodes.add(neighbour);</span>
+<span class="nc" id="L317">                }</span>
+<span class="nc" id="L318">            }</span>
+            
+            
+            
+<span class="nc" id="L322">            shortestRoute.add(destNode); //add dest to shortest path</span>
+<span class="nc" id="L323">            destNode.getRoute(shortestRoute); //create shortest path</span>
+<span class="nc" id="L324">            Collections.reverse(shortestRoute); //reverse path , srce to dest</span>
+           
+<span class="nc bnc" id="L326" title="All 2 branches missed.">            if (optimize) {</span>
+<span class="nc" id="L327">                optimize(shortestRoute); //delete useless nodes</span>
+            }
+<span class="nc bnc" id="L329" title="All 2 branches missed.">             for(PathNode node :alreadyChecked)</span>
+                  {
+<span class="nc" id="L331">                      node.setCost(-1, null);</span>
+<span class="nc" id="L332">                  }</span>
+             
+          
+<span class="nc" id="L335">            return shortestRoute;</span>
+        } else {
+<span class="nc" id="L337">            throw new Exception(&quot;source and/or destination not found in map&quot;);</span>
+        }
+
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    private PathNode getPathNode(String id) {
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        for (int i = 0; i &lt; getMap().size(); i++) {</span>
+<span class="nc" id="L349">            PathNode curNode = getMap().get(i);</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">            if (curNode.getId().equals(id)) {</span>
+<span class="nc" id="L351">                return curNode;</span>
+            }
+        }
+<span class="nc" id="L354">        return null;</span>
+    }
+
+    /**
+     * optimizes the path by deleting nodes on a linear path east-east-east will
+     * be optimized as east-east, east-north-east cant be optimized.
+     *
+     * @param shortestRoute
+     */
+    public void optimize(List&lt;PathNode&gt; shortestRoute) {
+<span class="nc bnc" id="L364" title="All 2 branches missed.">        for (int i = 1; i &lt; shortestRoute.size() - 1; i++) {</span>
+
+<span class="nc" id="L366">            String prevID = shortestRoute.get(i - 1).getId();</span>
+<span class="nc" id="L367">            String curID = shortestRoute.get(i).getId();</span>
+<span class="nc" id="L368">            String nextID = shortestRoute.get(i + 1).getId();</span>
+
+<span class="nc bnc" id="L370" title="All 6 branches missed.">            if (prevID.length() &gt; 2 &amp;&amp; curID.length() &gt; 2 &amp;&amp; nextID.length() &gt; 2) {</span>
+<span class="nc bnc" id="L371" title="All 4 branches missed.">                if (curID.substring(0, 3).equals(nextID.substring(0, 3)) &amp;&amp; curID.substring(0, 3).equals(prevID.substring(0, 3))) {</span>
+<span class="nc" id="L372">                    shortestRoute.remove(i);</span>
+<span class="nc" id="L373">                    i--;</span>
+                }
+            }
+        }
+<span class="nc" id="L377">    }</span>
+
+    /**
+     * returns PathNode with lowest cost
+     *
+     * @param neighbours
+     * @return
+     */
+    public PathNode getMinimum(List&lt;PathNode&gt; neighbours) {
+<span class="nc" id="L386">        PathNode minnode = null;</span>
+<span class="nc" id="L387">        float mindistance = 9999f;</span>
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        for (PathNode node : neighbours) {</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (node.getCost() &lt; mindistance) {</span>
+<span class="nc" id="L390">                mindistance = node.getCost();</span>
+<span class="nc" id="L391">                minnode = node;</span>
+            }
+<span class="nc" id="L393">        }</span>
+<span class="nc" id="L394">        return minnode;</span>
+    }
+
+    /**
+     * @return the complete map
+     */
+    public List&lt;PathNode&gt; getMap() {
+<span class="nc" id="L401">        return map;</span>
+    }
+
+    /**
+     * @return the mapCBA
+     */
+    public List&lt;PathNode&gt; getMapCBA() {
+<span class="nc" id="L408">        return mapCBA;</span>
+    }
+
+    /**
+     * @return the mapCTR
+     */
+    public List&lt;PathNode&gt; getMapCTR() {
+<span class="nc" id="L415">        return mapCTR;</span>
+    }
+
+    /**
+     * @return the mapCLO
+     */
+    public List&lt;PathNode&gt; getMapCLO() {
+<span class="nc" id="L422">        return mapCLO;</span>
+    }
+
+    /**
+     * @return the mapMR
+     */
+    public List&lt;PathNode&gt; getMapMR() {
+<span class="nc" id="L429">        return mapMR;</span>
+    }
+
+    /**
+     * @return the mapBA
+     */
+    public List&lt;PathNode&gt; getMapBA() {
+<span class="nc" id="L436">        return mapBA;</span>
+    }
+
+    /**
+     * @return the mapBB
+     */
+    public List&lt;PathNode&gt; getMapBB() {
+<span class="nc" id="L443">        return mapBB;</span>
+    }
+
+    /**
+     * @return the mapCSE
+     */
+    public List&lt;PathNode&gt; getMapCSE() {
+<span class="nc" id="L450">        return mapCSE;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

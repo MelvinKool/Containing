@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Crane.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Crane.java</span></div><h1>Crane.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+/**
+ *
+ * @author Ruben
+ */
+public class Crane {
+
+<span class="nc" id="L13">    public int lastX = 13;</span>
+    
+    /**
+     * kind of crane
+     */
+    final static public int LorryCrane = 0;
+    /**
+     *kind of crane
+     */
+    final static public int TrainCrane = 1;
+    /**
+     *kind of crane
+     */
+    final static public int SeaCrane = 2;
+    /**
+     *kind of crane
+     */
+    final static public int BargeCrane = 3;
+    /**
+     *kind of crane
+     */
+    final static public int BufferCrane = 4;
+    /**
+     * Crane ID
+     */
+    public String id;
+    /**
+     * waypoint node of crane
+     */
+    public PathNode node;
+    Container container;
+    /**
+     * start from range
+     */
+<span class="nc" id="L47">    public int startRange = 0;</span>
+    /**
+     * Range for crane
+     */
+<span class="nc" id="L51">    public int range = 0;</span>
+    int type;
+
+    /**
+     * create crane with id
+     *
+     * @param id
+     * @param type  
+     */
+<span class="nc" id="L60">    public Crane(String id, int type) {</span>
+<span class="nc" id="L61">        this.id = id;</span>
+<span class="nc" id="L62">        this.type = type;</span>
+<span class="nc" id="L63">    }</span>
+
+    /**
+     *
+     * @param cont
+     */
+    public void loadContainer(Container cont) {
+<span class="nc" id="L70">    }</span>
+
+    /**
+     *
+     * @param cont
+     */
+    public void getContainer(Container cont) {
+<span class="nc" id="L77">    }</span>
+<span class="nc" id="L78">    boolean ready = true;</span>
+
+    boolean getReady() {
+<span class="nc" id="L81">        return ready;</span>
+    }
+
+    void setIsReady(boolean b) {
+<span class="nc" id="L85">        ready = b;</span>
+<span class="nc" id="L86">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L90">        return &quot;Crane{&quot; + &quot;id=&quot; + id + &quot;, node=&quot; + node + &quot;, ready=&quot; + ready + '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
