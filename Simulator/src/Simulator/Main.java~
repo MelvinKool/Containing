@@ -3,10 +3,6 @@ package Simulator;
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-<<<<<<< HEAD
-import com.jme3.math.Vector3f;
-=======
->>>>>>> 0112b1c6549aff58a63c7bddbf7373d1b5fffea9
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
