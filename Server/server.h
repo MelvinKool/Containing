@@ -1,6 +1,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <string>
+
 #include "connections.h"
 
 class Server
@@ -8,6 +10,7 @@ class Server
 public:
 	Server();
 	~Server();
+	void writeToSim(string message);
 private:
     Connections* connections;
 };

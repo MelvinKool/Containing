@@ -81,3 +81,11 @@ thread* Connections::newClientThread(int number)
 		this->clients[number].used = false;
 	});
 }
+
+void Connections::writeToSim(string message)
+{
+	if(simulator != nullptr)
+	{
+		simulator->socket->write(message);
+	}
+}

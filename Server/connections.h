@@ -16,6 +16,7 @@ public:
 	Connections();
 	~Connections();
 	void acceptClients();
+	void writeToSim(string message);
 private:
 	struct Client
 	{
