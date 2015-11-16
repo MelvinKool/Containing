@@ -1,7 +1,13 @@
 #include "server.h"
+
 #include <iostream>
 
 Server::Server()
 {
-	std::cout << "hello world" << std::endl;
+	this->connections = new Connections();
+}
+
+Server::~Server()
+{
+	delete this->connections;
 }
