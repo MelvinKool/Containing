@@ -9,14 +9,20 @@ Connections::Connections()
 Connections::~Connections()
 {
 	this->stop = true;
-	this->acceptThread->join();
-	delete this->acceptThread;
+	//this->acceptThread->join();
+	//delete this->acceptThread;
 
 	for(int i = 0; i < clients.size(); i++)
 	{
+		clients[i].socket->write("disconnect");
 		clients[i].worker->join();
 		delete clients[i].worker;
 	}
+
+	cout << "all disconnected" << endl;
+
+		this->acceptThread->join();
+		delete this->acceptThread;
 
 	delete this->socket;
 }
@@ -66,18 +72,33 @@ thread* Connections::newClientThread(int number)
 		{
 			string input = this->clients[number].socket->read();
 
-			cout << input << endl;	//do something with the input!?
-			cout.flush();
+			//cout << input << endl;	//do something with the input!?
+			//cout.flush();
 
 			if(input == "disconnect")
-				break;
-			else if(this->stop)
 			{
-				this->clients[number].socket->write("disconnect");
+				cout << clients[number].type + " disconneced." << endl;
+				break;
+			}
+			else
+			{
+				cout << input << endl;	//do something with the input!?
+			}
+			if(this->stop)
+			{
+				//this->clients[number].socket->write("disconnect");
 				break;
 			}
 		}
 		delete this->clients[number].socket;
 		this->clients[number].used = false;
 	});
+}
+
+void Connections::writeToSim(string message)
+{
+	if(simulator != nullptr)
+	{
+		simulator->socket->write(message);
+	}
 }

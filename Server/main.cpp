@@ -1,4 +1,6 @@
 #include <string>
+#include <iostream>
+
 #include "server.h"
 
 using namespace std;
@@ -13,8 +15,10 @@ int main(int argc, char** argv)
 	{
 		cin >> input;
 		if(input == "exit") break;
+		else server->writeToSim(input);
 	}
 
+	cout << "Closing..." << endl;
 	delete server;
 	return 0;
 }

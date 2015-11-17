@@ -2,13 +2,12 @@
 #define SOCKET_H
 
 #include <string>
-//#include <string>
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-//#include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
