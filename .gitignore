@@ -1,7 +1,10 @@
-/.project
-/Simulator/build/
-#temporary files
+#Folders
+Simulator/build
+Simulator/nbproject/private
+
+#Temporary files
 *.lock
 *.o
-#executables
+
+#Executables
 Server
