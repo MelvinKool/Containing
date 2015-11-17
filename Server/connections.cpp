@@ -8,9 +8,10 @@ Connections::Connections()
 
 Connections::~Connections()
 {
+	cout << "Closing..." << endl;
 	this->stop = true;
-	//this->acceptThread->join();
-	//delete this->acceptThread;
+	this->acceptThread->join();
+	delete this->acceptThread;
 
 	for(int i = 0; i < clients.size(); i++)
 	{
@@ -18,11 +19,6 @@ Connections::~Connections()
 		clients[i].worker->join();
 		delete clients[i].worker;
 	}
-
-	cout << "all disconnected" << endl;
-
-		this->acceptThread->join();
-		delete this->acceptThread;
 
 	delete this->socket;
 }
@@ -34,10 +30,13 @@ void Connections::acceptClients()
 		while(!this->stop)
 		{
 			int sock = this->socket->accept();
-			int number = getFreeClientNumber();
-			this->clients[number].used = true;
-            this->clients[number].socket = new ClientSocket(sock);
-            this->clients[number].worker = newClientThread(number);
+			if(sock != -1)
+			{
+				int number = getFreeClientNumber();
+				this->clients[number].used = true;
+            	this->clients[number].socket = new ClientSocket(sock);
+            	this->clients[number].worker = newClientThread(number);
+			}
 		}
     });
 }
@@ -72,9 +71,6 @@ thread* Connections::newClientThread(int number)
 		{
 			string input = this->clients[number].socket->read();
 
-			//cout << input << endl;	//do something with the input!?
-			//cout.flush();
-
 			if(input == "disconnect")
 			{
 				cout << clients[number].type + " disconneced." << endl;
@@ -86,7 +82,6 @@ thread* Connections::newClientThread(int number)
 			}
 			if(this->stop)
 			{
-				//this->clients[number].socket->write("disconnect");
 				break;
 			}
 		}

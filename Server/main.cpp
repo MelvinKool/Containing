@@ -15,11 +15,9 @@ int main(int argc, char** argv)
 	{
 		cin >> input;
 		if(input == "exit") break;
-		else server->writeToSim(input);
+		//else server->writeToSim(input);
 	}
 
-	cout << "Closing..." << endl;
 	delete server;
 	return 0;
 }
-//http://cboard.cprogramming.com/networking-device-communication/128469-non-blocking-socket-timeout.html

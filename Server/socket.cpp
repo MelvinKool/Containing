@@ -70,26 +70,22 @@ ServerSocket::~ServerSocket()
 
 int ServerSocket::accept()
 {
-	return ::accept(this->sock, NULL, NULL);
-	/*
 	int iResult;
 	struct timeval tv;
 	fd_set rfds;
 	FD_ZERO(&rfds);
-	FD_SET(s, &rfds);
+	FD_SET(this->sock, &rfds);
 
-	tv.tv_sec = (long)timeout;
+	tv.tv_sec = (long)5;
 	tv.tv_usec = 0;
 
-	iResult = select(s, &rfds, (fd_set *) 0, (fd_set *) 0, &tv);
+	iResult = select(this->sock + 1, &rfds, (fd_set *) 0, (fd_set *) 0, &tv);
 	if(iResult > 0)
 	{
-	return accept(s, NULL, NULL);
+		return ::accept(this->sock, NULL, NULL);
 	}
 	else
 	{
-	//always here, even if i connect from another application
+		return -1;
 	}
-	return 0;
-	*/
 }

@@ -1,13 +1,13 @@
-SOURCES=main.cpp connections.cpp server.cpp socket.cpp
+SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp database.cpp \
+shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp
 
 #============================================
-
 CC=g++ -std=c++11
 CFLAGS=-c -Wall
-LDFLAGS=
+LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
-LIBS=-pthread
+LIBS=
 
 all: $(SOURCES) $(EXECUTABLE)
 
