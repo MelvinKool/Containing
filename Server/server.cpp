@@ -11,3 +11,8 @@ Server::~Server()
 {
 	delete this->connections;
 }
+
+void Server::writeToSim(string message)
+{
+	connections->writeToSim(message);
+}

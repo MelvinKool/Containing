@@ -1,6 +1,7 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AppState;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
@@ -10,6 +11,8 @@ import com.jme3.scene.shape.Box;
 public class Main extends SimpleApplication
 {
     Object AGV = new Object();
+    Connection connection;
+    Thread readThread;
 
     public static void main(String[] args)
     {
@@ -18,17 +21,32 @@ public class Main extends SimpleApplication
     }
 
     @Override
-    public void simpleInitApp() {
-        Box b = new Box(1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
+    public void simpleInitApp()
+    {
+        readThread = new Thread(new Runnable()
+        {
+            public void run() {
+                try
+                {
+                    connection = new Connection();
+                    while(true)
+                    {
+                        //What to do with the input?
+                        System.out.println(connection.read());
+                    }
+                }
+                catch(Exception e)
+                {
+                    //Always throws a exception after the socket is closed.
+                    //System.out.println(e);
+                }
+            }
+        });
+        readThread.start();
+        
+        //Yes, i removed the stupid cube ;p
     }
-
+    
     @Override
     public void simpleUpdate(float tpf)
     {
@@ -45,9 +63,17 @@ public class Main extends SimpleApplication
         
     }
     
-    /**
-     *
-     * @param verplaatsing afstand die afgelegd moet worden
+    //This is important to properly close
+    //the connection with the server.
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+        readThread.stop();
+        connection.stop();
+    }
+    
+    /**@param verplaatsing afstand die afgelegd moet worden
      * @param snelheid snelheid waarmee het object zich beweegt
      * @return
      */
