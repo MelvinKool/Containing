@@ -7,6 +7,7 @@
 class transport
 {
     private:
+        int loaded_Speed, unloaded_Speed;
     public:
 };
 

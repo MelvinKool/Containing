@@ -5,6 +5,7 @@ class database
 {
     private:
     public:
+        void saveData();
 };
 
 

@@ -11,8 +11,8 @@
 class agv : transport
 {
     private:
-
     public:
+        void Transfer(int x, int y);
 };
 
 #endif // AGV_H

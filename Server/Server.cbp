@@ -35,13 +35,27 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="agv.cpp" />
+		<Unit filename="agv.h" />
 		<Unit filename="connections.cpp" />
 		<Unit filename="connections.h" />
+		<Unit filename="container.cpp" />
+		<Unit filename="container.h" />
+		<Unit filename="crane.cpp" />
+		<Unit filename="crane.h" />
+		<Unit filename="database.cpp" />
+		<Unit filename="database.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="server.cpp" />
 		<Unit filename="server.h" />
 		<Unit filename="socket.cpp" />
 		<Unit filename="socket.h" />
+		<Unit filename="transfer.cpp" />
+		<Unit filename="transfer.h" />
+		<Unit filename="transport.cpp" />
+		<Unit filename="transport.h" />
+		<Unit filename="xmlparser.cpp" />
+		<Unit filename="xmlparser.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

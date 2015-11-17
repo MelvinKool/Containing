@@ -4,6 +4,7 @@
 class crane : transport
 {
     private:
+        double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
     public:
 };
 
