@@ -19,4 +19,10 @@ $(EXECUTABLE): $(OBJECTS)
 
 clean:
 	touch tmp.o
-	rm *.o $(EXECUTABLE)
+	touch $(EXECUTABLE).tmp
+	rm *.o $(EXECUTABLE)*
+
+run: $(EXECUTABLE)
+	./$(EXECUTABLE)
+	
+force: clean $(EXECUTABLE)
