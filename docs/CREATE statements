@@ -1,6 +1,7 @@
 CREATE TABLE Owner(
-	name TINYTEXT NOT NULL,
-	PRIMARY KEY(name)
+	ownerID INT NOT NULL AUTO_INCREMENT,
+	name TINYTEXT,
+	PRIMARY KEY(ownerID)
 	);
 
 CREATE TABLE Size(
@@ -69,13 +70,13 @@ CREATE TABLE Container(
 	iso TINYTEXT,
 	weightEmpty INT,
 	weightContents INT,
-	ownerName TINYTEXT,
+	owner INT,
 	size INT,
 	contents INT,
 	arrivalInfo INT,
 	departureInfo INT,
 	PRIMARY KEY(containerNr),
-	FOREIGN KEY (ownerName) REFERENCES Owner(name)
+	FOREIGN KEY (owner) REFERENCES Owner(ownerID)
 	ON DELETE RESTRICT,
 	FOREIGN KEY (size) REFERENCES Size(sizeID)
 	ON UPDATE CASCADE ON DELETE RESTRICT,

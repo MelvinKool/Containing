@@ -40,8 +40,10 @@ CREATE TABLE Arrival(
 	shippingType TINYTEXT,
 	shippingCompany TINYTEXT,
 	PRIMARY KEY(shipmentID),
-	FOREIGN KEY (shippingType) REFERENCES shippingType(sort),
+	FOREIGN KEY (shippingType) REFERENCES shippingType(sort)
+	ON DELETE RESTRICT,
 	FOREIGN KEY (shippingCompany) REFERENCES shippingCompany(name)
+	ON DELETE RESTRICT
 	);
 
 CREATE TABLE Departure(
@@ -52,8 +54,10 @@ CREATE TABLE Departure(
 	shippingType TINYTEXT,
 	shippingCompany TINYTEXT,
 	PRIMARY KEY(shipmentID),
-	FOREIGN KEY (shippingType) REFERENCES shippingType(sort),
+	FOREIGN KEY (shippingType) REFERENCES shippingType(sort)
+	ON DELETE RESTRICT,
 	FOREIGN KEY (shippingCompany) REFERENCES shippingCompany(name)
+	ON DELETE RESTRICT
 	);
 
 CREATE TABLE Container(
@@ -71,9 +75,14 @@ CREATE TABLE Container(
 	arrivalInfo INT,
 	departureInfo INT,
 	PRIMARY KEY(containerNr),
-	FOREIGN KEY (ownerName) REFERENCES Owner(name),
-	FOREIGN KEY (size) REFERENCES Size(sizeID),
-	FOREIGN KEY (contents) REFERENCES Content(contentID),
-	FOREIGN KEY (arrivalInfo) REFERENCES Arrival(shipmentID),
+	FOREIGN KEY (ownerName) REFERENCES Owner(name)
+	ON DELETE RESTRICT,
+	FOREIGN KEY (size) REFERENCES Size(sizeID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (contents) REFERENCES Content(contentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (arrivalInfo) REFERENCES Arrival(shipmentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY (departureInfo) REFERENCES Departure(shipmentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT
 	);
