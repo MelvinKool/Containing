@@ -3,13 +3,18 @@ package Simulator;
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends SimpleApplication
 {
     Object AGV = new Object();
+    
+    List<Container> containers = new ArrayList<Container>();
 
     public static void main(String[] args)
     {
@@ -27,6 +32,8 @@ public class Main extends SimpleApplication
         geom.setMaterial(mat);
 
         rootNode.attachChild(geom);
+        
+        this.containers.add(new Container(this.rootNode, this.assetManager, new Vector3f(0, 0, 0)));
     }
 
     @Override
@@ -47,14 +54,14 @@ public class Main extends SimpleApplication
     
     /**
      *
-     * @param verplaatsing afstand die afgelegd moet worden
-     * @param snelheid snelheid waarmee het object zich beweegt
+     * @param movement afstand die afgelegd moet worden
+     * @param speed snelheid waarmee het object zich beweegt
      * @return
      */
-    public float movementTijd(int verplaatsing,float snelheid)
+    public float movementTime(int movement,float speed)
     {
         //The AGV always moves at top speed, because reasons
-        float tijd = verplaatsing/snelheid;
+        float tijd = movement/speed;
         return tijd;
     }
 }

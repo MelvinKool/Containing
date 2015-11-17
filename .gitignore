@@ -1,3 +1,4 @@
 /.project
 /Simulator/build/
 /Simulator/nbproject/private
+**/*.lock
