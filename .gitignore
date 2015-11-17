@@ -1,2 +1,7 @@
 /.project
 /Simulator/build/
+#temporary files
+*.lock
+*.o
+#executables
+Server
