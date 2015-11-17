@@ -20,8 +20,10 @@ Connections::~Connections()
 	}
 
 	cout << "all disconnected" << endl;
-	this->acceptThread->join();
-	delete this->acceptThread;
+
+		this->acceptThread->join();
+		delete this->acceptThread;
+
 	delete this->socket;
 }
 

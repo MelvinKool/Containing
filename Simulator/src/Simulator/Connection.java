@@ -7,14 +7,14 @@ public class Connection
 {
     private class SimSocket extends Socket
     {
-        private InputStream in;
+        private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
             super(ip, port);
-            in = getInputStream();
+            in = new DataInputStream(getInputStream());
             out = getOutputStream();
         }
         
@@ -27,12 +27,7 @@ public class Connection
         
         public String read() throws Exception
         {
-            byte[] message = new byte[bufsize];
-            int count = in.read(message, 0, bufsize-1);
-            if(count > 0 && message[bufsize -1] == '\n')
-                count--;
-            message[count] = '\0';
-            return new String(message);
+            return in.readLine();
         }
     }
     
@@ -75,11 +70,18 @@ public class Connection
         if(simSocket != null)
         {
             String input = simSocket.read();
-            if(input.contains("disconnect"))// == "disconnect")
+            
+            if(input.contentEquals("disconnect"))
             {
                 stop();
                 return "Disconnected from server.";
             }
+            
+            for(int i = 0; i < input.length(); i++)
+            {
+                System.out.println(i+" : "+input.charAt(i));
+            }
+            
             return input;
         }
         else
