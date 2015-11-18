@@ -4,8 +4,8 @@
 #include "database.h"
 class xmlparser
 {
-    private:
-    public:
+	private:
+	public:
         void read_XML();
         void process_Data(database db);
 };
