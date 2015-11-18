@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 	{
 		cin >> input;
 		if(input == "exit") break;
-		//else server->writeToSim(input);
+		else server->writeToSim(input);
 	}
 
 	delete server;

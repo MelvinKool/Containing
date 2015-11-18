@@ -36,6 +36,7 @@ void Connections::acceptClients()
 				this->clients[number].used = true;
             	this->clients[number].socket = new ClientSocket(sock);
             	this->clients[number].worker = newClientThread(number);
+				cout << "nope";
 			}
 		}
     });
@@ -62,9 +63,11 @@ thread* Connections::newClientThread(int number)
         this->clients[number].type = this->clients[number].socket->read();
         cout << this->clients[number].type + " connected." << endl;
 
+		bool isSim = false;
         if(this->clients[number].type == "Simulator" && this->simulator == nullptr)
         {
 			this->simulator = &(this->clients[number]);
+			isSim = true;
         }
 
 		while(!this->stop)
@@ -84,6 +87,10 @@ thread* Connections::newClientThread(int number)
 			{
 				break;
 			}
+		}
+		if(isSim)
+		{
+			this->simulator = nullptr;
 		}
 		delete this->clients[number].socket;
 		this->clients[number].used = false;
