@@ -1,95 +1,121 @@
-//#include "xmlparser.h"
-#include "rapidxml.hpp"
-#include "rapidxml_utils.hpp"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "xmlparser.h"
+#include "rapidxml.hpp"
+#include "rapidxml_utils.hpp"
 
-using namespace rapidxml;
 using namespace std;
-/*
-//places data in the database
-void xmlparser::process_Data(database db)
-{
+using namespace rapidxml;
 
+//places data in the database
+void xmlparser::process_Data(vector<string> &xmlDocPaths)
+{
+	for(string xmlDocPath : xmlDocPaths)
+	{
+		xml_document<> doc; //create xml_document object
+		ifstream theFile (xmlDocPath.c_str());
+		vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
+		buffer.push_back('\0');
+		doc.parse<0>(&buffer[0]); //parse the contents of file
+		xml_node<> * root = doc.first_node("recordset");//find our root node
+		for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
+		{
+			string iso = record->first_node("ISO")->value();
+			//arrival
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * arrival = record->first_node("aankomst");
+			string type_Transport_Arrival = arrival->first_node("soort_vervoer")->value();
+			string company_Arrival = arrival->first_node("bedrijf")->value();
+			//date
+			xml_node<> * date_Arrival = arrival->first_node("datum");
+			string day_Arrival = date_Arrival->first_node("d")->value();
+			string month_Arrival = date_Arrival->first_node("m")->value();
+			string year_Arrival = date_Arrival->first_node("j")->value();
+			//time
+			xml_node<> * time_Arrival = arrival->first_node("tijd");
+			string from_Arrival = time_Arrival->first_node("van")->value();
+			string till_Arrival = time_Arrival->first_node("tot")->value();
+			//position
+			xml_node<> * position_Arrival = arrival->first_node("positie");
+			string pos_X_Arrival, pos_Y_Arrival, pos_Z_Arrival;
+			pos_X_Arrival = position_Arrival->first_node("x")->value();
+			pos_Y_Arrival = position_Arrival->first_node("y")->value();
+			pos_Z_Arrival = position_Arrival->first_node("z")->value();
+			/////////////////////////////////////////////////////////////////////
+
+			//owner
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * owner = record->first_node("eigenaar");
+			string owner_Name = owner->first_node("naam")->value();
+			string containerNr = owner->first_node("containernr")->value();
+			/////////////////////////////////////////////////////////////////////
+
+			//departure
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * departure = record->first_node("vertrek");
+			string type_Transport_Departure = departure->first_node("soort_vervoer")->value();
+			string company_Departure = departure->first_node("bedrijf")->value();
+			//date
+			xml_node<> * date_Departure = departure->first_node("datum");
+			string day_Departure = date_Departure->first_node("d")->value();
+			string month_Departure = date_Departure->first_node("m")->value();
+			string year_Departure = date_Departure->first_node("j")->value();
+			//time
+			xml_node<> * time_Departure = departure->first_node("tijd");
+			string from_Departure = time_Departure->first_node("van")->value();
+			string till_Departure = time_Departure->first_node("tot")->value();
+			/////////////////////////////////////////////////////////////////////
+
+			//dimensions
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * dimensions = record->first_node("afmetingen");
+			string length, width, height;
+			length = dimensions->first_node("l")->value();
+			width = dimensions->first_node("b")->value();
+			height = dimensions->first_node("h")->value();
+			/////////////////////////////////////////////////////////////////////
+
+			//weight
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * weight = record->first_node("gewicht");
+			string empty_Weight, content_Weight;
+			empty_Weight = weight->first_node("leeg")->value();
+			content_Weight = weight->first_node("inhoud")->value();
+			/////////////////////////////////////////////////////////////////////
+
+			//content
+			/////////////////////////////////////////////////////////////////////
+			xml_node<> * content = record->first_node("inhoud");
+			string content_Name, content_Type, content_Danger;
+			content_Name =  content->first_node("naam")->value();
+			content_Type =  content->first_node("soort")->value();
+			content_Danger =  content->first_node("gevaar")->value();
+			/////////////////////////////////////////////////////////////////////
+		}
+	}
 }
 
 //reads an xml node
 void xmlparser::read_XML()
 {
-
-}*/
+	
+}
 
 int main()
 {
-	xml_document<> doc; //create xml_document object
-	ifstream theFile ("../INFO/XML/xml1.xml");
-	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
-	buffer.push_back('\0');
-	doc.parse<0>(&buffer[0]); //parse the contents of file
-	xml_node<> * root = doc.first_node("recordset");//find our root node
-	for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
-	{
-		string iso = record->first_node("ISO")->value();
-		//aankomst
-		/////////////////////////////////////////////////////////////////////
-		xml_node<> * arrival = record->first_node("aankomst");
-		string type_Transport = arrival->first_node("soort_vervoer")->value();
-		string company = arrival->first_node("bedrijf")->value();
-		//date
-		xml_node<> * date = arrival->first_node("datum");
-		string day = date->first_node("d")->value();
-		string month = date->first_node("m")->value();
-		string year = date->first_node("j")->value();
-		//time
-		xml_node<> * time = arrival->first_node("tijd");
-		string from = time->first_node("van")->value();
-		string till = time->first_node("tot")->value();
-		//position
-		xml_node<> * position = arrival->first_node("positie");
-		string pos_X, pos_Y, pos_Z;
-		pos_X = position->first_node("x")->value();
-		pos_Y = position->first_node("y")->value();
-		pos_Z = position->first_node("z")->value();
-		/////////////////////////////////////////////////////////////////////
-		
-		//owner
-		/////////////////////////////////////////////////////////////////////
-		xml_node<> * owner = record->first_node("eigenaar");
-		string owner_Name = owner->first_node("naam")->value();
-		string containerNr = owner->first_node("containernr")->value();
-		/////////////////////////////////////////////////////////////////////
-		
-		//departure
-		/////////////////////////////////////////////////////////////////////
-		xml_node<> * departure = record->first_node("vertrek");
-		/////////////////////////////////////////////////////////////////////
-		xml_node<> * vertrek = record->first_node("vertrek");
-		for (xml_node<> *child = vertrek->first_node(); child; child = child->next_sibling())
-		{
-		
-		}
-		xml_node<> * afmetingen = record->first_node("afmetingen");
-		for (xml_node<> *child = afmetingen->first_node(); child; child = child->next_sibling())
-		{
-		
-		}
-		xml_node<> * gewicht = record->first_node("gewicht");
-		for (xml_node<> *child = gewicht->first_node(); child; child = child->next_sibling())
-		{
-		
-		}
-		xml_node<> * inhoud = record->first_node("inhoud");
-		for (xml_node<> *child = inhoud->first_node(); child; child = child->next_sibling())
-		{
-		
-		}
-	}
-	//cout << doc << endl;
-	//xml_node<> * node1 = root->first_node("record"); //find our node1 node
+	xmlparser parsexml;
+	vector<string> xmlDocPaths;
+	xmlDocPaths.push_back("../INFO/XML/xml1.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml2.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml3.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml4.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml5.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml6.xml");
+	xmlDocPaths.push_back("../INFO/XML/xml7.xml");
+	parsexml.process_Data(xmlDocPaths);
 	return 0;
-	
 }
 
 

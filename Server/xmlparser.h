@@ -7,7 +7,7 @@ class xmlparser
 	private:
 	public:
         void read_XML();
-        void process_Data(database db);
+        void process_Data(std::vector<std::string> &xmlDocPaths);
 };
 
 
