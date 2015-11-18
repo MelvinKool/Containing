@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Simulator.cranes;
+package Simulator.vehicles;
 
 import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
@@ -13,11 +13,10 @@ import com.jme3.scene.Node;
  *
  * @author erwin
  */
-public class DockCrane extends WorldObject {
+public class Ship extends WorldObject {
     
-    public Node magnet;
-    
-    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
+    public Ship(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
         super(rootNode, assetManager, position, modelFile);
     }
+    
 }

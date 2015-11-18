@@ -61,7 +61,7 @@ public class Main extends SimpleApplication
     public float movementTime(int movement,float speed)
     {
         //The AGV always moves at top speed, because reasons
-        float tijd = movement/speed;
-        return tijd;
+        float time = movement/speed;
+        return time;
     }
 }
