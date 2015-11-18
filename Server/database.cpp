@@ -1,24 +1,14 @@
 #include "database.h"
-#include <stdlib.h>
-#include <iostream.h>
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-
-using namespace std;
-
-sql::Connection *con;
 
 void database::saveData()
 {
 
 }
 
-void database::createConnection()
+database::database()
 {
 	cout<<endl;
-	cout<<"Creating DB connection"<<endl
+	cout<<"Creating DB connection..."<<endl
 
 	try
 	{
@@ -35,5 +25,10 @@ void database::createConnection()
   		cout << " (MySQL error code: " << e.getErrorCode();
   		cout << ", SQLState: " << e.getSQLState() << " )" << endl;
 	}
+}
 
+database::~database()
+{
+	//close connection
+	delete con;
 }
