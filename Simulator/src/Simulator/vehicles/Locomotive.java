@@ -17,6 +17,5 @@ public class Locomotive extends WorldObject {
     
     public Locomotive(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
         super(rootNode, assetManager, position, modelFile);
-    }
-    
+    }    
 }

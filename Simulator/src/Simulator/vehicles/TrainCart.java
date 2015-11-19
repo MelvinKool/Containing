@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
  */
 public class TrainCart extends WorldObject {
     
-    public Traincart(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
+    public TrainCart(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
         super(rootNode, assetManager, position, modelFile);
     }
     

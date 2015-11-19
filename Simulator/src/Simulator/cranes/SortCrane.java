@@ -4,7 +4,6 @@
  */
 package Simulator.cranes;
 
-import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -13,12 +12,11 @@ import com.jme3.scene.Node;
  *
  * @author erwin
  */
-public class SortCrane extends WorldObject {
+public class SortCrane extends Crane {
     
-    public Node magnet;
+    public Magnet magnet;
     
-    public SortCrane(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
-        super(rootNode, assetManager, position, modelFile);
+    public SortCrane(Node rootNode, AssetManager assetManager, Vector3f position) {
+        super(rootNode, assetManager, position, new Vector3f(0, 0, 0), "Models/SortCrane.j3o");
     }
-    
 }

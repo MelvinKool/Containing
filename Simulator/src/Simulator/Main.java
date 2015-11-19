@@ -12,7 +12,6 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
-    Object AGV = new Object();
     
     List<Container> containers = new ArrayList<Container>();
 
@@ -33,7 +32,6 @@ public class Main extends SimpleApplication
 
         rootNode.attachChild(geom);
         
-        this.containers.add(new Container(this.rootNode, this.assetManager, new Vector3f(0, 0, 0)));
     }
 
     @Override
