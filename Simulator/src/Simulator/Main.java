@@ -1,12 +1,7 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AppState;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
 
 public class Main extends SimpleApplication
 {
@@ -23,25 +18,9 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        readThread = new Thread(new Runnable()
-        {
-            public void run() {
-                try
-                {
-                    connection = new Connection();
-                    while(true)
-                    {
-                        //What to do with the input?
-                        System.out.println(connection.read());
-                    }
-                }
-                catch(Exception e)
-                {
-                    //Always throws a exception after the socket is closed.
-                    //System.out.println(e);
-                }
-            }
-        });
+        flyCam.setEnabled(false);
+        
+        readThread = initReadThread();
         readThread.start();
         
         //Yes, i removed the stupid cube ;p
@@ -82,5 +61,27 @@ public class Main extends SimpleApplication
         //The AGV always moves at top speed, because reasons
         float tijd = verplaatsing/snelheid;
         return tijd;
+    }
+    
+    private Thread initReadThread(){
+        return new Thread(new Runnable()
+        {
+            public void run() {
+                try
+                {
+                    connection = new Connection();
+                    while(true)
+                    {
+                        //What to do with the input?
+                        System.out.println(connection.read());
+                    }
+                }
+                catch(Exception e)
+                {
+                    //Always throws a exception after the socket is closed.
+                    //System.out.println(e);
+                }
+            }
+        });
     }
 }
