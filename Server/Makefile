@@ -1,5 +1,5 @@
-SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp database.cpp \
-shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp
+SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp \
+shortestPath.cpp transfer.cpp transport.cpp database.cpp xmlparser.cpp
 
 #============================================
 CC=g++ -std=c++11

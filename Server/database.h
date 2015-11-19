@@ -8,5 +8,4 @@ class database
         void saveData();
 };
 
-
 #endif // DATABASE_H

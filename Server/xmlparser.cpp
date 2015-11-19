@@ -1,9 +1,8 @@
-#include <string>
 #include <iostream>
 #include <fstream>
-#include <vector>
 
 #include "xmlparser.h"
+#include "database.h"
 #include "RapidXML/rapidxml.hpp"
 #include "RapidXML/rapidxml_utils.hpp"
 
@@ -11,7 +10,7 @@ using namespace std;
 using namespace rapidxml;
 
 //places data in the database
-void xmlparser::process_Data(vector<string> &xmlDocPaths)
+void xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
 {
 	for(string xmlDocPath : xmlDocPaths)
 	{
@@ -29,21 +28,25 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			xml_node<> * arrival = record->first_node("aankomst");
 			string type_Transport_Arrival = arrival->first_node("soort_vervoer")->value();
 			string company_Arrival = arrival->first_node("bedrijf")->value();
+
 			//date
 			xml_node<> * date_Arrival = arrival->first_node("datum");
 			string day_Arrival = date_Arrival->first_node("d")->value();
 			string month_Arrival = date_Arrival->first_node("m")->value();
 			string year_Arrival = date_Arrival->first_node("j")->value();
+
 			//time
 			xml_node<> * time_Arrival = arrival->first_node("tijd");
 			string from_Arrival = time_Arrival->first_node("van")->value();
 			string till_Arrival = time_Arrival->first_node("tot")->value();
+
 			//position
 			xml_node<> * position_Arrival = arrival->first_node("positie");
 			string pos_X_Arrival, pos_Y_Arrival, pos_Z_Arrival;
 			pos_X_Arrival = position_Arrival->first_node("x")->value();
 			pos_Y_Arrival = position_Arrival->first_node("y")->value();
 			pos_Z_Arrival = position_Arrival->first_node("z")->value();
+
 			/////////////////////////////////////////////////////////////////////
 
 			//owner
@@ -51,6 +54,7 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			xml_node<> * owner = record->first_node("eigenaar");
 			string owner_Name = owner->first_node("naam")->value();
 			string containerNr = owner->first_node("containernr")->value();
+
 			/////////////////////////////////////////////////////////////////////
 
 			//departure
@@ -58,15 +62,18 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			xml_node<> * departure = record->first_node("vertrek");
 			string type_Transport_Departure = departure->first_node("soort_vervoer")->value();
 			string company_Departure = departure->first_node("bedrijf")->value();
+
 			//date
 			xml_node<> * date_Departure = departure->first_node("datum");
 			string day_Departure = date_Departure->first_node("d")->value();
 			string month_Departure = date_Departure->first_node("m")->value();
 			string year_Departure = date_Departure->first_node("j")->value();
+
 			//time
 			xml_node<> * time_Departure = departure->first_node("tijd");
 			string from_Departure = time_Departure->first_node("van")->value();
 			string till_Departure = time_Departure->first_node("tot")->value();
+
 			/////////////////////////////////////////////////////////////////////
 
 			//dimensions
@@ -76,6 +83,7 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			length = dimensions->first_node("l")->value();
 			width = dimensions->first_node("b")->value();
 			height = dimensions->first_node("h")->value();
+
 			/////////////////////////////////////////////////////////////////////
 
 			//weight
@@ -84,6 +92,7 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			string empty_Weight, content_Weight;
 			empty_Weight = weight->first_node("leeg")->value();
 			content_Weight = weight->first_node("inhoud")->value();
+
 			/////////////////////////////////////////////////////////////////////
 
 			//content
@@ -93,20 +102,16 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			content_Name =  content->first_node("naam")->value();
 			content_Type =  content->first_node("soort")->value();
 			content_Danger =  content->first_node("gevaar")->value();
+
 			/////////////////////////////////////////////////////////////////////
 		}
 	}
 }
 
 //reads an xml node
-void xmlparser::read_XML()
+void xmlparser::read_XML(database *db)
 {
-
-}
-
-int main2()
-{
-	xmlparser parsexml;
+	cout << "Loading XML..." << endl;
 	vector<string> xmlDocPaths;
 	xmlDocPaths.push_back("../INFO/XML/xml1.xml");
 	xmlDocPaths.push_back("../INFO/XML/xml2.xml");
@@ -115,6 +120,6 @@ int main2()
 	xmlDocPaths.push_back("../INFO/XML/xml5.xml");
 	xmlDocPaths.push_back("../INFO/XML/xml6.xml");
 	xmlDocPaths.push_back("../INFO/XML/xml7.xml");
-	parsexml.process_Data(xmlDocPaths);
-	return 0;
+	process_Data(xmlDocPaths, db);
+	cout << "XML Done!" << endl;
 }

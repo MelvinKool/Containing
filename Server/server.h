@@ -4,6 +4,7 @@
 #include <string>
 
 #include "connections.h"
+#include "xmlparser.h"
 
 class Server
 {
@@ -13,6 +14,7 @@ public:
 	void writeToSim(string message);
 private:
     Connections* connections;
+	xmlparser parser;
 };
 
 #endif //SERVER_H
