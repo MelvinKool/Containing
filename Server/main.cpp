@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
 	cout << "Type 'exit' to close the application." << endl;
 	Server* server = new Server();
@@ -22,4 +22,3 @@ int main(int argc, char** argv)
 	delete server;
 	return 0;
 }
-//http://cboard.cprogramming.com/networking-device-communication/128469-non-blocking-socket-timeout.html

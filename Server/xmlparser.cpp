@@ -2,9 +2,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+
 #include "xmlparser.h"
-#include "rapidxml.hpp"
-#include "rapidxml_utils.hpp"
+#include "RapidXML/rapidxml.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
 
 using namespace std;
 using namespace rapidxml;
@@ -100,10 +101,10 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 //reads an xml node
 void xmlparser::read_XML()
 {
-	
+
 }
 
-int main()
+int main2()
 {
 	xmlparser parsexml;
 	vector<string> xmlDocPaths;
@@ -117,5 +118,3 @@ int main()
 	parsexml.process_Data(xmlDocPaths);
 	return 0;
 }
-
-
