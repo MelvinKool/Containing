@@ -1,13 +1,15 @@
-SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp\
-shortestPath.cpp transfer.cpp transport.cpp# database.cpp xmlparser.cpp
+SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp \
+shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp
+#database.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -Wall
+CFLAGS=-c -I./include -Wall
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=
+#-L./lib -lmysqlcppconn -lmysqlcppconn-static
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -21,6 +23,7 @@ clean:
 	touch tmp.o
 	touch $(EXECUTABLE).tmp
 	rm *.o $(EXECUTABLE)*
+	clear
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)

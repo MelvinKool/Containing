@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
 	cout << "Type 'exit' to close the application." << endl;
 	Server* server = new Server();

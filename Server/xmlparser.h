@@ -2,13 +2,15 @@
 #define XMLPARSER_H
 
 #include "database.h"
+#include <vector>
+#include <string>
+
 class xmlparser
 {
-    private:
-    public:
-        void read_XML();
-        void process_Data(database db);
+	private:
+		void process_Data(std::vector<std::string> &xmlDocPaths, database *db);
+	public:
+        void read_XML(database *db);
 };
-
 
 #endif // XMLPARSER_H

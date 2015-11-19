@@ -4,6 +4,8 @@
 
 Server::Server()
 {
+	//setup db
+	parser.read_XML(nullptr);
 	this->connections = new Connections();
 }
 
