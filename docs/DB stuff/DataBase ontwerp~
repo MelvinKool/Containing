@@ -12,4 +12,4 @@ Arrival(shipmentID int, date Date, timeFrom float, timeTill float, positionX int
 
 Departure(shipmentID int, date Date, timeFrom float, timeTill float, ShippingType.sort, ShippingCompany.name);
 
-Container(containerID int, containerNr int, storageLane int, positionX int, positionY int, positionZ int, iso string, weightEmpty int, weightContents int, Owner.name, Size.sizeID, Content.contentID, Arrival.shipmentID, Departure.shipmentID);
+Container(containerNr int, storageLane int, positionX int, positionY int, positionZ int, iso string, weightEmpty int, weightContents int, Owner.name, Size.sizeID, Content.contentID, Arrival.shipmentID, Departure.shipmentID);
