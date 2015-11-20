@@ -1,7 +1,12 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 public class Main extends SimpleApplication
 {
@@ -14,16 +19,22 @@ public class Main extends SimpleApplication
         Main app = new Main();
         app.start();
     }
-
+    
     @Override
     public void simpleInitApp()
     {
-        flyCam.setEnabled(false);
+        //flyCam.setEnabled(false);
+        flyCam.setMoveSpeed(250);
+        cam.setFrustumFar(2000);
         
         readThread = initReadThread();
         readThread.start();
         
-        //Yes, i removed the stupid cube ;p
+        initLight();
+        
+        Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
+        rootNode.attachChild(SimWorld);
+        
     }
     
     @Override
@@ -83,5 +94,17 @@ public class Main extends SimpleApplication
                 }
             }
         });
+    }
+    
+    private void initLight(){
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun);
+        
+        DirectionalLight sun2 = new DirectionalLight();
+        sun2.setDirection((new Vector3f(0.5f, -0.5f, 0.5f)).normalizeLocal());
+        sun2.setColor(ColorRGBA.White);
+        rootNode.addLight(sun2); 
     }
 }

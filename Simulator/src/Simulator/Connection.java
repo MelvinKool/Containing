@@ -31,13 +31,13 @@ public class Connection
         }
     }
     
-    private SimSocket simSocket;
+    private Connection.SimSocket simSocket;
     
     public Connection()
     {
         try
         {
-            simSocket = new SimSocket(InetAddress.getByName("localhost"), 1337);
+            simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337);
             if(simSocket != null)
                 write("Simulator");
         }
