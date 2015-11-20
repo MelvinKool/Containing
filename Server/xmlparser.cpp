@@ -105,6 +105,7 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
 
 			/////////////////////////////////////////////////////////////////////
 		}
+		theFile.close();
 	}
 }
 
