@@ -1,13 +1,7 @@
 #include "database.h"
 
-void database::saveData()
-{
-
-}
-
 database::database()
 {
-	cout<<endl;
 	cout<<"Creating DB connection..."<<endl
 
 	try

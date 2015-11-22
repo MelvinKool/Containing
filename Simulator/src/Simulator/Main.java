@@ -23,7 +23,7 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        //flyCam.setEnabled(false);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         

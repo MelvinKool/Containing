@@ -36,7 +36,6 @@ void Connections::acceptClients()
 				this->clients[number].used = true;
             	this->clients[number].socket = new ClientSocket(sock);
             	this->clients[number].worker = newClientThread(number);
-				cout << "nope";
 			}
 		}
     });
@@ -72,7 +71,13 @@ thread* Connections::newClientThread(int number)
 
 		while(!this->stop)
 		{
-			string input = this->clients[number].socket->read();
+			string input;
+			try{
+				input = this->clients[number].socket->read();
+			}
+			catch(...){
+				input = "disconnect";
+			}
 
 			if(input == "disconnect")
 			{
@@ -101,6 +106,11 @@ void Connections::writeToSim(string message)
 {
 	if(simulator != nullptr)
 	{
-		simulator->socket->write(message);
+		try{
+			simulator->socket->write(message);
+		}
+		catch(...){
+			cout << "Could not write to Simulator." << endl;
+		}
 	}
 }

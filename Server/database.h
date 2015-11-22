@@ -15,7 +15,6 @@ class database
     private:
 //		sql::Connection *con;
     public:
-//        void saveData();
 //		database();
 //		~database();
 };

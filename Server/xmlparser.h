@@ -8,9 +8,9 @@
 class xmlparser
 {
 	private:
-		void process_Data(std::vector<std::string> &xmlDocPaths, database *db);
+		void process_Data(std::vector<std::string> &xmlDocPaths);
 	public:
-        void read_XML(database *db);
+        void read_XML();
 };
 
 #endif // XMLPARSER_H

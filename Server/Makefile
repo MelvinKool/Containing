@@ -4,12 +4,13 @@ shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -I./include -Wall
+CFLAGS=-c -Wall
+#-I/lib/Containing/include
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=
-#-L./lib -lmysqlcppconn -lmysqlcppconn-static
+#-L/lib/Containing/lib -lmysqlcppconn -lmysqlcppconn-static
 
 all: $(SOURCES) $(EXECUTABLE)
 

@@ -10,7 +10,7 @@ using namespace std;
 using namespace rapidxml;
 
 //places data in the database
-void xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
+void xmlparser::process_Data(vector<string> &xmlDocPaths)
 {
 	for(string xmlDocPath : xmlDocPaths)
 	{
@@ -110,17 +110,22 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
 }
 
 //reads an xml node
-void xmlparser::read_XML(database *db)
+void xmlparser::read_XML()
 {
-	cout << "Loading XML..." << endl;
-	vector<string> xmlDocPaths;
-	xmlDocPaths.push_back("../INFO/XML/xml1.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml2.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml3.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml4.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml5.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml6.xml");
-	xmlDocPaths.push_back("../INFO/XML/xml7.xml");
-	process_Data(xmlDocPaths, db);
-	cout << "XML Done!" << endl;
+	cout << "Do you want to load the XML files ('y' or 'n')? ";
+	string answer;
+	cin >> answer;
+	if(answer == "y"){
+		cout << "Loading XML..." << endl;
+		vector<string> xmlDocPaths;
+		xmlDocPaths.push_back("../INFO/XML/xml1.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml2.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml3.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml4.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml5.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml6.xml");
+		xmlDocPaths.push_back("../INFO/XML/xml7.xml");
+		process_Data(xmlDocPaths);//, db);
+		cout << "Loading XML Done!" << endl;
+	}
 }

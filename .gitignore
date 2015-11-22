@@ -7,3 +7,4 @@ Simulator/nbproject/private
 *.o
 
 #Executables
+/Simulator/dist/
