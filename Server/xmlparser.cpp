@@ -2,12 +2,15 @@
 #include <fstream>
 
 #include "xmlparser.h"
-#include "database.h"
 #include "RapidXML/rapidxml.hpp"
 #include "RapidXML/rapidxml_utils.hpp"
 
 using namespace std;
 using namespace rapidxml;
+
+xmlparser::xmlparser(){
+
+}
 
 //places data in the database
 void xmlparser::process_Data(vector<string> &xmlDocPaths)
@@ -23,22 +26,30 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 		for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
 		{
 			string iso = record->first_node("ISO")->value();
+			data.push_back(iso);
 			//arrival
 			/////////////////////////////////////////////////////////////////////
 			xml_node<> * arrival = record->first_node("aankomst");
 			string type_Transport_Arrival = arrival->first_node("soort_vervoer")->value();
 			string company_Arrival = arrival->first_node("bedrijf")->value();
+			data.push_back(type_Transport_Arrival);
+			data.push_back(company_Arrival);
 
 			//date
 			xml_node<> * date_Arrival = arrival->first_node("datum");
 			string day_Arrival = date_Arrival->first_node("d")->value();
 			string month_Arrival = date_Arrival->first_node("m")->value();
 			string year_Arrival = date_Arrival->first_node("j")->value();
+			data.push_back(day_Arrival);
+			data.push_back(month_Arrival);
+			data.push_back(year_Arrival);
 
 			//time
 			xml_node<> * time_Arrival = arrival->first_node("tijd");
 			string from_Arrival = time_Arrival->first_node("van")->value();
 			string till_Arrival = time_Arrival->first_node("tot")->value();
+			data.push_back(from_Arrival);
+			data.push_back(till_Arrival);
 
 			//position
 			xml_node<> * position_Arrival = arrival->first_node("positie");
@@ -46,6 +57,9 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			pos_X_Arrival = position_Arrival->first_node("x")->value();
 			pos_Y_Arrival = position_Arrival->first_node("y")->value();
 			pos_Z_Arrival = position_Arrival->first_node("z")->value();
+			data.push_back(pos_X_Arrival);
+			data.push_back(pos_Y_Arrival);
+			data.push_back(pos_Z_Arrival);
 
 			/////////////////////////////////////////////////////////////////////
 
@@ -54,6 +68,8 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			xml_node<> * owner = record->first_node("eigenaar");
 			string owner_Name = owner->first_node("naam")->value();
 			string containerNr = owner->first_node("containernr")->value();
+			data.push_back(owner_Name);
+			data.push_back(containerNr);
 
 			/////////////////////////////////////////////////////////////////////
 
@@ -62,17 +78,24 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			xml_node<> * departure = record->first_node("vertrek");
 			string type_Transport_Departure = departure->first_node("soort_vervoer")->value();
 			string company_Departure = departure->first_node("bedrijf")->value();
+			data.push_back(type_Transport_Departure);
+			data.push_back(company_Departure);
 
 			//date
 			xml_node<> * date_Departure = departure->first_node("datum");
 			string day_Departure = date_Departure->first_node("d")->value();
 			string month_Departure = date_Departure->first_node("m")->value();
 			string year_Departure = date_Departure->first_node("j")->value();
+			data.push_back(day_Departure);
+			data.push_back(month_Departure);
+			data.push_back(year_Departure);
 
 			//time
 			xml_node<> * time_Departure = departure->first_node("tijd");
 			string from_Departure = time_Departure->first_node("van")->value();
 			string till_Departure = time_Departure->first_node("tot")->value();
+			data.push_back(from_Departure);
+			data.push_back(till_Departure);
 
 			/////////////////////////////////////////////////////////////////////
 
@@ -83,6 +106,9 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			length = dimensions->first_node("l")->value();
 			width = dimensions->first_node("b")->value();
 			height = dimensions->first_node("h")->value();
+			data.push_back(length);
+			data.push_back(width);
+			data.push_back(height);
 
 			/////////////////////////////////////////////////////////////////////
 
@@ -92,6 +118,8 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			string empty_Weight, content_Weight;
 			empty_Weight = weight->first_node("leeg")->value();
 			content_Weight = weight->first_node("inhoud")->value();
+			data.push_back(empty_Weight);
+			data.push_back(content_Weight);
 
 			/////////////////////////////////////////////////////////////////////
 
@@ -102,6 +130,9 @@ void xmlparser::process_Data(vector<string> &xmlDocPaths)
 			content_Name =  content->first_node("naam")->value();
 			content_Type =  content->first_node("soort")->value();
 			content_Danger =  content->first_node("gevaar")->value();
+			data.push_back(content_Name);
+			data.push_back(content_Type);
+			data.push_back(content_Danger);
 
 			/////////////////////////////////////////////////////////////////////
 		}

@@ -2,9 +2,9 @@
 #define SERVER_H
 
 #include <string>
-
 #include "connections.h"
 #include "xmlparser.h"
+#include "database.h"
 
 class Server
 {
@@ -14,7 +14,8 @@ public:
 	void writeToSim(string message);
 private:
     Connections* connections;
-	xmlparser parser;
+	xmlparser* parser;
+	database* db;
 };
 
 #endif //SERVER_H
