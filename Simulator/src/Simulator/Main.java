@@ -1,39 +1,42 @@
 package Simulator;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.material.Material;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
-import java.util.ArrayList;
-import java.util.List;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 public class Main extends SimpleApplication
 {
-    
-    List<Container> containers = new ArrayList<Container>();
+    Object AGV = new Object();
+    Connection connection;
+    Thread readThread;
 
     public static void main(String[] args)
     {
         Main app = new Main();
         app.start();
     }
-
+    
     @Override
-    public void simpleInitApp() {
-        Box b = new Box(1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
+    public void simpleInitApp()
+    {
+        flyCam.setEnabled(false);
+        flyCam.setMoveSpeed(250);
+        cam.setFrustumFar(2000);
+        
+        readThread = initReadThread();
+        readThread.start();
+        
+        initLight();
+        
+        Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
+        rootNode.attachChild(SimWorld);
         
     }
-
+    
     @Override
     public void simpleUpdate(float tpf)
     {
@@ -50,16 +53,58 @@ public class Main extends SimpleApplication
         
     }
     
-    /**
-     *
-     * @param movement afstand die afgelegd moet worden
-     * @param speed snelheid waarmee het object zich beweegt
+    //This is important to properly close
+    //the connection with the server.
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+        readThread.stop();
+        connection.stop();
+    }
+    
+    /**@param verplaatsing afstand die afgelegd moet worden
+     * @param snelheid snelheid waarmee het object zich beweegt
      * @return
      */
-    public float movementTime(int movement,float speed)
+    public float movementTijd(int verplaatsing,float snelheid)
     {
         //The AGV always moves at top speed, because reasons
-        float time = movement/speed;
-        return time;
+        float tijd = verplaatsing/snelheid;
+        return tijd;
+    }
+    
+    private Thread initReadThread(){
+        return new Thread(new Runnable()
+        {
+            public void run() {
+                try
+                {
+                    connection = new Connection();
+                    while(true)
+                    {
+                        //What to do with the input?
+                        System.out.println(connection.read());
+                    }
+                }
+                catch(Exception e)
+                {
+                    //Always throws a exception after the socket is closed.
+                    //System.out.println(e);
+                }
+            }
+        });
+    }
+    
+    private void initLight(){
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun);
+        
+        DirectionalLight sun2 = new DirectionalLight();
+        sun2.setDirection((new Vector3f(0.5f, -0.5f, 0.5f)).normalizeLocal());
+        sun2.setColor(ColorRGBA.White);
+        rootNode.addLight(sun2); 
     }
 }

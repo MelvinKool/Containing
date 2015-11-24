@@ -8,12 +8,14 @@ Connections::Connections()
 
 Connections::~Connections()
 {
+	cout << "Closing..." << endl;
 	this->stop = true;
 	this->acceptThread->join();
 	delete this->acceptThread;
 
 	for(int i = 0; i < clients.size(); i++)
 	{
+		clients[i].socket->write("disconnect");
 		clients[i].worker->join();
 		delete clients[i].worker;
 	}
@@ -28,10 +30,13 @@ void Connections::acceptClients()
 		while(!this->stop)
 		{
 			int sock = this->socket->accept();
-			int number = getFreeClientNumber();
-			this->clients[number].used = true;
-            this->clients[number].socket = new ClientSocket(sock);
-            this->clients[number].worker = newClientThread(number);
+			if(sock != -1)
+			{
+				int number = getFreeClientNumber();
+				this->clients[number].used = true;
+            	this->clients[number].socket = new ClientSocket(sock);
+            	this->clients[number].worker = newClientThread(number);
+			}
 		}
     });
 }
@@ -57,27 +62,55 @@ thread* Connections::newClientThread(int number)
         this->clients[number].type = this->clients[number].socket->read();
         cout << this->clients[number].type + " connected." << endl;
 
+		bool isSim = false;
         if(this->clients[number].type == "Simulator" && this->simulator == nullptr)
         {
 			this->simulator = &(this->clients[number]);
+			isSim = true;
         }
 
 		while(!this->stop)
 		{
-			string input = this->clients[number].socket->read();
-
-			cout << input << endl;	//do something with the input!?
-			cout.flush();
+			string input;
+			try{
+				input = this->clients[number].socket->read();
+			}
+			catch(...){
+				input = "disconnect";
+			}
 
 			if(input == "disconnect")
-				break;
-			else if(this->stop)
 			{
-				this->clients[number].socket->write("disconnect");
+				cout << clients[number].type + " disconneced." << endl;
 				break;
 			}
+			else
+			{
+				cout << input << endl;	//do something with the input!?
+			}
+			if(this->stop)
+			{
+				break;
+			}
+		}
+		if(isSim)
+		{
+			this->simulator = nullptr;
 		}
 		delete this->clients[number].socket;
 		this->clients[number].used = false;
 	});
+}
+
+void Connections::writeToSim(string message)
+{
+	if(simulator != nullptr)
+	{
+		try{
+			simulator->socket->write(message);
+		}
+		catch(...){
+			cout << "Could not write to Simulator." << endl;
+		}
+	}
 }

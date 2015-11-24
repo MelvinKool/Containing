@@ -34,12 +34,16 @@ string ClientSocket::read()
 void ClientSocket::write(string message)
 {
 	int count = message.size();
-	if(count <= bufsize-1)// throw runtime_error("ClientSocket::write - argument too large");
+	if(count <= bufsize-1)
 	{
 		char buffer[bufsize];
 		strcpy(buffer, message.c_str());
 		buffer[count++] = '\n';
 		send(sock, buffer, count, 0);
+	}
+	else
+	{
+		cout << "ClientSocket::write - message to large to send." << endl;
 	}
 }
 
@@ -66,5 +70,22 @@ ServerSocket::~ServerSocket()
 
 int ServerSocket::accept()
 {
-	return ::accept(this->sock, NULL, NULL);
+	int iResult;
+	struct timeval tv;
+	fd_set rfds;
+	FD_ZERO(&rfds);
+	FD_SET(this->sock, &rfds);
+
+	tv.tv_sec = (long)5;
+	tv.tv_usec = 0;
+
+	iResult = select(this->sock + 1, &rfds, (fd_set *) 0, (fd_set *) 0, &tv);
+	if(iResult > 0)
+	{
+		return ::accept(this->sock, NULL, NULL);
+	}
+	else
+	{
+		return -1;
+	}
 }

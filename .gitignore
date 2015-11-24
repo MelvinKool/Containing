@@ -1,4 +1,9 @@
-/.project
 /Simulator/build/
 /Simulator/nbproject/private
-**/*.lock
+
+#Temporary files
+*.lock
+*.o
+
+#Executables
+/Simulator/dist/

@@ -1,0 +1,90 @@
+CREATE TABLE Owner(
+	ownerID INT NOT NULL AUTO_INCREMENT,
+	name TINYTEXT,
+	PRIMARY KEY(ownerID)
+	);
+
+CREATE TABLE Size(
+	sizeID INT NOT NULL AUTO_INCREMENT,
+	length DOUBLE,
+	width DOUBLE,
+	hight DOUBLE,
+	PRIMARY KEY(SizeID)
+	);
+
+CREATE TABLE Content(
+	contentID INT NOT NULL AUTO_INCREMENT,
+	name TINYTEXT,
+	type TINYTEXT,
+	danger TINYTEXT,
+	PRIMARY KEY(contentID)
+	);
+
+CREATE TABLE ShippingType(
+	sort TINYTEXT NOT NULL,
+	PRIMARY KEY(sort);
+	);
+
+CREATE TABLE ShippingCompany(
+	name TINYTEXT NOT NULL,
+	PRIMARY KEY(name)
+	);
+
+CREATE TABLE Arrival(
+	shipmentID INT NOT NULL AUTO_INCREMENT,
+	date DATE,
+	timeFrom TIME,
+	timeTill TIME,
+	positionX INT,
+	positionY INT,
+	positionZ INT,
+	shippingType TINYTEXT,
+	shippingCompany TINYTEXT,
+	PRIMARY KEY(shipmentID),
+	FOREIGN KEY (shippingType) REFERENCES shippingType(sort)
+	ON DELETE RESTRICT,
+	FOREIGN KEY (shippingCompany) REFERENCES shippingCompany(name)
+	ON DELETE RESTRICT
+	);
+
+CREATE TABLE Departure(
+	shipmentID INT NOT NULL AUTO_INCREMENT,
+	date DATE,
+	timeFrom TIME,
+	timeTill TIME,
+	shippingType TINYTEXT,
+	shippingCompany TINYTEXT,
+	PRIMARY KEY(shipmentID),
+	FOREIGN KEY (shippingType) REFERENCES shippingType(sort)
+	ON DELETE RESTRICT,
+	FOREIGN KEY (shippingCompany) REFERENCES shippingCompany(name)
+	ON DELETE RESTRICT
+	);
+
+CREATE TABLE Container(
+	containerID INT NOT NULL,
+	containerNr INT,
+	storagelane INT,
+	positionX INT,
+	positionY INT,
+	positionZ INT,
+	iso TINYTEXT,
+	weightEmpty INT,
+	weightContents INT,
+	owner INT,
+	size INT,
+	contents INT,
+	arrivalInfo INT,
+	departureInfo INT,
+	PRIMARY KEY(containerID),
+	FOREIGN KEY (owner) REFERENCES Owner(ownerID)
+	ON DELETE RESTRICT,
+	FOREIGN KEY (size) REFERENCES Size(sizeID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (contents) REFERENCES Content(contentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (arrivalInfo) REFERENCES Arrival(shipmentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY (departureInfo) REFERENCES Departure(shipmentID)
+	ON UPDATE CASCADE ON DELETE RESTRICT
+	);
