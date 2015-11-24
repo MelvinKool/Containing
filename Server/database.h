@@ -7,9 +7,9 @@
 //#include <cppconn/exception.h>
 //#include <cppconn/resultset.h>
 //#include <cppconn/statement.h>
-//
-//using namespace std;
-//
+
+using namespace std;
+
 class database
 {
     private:

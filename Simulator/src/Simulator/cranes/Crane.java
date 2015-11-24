@@ -13,6 +13,7 @@ import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,51 +24,55 @@ public class Crane extends WorldObject {
     
     public Vector3f defaultPos;
     public Vector3f motionTarget;
-    public Magnet magnet;
+    public Grabber grabber;
     public Container targetContainer;
 
     private MotionPath motionPath;
+    private MotionEvent craneMotion;
     
-    public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, String modelFile) {
-        super(rootNode, assetManager, position, modelFile);
+    public Crane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Vector3f magnetPos, String modelFile) {
+        super(rootNode, assetManager, motionControls, position, modelFile);
         this.defaultPos = position;
         this.initMagnet(magnetPos);
     }
     
     public final void initMagnet(Vector3f position) {
-        this.magnet = new Magnet(this.node, this.assetManager, position, "Models/magnet.j3o");
+        this.grabber = new Grabber(this.node, this.assetManager, this.motionControls, position);
     }
     
     public void setTarget(Vector3f target) {
         this.motionTarget = target;
         this.motionPath = new MotionPath();
-        MotionEvent craneMotion;
+        
+        // dirty fix for nullpointerexception
+        // apparantly you need at least two waypoints
+        this.motionPath.addWayPoint(this.getPosition());
         
         if (this instanceof DockCrane) {
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
-            this.magnet.setTarget(new Vector3f(this.magnet.getPosition().x, target.y, target.z));
+            this.grabber.targetContainer(this.targetContainer, new Vector3f(this.grabber.getPosition().x, target.y, target.z));
         } else if (this instanceof SortCrane) {
         }
         
         craneMotion = new MotionEvent(this.node, this.motionPath);
-        craneMotion.setInitialDuration(10.0f);
-        craneMotion.setSpeed(10.0f / this.motionTarget.distance(this.getPosition()));
+        craneMotion.setSpeed(5.0f);
+        grabber.grabberMotion.setInitialDuration(craneMotion.getDuration());
         
         motionPath.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (motionPath.getNbWayPoints() == wayPointIndex + 1) {
-                    magnet.attachContainer(targetContainer);
                     motionTarget = null;
+                    motionControls.remove(craneMotion);
                 }
             }
         });
         
-        craneMotion.play();       
+        motionControls.add(craneMotion);
     }
     
     public void resetPosition() {
         this.setTarget(this.defaultPos);
-        this.magnet.resetPosition();        
+        this.grabber.resetPosition();        
     }
     
     public void targetContainer(Container container) {

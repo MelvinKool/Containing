@@ -5,8 +5,10 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.List;
 
 /**
  *
@@ -17,10 +19,12 @@ public class WorldObject {
     public Node node;
     public Node rootNode;
     public AssetManager assetManager;
+    public List<MotionEvent> motionControls;
     
-    public WorldObject(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
+    public WorldObject(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String modelFile) {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
+        this.motionControls = motionControls;
         this.initObject(position, modelFile);
     }
     

@@ -8,7 +8,7 @@ database::database()
 	{
 		sql::Driver *driver;
 		driver = get_driver_instance();
-		con = driver->connect("178.84.137.198:3306","containing","e0d2c603414413df6b6d15dcb4f7c1fb");
+		con = driver->connect("192.168.192.13:3306","containing","e0d2c603414413df6b6d15dcb4f7c1fb");
 		con->setSchema("containing");
 	}
 	catch (sql::SQLException &e)

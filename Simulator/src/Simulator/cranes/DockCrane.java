@@ -6,8 +6,10 @@ package Simulator.cranes;
 
 import Simulator.Container;
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.List;
 
 /**
  *
@@ -15,7 +17,8 @@ import com.jme3.scene.Node;
  */
 public class DockCrane extends Crane {
     
-    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position) {
-        super(rootNode, assetManager, position, new Vector3f(0, 0, 0), "Models/DockCrane.j3o");
+    public DockCrane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position) {
+        super(rootNode, assetManager, motionControls, position, new Vector3f(0, 0, 0), "Models/crane/dockingcrane/crane.j3o");
+        this.node.rotate(0, (float) Math.toRadians(90), 0);
     }   
 }
