@@ -14,6 +14,8 @@ import com.jme3.scene.*;
  */
 public class Container extends WorldObject {
     
+    public String containerId;
+    
     public Container(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
         super(rootNode, assetManager, position, modelFile);
     }
