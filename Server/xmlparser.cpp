@@ -2,8 +2,8 @@
 #include <fstream>
 
 #include "xmlparser.h"
-#include "RapidXML/rapidxml.hpp"
-#include "RapidXML/rapidxml_utils.hpp"
+#include "Files/RapidXML/rapidxml.hpp"
+#include "Files/RapidXML/rapidxml_utils.hpp"
 
 using namespace std;
 using namespace rapidxml;

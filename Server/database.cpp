@@ -1,33 +1,53 @@
+#include <iostream>
+
 #include "database.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+
+using namespace std;
 
 database::database()
 {
-	cout<<"Creating DB connection..."<<endl;
-
-	try
-	{
-		sql::Driver *driver;
-		driver = get_driver_instance();
-		//con = driver->connect("178.84.137.198:3306","containing","e0d2c603414413df6b6d15dcb4f7c1fb");
-		con = driver->connect("tcp://127.0.0.1:3306","root","abc");
-
-		cout << "setSchema" << endl;
-
-		con->setSchema("test");
-		cout << "done setSchema" << endl;
-	}
-	catch (sql::SQLException &e)
-	{
-		cout << "# ERR: SQLException in " << __FILE__;
-		cout << "(" << __FUNCTION__ << ") on line "<< __LINE__ << endl;
-		cout << "# ERR: " << e.what();
-		cout << " (MySQL error code: " << e.getErrorCode();
-		cout << ", SQLState: " << e.getSQLState() << " )" << endl;
-	}
+	rc = sqlite3_open("Files/containing.db", &db);
+    if(rc){
+        cout << "Can't open the database." << sqlite3_errmsg(db) << endl;
+        open = false;
+    }
+    else{
+        open = true;
+        //check if table exists, else create it.
+        string create = "create table test4(col1 varchar(1) primary key)";
+        execute(create);
+    }
 }
 
 database::~database()
 {
-	//close connection
-	//delete con;
+    sqlite3_close(db);
+}
+
+bool database::isOpen(){
+    return open;
+}
+
+int database::callback(void *NotUsed, int argc, char** argv, char** azColName){
+    int i;
+    for(i=0; i<argc; i++){
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    }
+    printf("\n");
+    return 0;
+}
+
+bool database::execute(string sqlStatement){
+    if(open){
+        rc = sqlite3_exec(db, sqlStatement.c_str(), callback, 0, &zErrMsg);
+        if(rc != SQLITE_OK){
+            cout << "Error in database::execute: " << sqlStatement << endl;
+            return false;
+        }
+        else return true;
+    }
+    return false;
 }

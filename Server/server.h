@@ -14,7 +14,7 @@ public:
 	void writeToSim(string message);
 private:
     Connections* connections;
-	xmlparser* parser;
+	xmlparser* xmlParser;
 	database* db;
 };
 

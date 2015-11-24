@@ -2,9 +2,10 @@
 Simulator/build
 Simulator/nbproject/private
 
-#Temporary files
+#Files
 *.lock
 *.o
+*.db
 
 #Executables
-/Simulator/dist/
+Simulator/dist/

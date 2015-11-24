@@ -4,17 +4,17 @@
 
 Server::Server()
 {
-	parser = new xmlparser();
-	parser->read_XML();
-	db = new database();
+    db = new database();
+	xmlParser = new xmlparser();
+	xmlParser->read_XML();
 	this->connections = new Connections();
 }
 
 Server::~Server()
 {
 	delete this->connections;
-	delete db;
-	delete parser;
+	delete xmlParser;
+    delete db;
 }
 
 void Server::writeToSim(string message)
