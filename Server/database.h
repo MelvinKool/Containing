@@ -12,8 +12,11 @@ class database
         char* zErrMsg = 0;
         int rc;
 
-        static int callback(void *NotUsed, int argc, char** argv, char** azColName);
-        bool execute(std::string sqlStatement);
+		bool execute(std::string sqlStatement);
+        static int execute_callback(void *NotUsed, int argc, char** argv, char** azColName);
+
+        bool createAllTables();
+		bool dropAllTables();
     public:
 		database();
 		~database();

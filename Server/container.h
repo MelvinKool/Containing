@@ -5,6 +5,7 @@
 #include <string>
 using namespace std;
 
+//Deze class is niet af, en er klopt nog geen ruk van
 class container
 {
     private:

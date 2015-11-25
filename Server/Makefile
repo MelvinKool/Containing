@@ -4,12 +4,10 @@ shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp database.cpp
 #============================================
 CC=g++ -std=c++11
 CFLAGS=-c -Wall
-# -I/lib/Containing/include
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=-l sqlite3
-#-L/lib/Containing/lib -lmysqlcppconn -lmysqlcppconn-static
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -27,6 +25,5 @@ clean:
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
-	#bash run.sh
 
 force: clean $(EXECUTABLE)
