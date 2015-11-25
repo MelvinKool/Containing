@@ -5,6 +5,7 @@
 
 #include "connections.h"
 #include "xmlparser.h"
+#include "JSONGenerator.h"
 
 class Server
 {
@@ -13,8 +14,9 @@ public:
 	~Server();
 	void writeToSim(string message);
 private:
-    Connections* connections;
+  Connections* connections;
 	xmlparser parser;
+	JSONGenerator jsonGenerator;
 };
 
 #endif //SERVER_H

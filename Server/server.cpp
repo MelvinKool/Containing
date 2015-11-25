@@ -5,6 +5,7 @@
 Server::Server()
 {
 	parser.read_XML();
+	jsonGenerator.GenerateJSON();
 	this->connections = new Connections();
 }
 
