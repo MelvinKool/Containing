@@ -19,7 +19,7 @@ database::database(){
         // string create1 = "insert into test values(1);";
         // execute(create4);
 
-
+        createAllTables();
     }
 }
 
@@ -60,6 +60,11 @@ bool database::createAllTables(){
                                 "name VARCHAR(50),"
                                 "PRIMARY KEY(ownerID)"
                             );
+
+    for(string createTable : createTables){
+        if(execute(createTable)) continue;
+        else return false;
+    }
 }
 
 bool database::dropAllTables(){
