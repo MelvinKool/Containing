@@ -14,6 +14,7 @@ import com.jme3.cinematic.events.CinematicEventListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import java.util.List;
 
 /**
@@ -30,8 +31,8 @@ public class Crane extends WorldObject implements CinematicEventListener {
     private MotionPath motionPath;
     private MotionEvent craneMotion;
     
-    public Crane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Vector3f magnetPos, String modelFile) {
-        super(rootNode, assetManager, motionControls, position, modelFile);
+    public Crane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Vector3f magnetPos, Spatial model) {
+        super(rootNode, assetManager, motionControls, position, model);
         this.defaultPos = position;
     }
     

@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author erwin
  */
-public class WorldObject {
+public class WorldObject implements Cloneable {
     
     public Node node;
     public Node rootNode;
@@ -39,7 +39,6 @@ public class WorldObject {
     }
     
     private void initModel(Vector3f position, Spatial model) {
-        
         if (model instanceof Geometry) {
             this.node = new Node();
             this.node.attachChild(model);
@@ -48,7 +47,7 @@ public class WorldObject {
         }
         
         this.setPosition(position);
-        this.rootNode.attachChild(this.node);
+        this.rootNode.attachChild(model);
     }
     
     public void setPosition(Vector3f position) {
@@ -69,6 +68,11 @@ public class WorldObject {
 
         return new Vector3f(realX, realY, realZ);
     }
+    
+    public WorldObject clone() throws CloneNotSupportedException {
+       return (WorldObject) super.clone();
+    }
+    
     
     public void initObject(Vector3f initialPosition, String modelFile) {
         Spatial spatial = this.assetManager.loadModel(modelFile);

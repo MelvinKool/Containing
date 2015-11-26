@@ -10,6 +10,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.BatchNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -19,13 +20,15 @@ import java.util.Set;
 
 public class Main extends SimpleApplication
 {
-    Object AGV = new Object();
-    public Node dockCraneNode;
-    DockCrane dockCrane1;
-    List<Container> containers;
-    Connection connection;
-    Thread readThread;
-    List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
+    private Node dockCraneNode;
+    private List<Container> containers;
+    private Connection connection;
+    private Thread readThread;
+    private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
+    private ObjectLoader objectLoader;
+    
+    private BatchNode bNode;
+    private Node containerNode;
     
     boolean playing;
 
@@ -38,20 +41,22 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
+        this.objectLoader = new ObjectLoader(this.assetManager);
         this.dockCraneNode = new Node();
-        this.dockCrane1 = new DockCrane(this.dockCraneNode, this.assetManager, this.motionControls, new Vector3f(0,0,0));
+        //DockCrane dockCrane1 = new DockCrane(this.dockCraneNode, this.assetManager, this.motionControls, new Vector3f(0,0,0), this.objectLoader.getDockCraneModel());
         this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
-        Spatial model = this.assetManager.loadModel("Models/container/container.j3o");
+        this.bNode = new BatchNode();
+        this.containerNode = new Node();
         
         this.containers = new ArrayList<Container>();
         int r;
         for (int i = 0; i < 10; i++) {
-            for (r = 0; r < 7500; r++) {
-                this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), model.clone()));
+            for (r = 0; r < 750; r++) {
+                this.containers.add(new Container(this.containerNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), this.objectLoader.getContainerModel()));
             }
         }
         
@@ -65,6 +70,9 @@ public class Main extends SimpleApplication
         rootNode.attachChild(SimWorld);
         rootNode.attachChild(this.dockCraneNode);
         
+        this.bNode.attachChild(containerNode);
+        this.rootNode.attachChild(this.bNode);
+        this.bNode.batch();
         
     }
     
