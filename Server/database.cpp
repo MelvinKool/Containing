@@ -14,7 +14,7 @@ database::database(){
     }
     else{
         open = true;
-        createAllTables();
+        //createAllTables();
 
         //dropAllTables();
         //resetDatabase();
@@ -27,7 +27,8 @@ database::database(){
             }
             mysql_free_result(res);
         */
-        //execute("drop table test;");
+        //execute("INSERT INTO Owner(name) VALUES('jantje');");
+        //execute("INSERT INTO Size(length, width, hight) VALUES(12, 54.9, 2.9476);");
     }
 }
 
