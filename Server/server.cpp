@@ -4,17 +4,19 @@
 
 Server::Server()
 {
-	parser.read_XML();
-	//jsonGenerator.GenerateJSON();
-	this->connections = new Connections();
+    //jsonGenerator.GenerateJSON();
+    db = new database();
+    xmlParser.read_XML(db);
+    this->connections = new Connections();
 }
 
 Server::~Server()
 {
-	delete this->connections;
+    delete connections;
+    delete db;
 }
 
 void Server::writeToSim(string message)
 {
-	connections->writeToSim(message);
+    connections->writeToSim(message);
 }
