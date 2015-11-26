@@ -10,8 +10,7 @@ using namespace rapidjson;
 
 void JSONGenerator::GenerateJSON()
 {
-	cout << "Started JSON test" << endl;
-  // document is the root of a json message
+	// document is the root of a json message
 	rapidjson::Document document;
 	// define the document as an object rather than an array
 	document.SetObject();
@@ -39,5 +38,4 @@ void JSONGenerator::GenerateJSON()
 	document.Accept(writer);
 	string JsonData = strbuf.GetString();
 	cout << JsonData << endl;
-	cout << "JSON test done!" << endl;
 }

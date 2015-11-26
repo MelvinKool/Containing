@@ -5,12 +5,10 @@ shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp JSONGenerator.cpp
 #============================================
 CC=g++ -std=c++11
 CFLAGS=-c -Wall
-#-I/lib/Containing/include
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=
-#-L/lib/Containing/lib -lmysqlcppconn -lmysqlcppconn-static
 
 all: $(SOURCES) $(EXECUTABLE)
 
