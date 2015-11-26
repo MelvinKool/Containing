@@ -18,7 +18,8 @@ import java.util.List;
 public class DockCrane extends Crane {
     
     public DockCrane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position) {
-        super(rootNode, assetManager, motionControls, position, new Vector3f(0, 0, 0), "Models/crane/dockingcrane/crane.j3o");
+        super(rootNode, assetManager, motionControls, position, Vector3f.ZERO, "Models/crane/dockingcrane/crane.j3o");
         this.node.rotate(0, (float) Math.toRadians(90), 0);
+        this.initGrabber("dockingcrane");
     }   
 }

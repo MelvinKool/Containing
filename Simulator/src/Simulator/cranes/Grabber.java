@@ -27,13 +27,22 @@ public class Grabber extends WorldObject {
     private MotionPath motionPath;
     private Container targetContainer;
     
-    private GrabbingHolder grabbingHolder;
+    private GrabberHolder grabbingHolder;
     private Hook hookLeft;
     private Hook hookRight;
     
-    public Grabber(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position) {
-        super(rootNode, assetManager, motionControls, position, "Models/crane/dockingcrane/grabbingGear.j3o");
-        this.defaultPos = position;
+    public Grabber(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, String craneType) {
+        super(rootNode, assetManager, motionControls, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
+        this.defaultPos = Vector3f.ZERO;
+        
+        this.hookLeft = new Hook(
+                this.node, this.assetManager, this.motionControls,
+                new Vector3f(0,0,0), "Models/crane/dockingcrane/hookLeft.j3o",
+                Hook.LEFT_HOOK);
+        this.hookRight = new Hook(
+                this.node, this.assetManager, this.motionControls, 
+                new Vector3f(0,0,0), "Models/crane/dockingcrane/hookRight.j3o",
+                Hook.RIGHT_HOOK);
     }
     
     /**
@@ -68,6 +77,9 @@ public class Grabber extends WorldObject {
     
     public void attachContainer(Container container) {
         this.node.attachChild(container.node);
+        
+        this.hookLeft.close();
+        this.hookRight.close();
     }
     
     public void resetPosition() {
@@ -77,5 +89,8 @@ public class Grabber extends WorldObject {
     public void targetContainer(Container targetContainer, Vector3f targetPosition) {
         this.targetContainer = targetContainer;
         this.setTarget(targetPosition);
+        
+        this.hookLeft.open();
+        this.hookRight.open();
     }
 }

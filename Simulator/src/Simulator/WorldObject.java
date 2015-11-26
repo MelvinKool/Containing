@@ -7,7 +7,9 @@ package Simulator;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import java.util.List;
 
 /**
@@ -26,6 +28,27 @@ public class WorldObject {
         this.assetManager = assetManager;
         this.motionControls = motionControls;
         this.initObject(position, modelFile);
+    }
+    
+    public WorldObject(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
+
+        this.rootNode = rootNode;
+        this.assetManager = assetManager;
+        this.motionControls = motionControls;
+        this.initModel(position, model);
+    }
+    
+    private void initModel(Vector3f position, Spatial model) {
+        
+        if (model instanceof Geometry) {
+            this.node = new Node();
+            this.node.attachChild(model);
+        } else {
+            this.node = (Node) model;
+        }
+        
+        this.setPosition(position);
+        this.rootNode.attachChild(this.node);
     }
     
     public void setPosition(Vector3f position) {
@@ -48,7 +71,15 @@ public class WorldObject {
     }
     
     public void initObject(Vector3f initialPosition, String modelFile) {
-        this.node = (Node) this.assetManager.loadModel(modelFile);
+        Spatial spatial = this.assetManager.loadModel(modelFile);
+        
+        if (spatial instanceof Geometry) {
+            this.node = new Node();
+            this.node.attachChild(spatial);
+        } else {
+            this.node = (Node) spatial;
+        }
+        
         this.setPosition(initialPosition);
         this.rootNode.attachChild(this.node);
     }

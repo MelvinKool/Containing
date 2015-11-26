@@ -22,6 +22,7 @@ public class Main extends SimpleApplication
     Object AGV = new Object();
     public Node dockCraneNode;
     DockCrane dockCrane1;
+    List<Container> containers;
     Connection connection;
     Thread readThread;
     List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
@@ -44,6 +45,16 @@ public class Main extends SimpleApplication
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
+        Spatial model = this.assetManager.loadModel("Models/container/container.j3o");
+        
+        this.containers = new ArrayList<Container>();
+        int r;
+        for (int i = 0; i < 10; i++) {
+            for (r = 0; r < 7500; r++) {
+                this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), model.clone()));
+            }
+        }
+        
         readThread = initReadThread();
         readThread.start();
         
@@ -63,7 +74,7 @@ public class Main extends SimpleApplication
     {
         if (this.test == false) {
             this.test = true;
-            this.dockCrane1.setTarget(new Vector3f(2, 3, 4));
+//            this.dockCrane1.targetContainer(this.containers.get(0));
         }
         
         //TODO Depending on wich way you're going (XYZ) 
@@ -109,7 +120,7 @@ public class Main extends SimpleApplication
                     if (playing) {
                         playing = false;
                         for (MotionEvent motionControl : motionControls) {
-                            motionControl.play();                            
+                            motionControl.stop();                            
                         }
                     } else {
                         playing = true;
