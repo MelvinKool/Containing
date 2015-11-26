@@ -3,11 +3,11 @@ shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp database.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
-LIBS=-l sqlite3
+LIBS=$(shell mysql_config --libs)
 
 all: $(SOURCES) $(EXECUTABLE)
 

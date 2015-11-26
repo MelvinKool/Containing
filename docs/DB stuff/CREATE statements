@@ -22,7 +22,7 @@ CREATE TABLE Content(
 
 CREATE TABLE ShippingType(
 	sort TINYTEXT NOT NULL,
-	PRIMARY KEY(sort);
+	PRIMARY KEY(sort)
 	);
 
 CREATE TABLE ShippingCompany(

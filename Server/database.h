@@ -1,26 +1,29 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <sqlite3.h>
+#include <mysql.h>
 #include <string>
 
 class database
 {
     private:
+        MYSQL* connection;
+        
+        char* server = "mator.eu";
+        char* username = "containing";
+        char* password = "e0d2c603414413df6b6d15dcb4f7c1fb";
+        char* dbName = "containing";
         bool open = false;
-        sqlite3* db;
-        char* zErrMsg = 0;
-        int rc;
-
-		bool execute(std::string sqlStatement);
-        static int execute_callback(void *NotUsed, int argc, char** argv, char** azColName);
-
+        
         bool createAllTables();
-		bool dropAllTables();
+        bool dropAllTables();
     public:
-		database();
-		~database();
+        database();
+        ~database();
         bool isOpen();
+        bool execute(std::string sqlStatement);
+        MYSQL_RES* select(std::string sqlStatement);
+        bool resetDatabase();
 };
 
 #endif // DATABASE_H

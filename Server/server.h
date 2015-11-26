@@ -9,13 +9,13 @@
 class Server
 {
 public:
-	Server();
-	~Server();
-	void writeToSim(string message);
+    Server();
+    ~Server();
+    void writeToSim(string message);
 private:
     Connections* connections;
-	xmlparser* xmlParser;
-	database* db;
+    xmlparser xmlParser;
+    database* db;
 };
 
 #endif //SERVER_H
