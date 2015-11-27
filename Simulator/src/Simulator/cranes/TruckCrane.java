@@ -4,7 +4,6 @@
  */
 package Simulator.cranes;
 
-import Simulator.Container;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
@@ -16,10 +15,10 @@ import java.util.List;
  *
  * @author erwin
  */
-public class DockCrane extends Crane {
+public class TruckCrane extends Crane {
     
-    public DockCrane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
+    public TruckCrane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
         super(rootNode, assetManager, motionControls, position, Vector3f.ZERO, model);
-        this.initGrabber("dockingcrane");
+        //this.initGrabber("truckcrane");
     }   
 }
