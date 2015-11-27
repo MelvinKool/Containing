@@ -14,7 +14,7 @@ database::database(){
     }
     else{
         open = true;
-        //createAllTables();
+        createAllTables();
 
         //dropAllTables();
         //resetDatabase();

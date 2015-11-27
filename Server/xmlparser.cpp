@@ -124,8 +124,16 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
                 string content_Danger =  content->first_node("gevaar")->value();
             /////////////////////////////////////////////////////////////////////
             
+            //empty db
+            
+            MYSQL_RES* res = select("show tables;");
+            MYSQL_ROW row;
+            while((row = mysql_fetch_row(res)) != NULL){
+                cout << row[0] << endl;
+            }
+            mysql_free_result(res);
+            
             //db->execute("");
-            //cout<<year_Arrival<<" - "<<month_Arrival<<" - "<<day_Arrival<<endl;
         }
         theFile.close();
     }
