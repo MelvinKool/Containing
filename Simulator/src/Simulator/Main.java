@@ -39,7 +39,7 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        this.objectLoader = new ObjectLoader(this.assetManager);
+        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.dockCraneNode = new Node();
         //DockCrane dockCrane1 = new DockCrane(this.dockCraneNode, this.assetManager, this.motionControls, new Vector3f(0,0,0), this.objectLoader.getDockCraneModel());
         this.playing = false;
@@ -47,14 +47,7 @@ public class Main extends SimpleApplication
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
-        
         this.containers = new ArrayList<Container>();
-        int r;
-        for (int i = 0; i < 10; i++) {
-            for (r = 0; r < 7500; r++) {
-                this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), this.objectLoader.getContainerModel()));
-            }
-        }
         
         readThread = initReadThread();
         readThread.start();
@@ -64,6 +57,7 @@ public class Main extends SimpleApplication
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
+        SimWorld.setLocalTranslation(0, 0, 0);
         rootNode.attachChild(this.dockCraneNode);
         
         
