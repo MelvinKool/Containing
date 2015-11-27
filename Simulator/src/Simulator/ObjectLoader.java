@@ -106,9 +106,9 @@ public class ObjectLoader {
     }
 
     private void spawnDockCranes(JSONObject craneObject) {
-        float rotX = (float) craneObject.getJSONArray("rotation").getDouble(0);
-        float rotY = (float) craneObject.getJSONArray("rotation").getDouble(1);
-        float rotZ = (float) craneObject.getJSONArray("rotation").getDouble(2);
+        float rotX = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(0));
+        float rotY = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(1));
+        float rotZ = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(2));
         
         float posX;
         float posY;
@@ -130,7 +130,6 @@ public class ObjectLoader {
             positionVec = new Vector3f(posX, posY, posZ);
             dockCraneObj = new DockCrane(this.dockCraneNode, this.assetManager, new ArrayList<MotionEvent>(), positionVec, this.getDockCraneModel());
             dockCraneObj.node.rotate(rotX, rotY, rotZ);
-            
             this.cranes.add(dockCraneObj);
             
             System.out.println("new dockCrane at: " + rotation.toString());
