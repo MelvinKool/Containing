@@ -27,8 +27,6 @@ public class Main extends SimpleApplication
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
     
-    private BatchNode bNode;
-    private Node containerNode;
     
     boolean playing;
 
@@ -49,14 +47,12 @@ public class Main extends SimpleApplication
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
-        this.bNode = new BatchNode();
-        this.containerNode = new Node();
         
         this.containers = new ArrayList<Container>();
         int r;
         for (int i = 0; i < 10; i++) {
-            for (r = 0; r < 750; r++) {
-                this.containers.add(new Container(this.containerNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), this.objectLoader.getContainerModel()));
+            for (r = 0; r < 7500; r++) {
+                this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), this.objectLoader.getContainerModel()));
             }
         }
         
@@ -70,9 +66,6 @@ public class Main extends SimpleApplication
         rootNode.attachChild(SimWorld);
         rootNode.attachChild(this.dockCraneNode);
         
-        this.bNode.attachChild(containerNode);
-        this.rootNode.attachChild(this.bNode);
-        this.bNode.batch();
         
     }
     
