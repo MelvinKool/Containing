@@ -17,7 +17,9 @@ int main(int argc, char* argv[])
         string input;
         cin >> input;
         if(input == "exit") break;
-        else server->writeToSim(input);
+        JSONGenerator jsongenerator;
+        string jsonMoveToData = jsongenerator.moveTo();
+        server->writeToSim(jsonMoveToData);
     }
 
     delete server;
