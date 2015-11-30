@@ -21,19 +21,17 @@ class GrabberHolder extends WorldObject {
 public Vector3f motionTarget;
     public Vector3f defaultPos;
     public MotionEvent grabberHolderMotion;
-    public Grabber grabber;
     
-    private MotionPath motionPath;
+    public MotionPath motionPath;
     private Container targetContainer;
     
-    public GrabberHolder(Node node, AssetManager assetManager, List<MotionEvent> motionControls, String craneType) {
-        super(node, assetManager, motionControls, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGearHolder.j3o");
-        this.defaultPos = Vector3f.ZERO;
-        this.initGrabber(craneType);
+    public GrabberHolder(Node node, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String craneType) {
+        super(node, assetManager, motionControls, position, "Models/crane/" + craneType + "/grabbingGearHolder.j3o");
+        this.defaultPos = position;
     }
     
-    public void initGrabber(String craneType) {
-        this.grabber = new Grabber(this.node, this.assetManager, this.motionControls, craneType);
+    public Grabber initGrabber(String craneType) {
+        return new Grabber(this.node, this.assetManager, this.motionControls, craneType);
     }
     
     public void setTarget(Vector3f target) {
@@ -44,6 +42,7 @@ public Vector3f motionTarget;
         this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
         
         grabberHolderMotion = new MotionEvent(this.node, this.motionPath);
+        grabberHolderMotion.setSpeed(5.0f);
         
         this.motionControls.add(grabberHolderMotion);
     }

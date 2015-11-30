@@ -7,13 +7,11 @@ package Simulator.cranes;
 import Simulator.*;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -24,8 +22,8 @@ public class Grabber extends WorldObject {
     public Vector3f motionTarget;
     public Vector3f defaultPos;
     public MotionEvent grabberMotion;
-    private MotionPath motionPath;
-    private Container targetContainer;
+    public MotionPath motionPath;
+    public Container container;
     
     private GrabberHolder grabbingHolder;
     private Hook hookLeft;
@@ -33,7 +31,8 @@ public class Grabber extends WorldObject {
     
     public Grabber(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, String craneType) {
         super(rootNode, assetManager, motionControls, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
-        this.defaultPos = Vector3f.ZERO;
+        this.defaultPos = new Vector3f(0.0f, 0.0f, 0.0f);
+        this.container = null;
         
         this.hookLeft = new Hook(
                 this.node, this.assetManager, this.motionControls,
@@ -43,6 +42,10 @@ public class Grabber extends WorldObject {
                 this.node, this.assetManager, this.motionControls, 
                 new Vector3f(0,0,0), "Models/crane/dockingcrane/hookRight.j3o",
                 Hook.RIGHT_HOOK);
+    }
+    
+    public Vector3f toRealPos(Vector3f pos) {
+        return new Vector3f(0.0f, pos.y - 11.0f, 0.0f);
     }
     
     /**
@@ -55,42 +58,25 @@ public class Grabber extends WorldObject {
         
         this.motionPath.addWayPoint(this.getPosition());
 
-        this.motionPath.addWayPoint(target);
+        this.motionPath.addWayPoint(new Vector3f(this.getPosition().x, target.y, this.getPosition().z));
         
         grabberMotion = new MotionEvent(this.node, this.motionPath);
-        
-        motionPath.addListener(new MotionPathListener() {
-            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
-                if (motionPath.getNbWayPoints() == wayPointIndex + 1) {
-                    if (targetContainer != null) {
-                        attachContainer(targetContainer);
-                    }
-                    motionTarget = null;
-                    motionControls.remove(grabberMotion);
-                }
-            }
-        });
-        
+        grabberMotion.setSpeed(5.0f);        
         
         motionControls.add(grabberMotion);
     }
     
     public void attachContainer(Container container) {
+        Vector3f pos = container.node.getWorldTranslation();
+        Quaternion rot = container.node.getWorldRotation();
         this.node.attachChild(container.node);
-        
-        this.hookLeft.close();
-        this.hookRight.close();
+        container.node.setLocalTranslation(this.node.worldToLocal(pos, null));
+        container.node.rotate(rot);
+        this.container = container;
     }
     
     public void resetPosition() {
         this.setTarget(this.defaultPos);
-    }
-
-    public void targetContainer(Container targetContainer, Vector3f targetPosition) {
-        this.targetContainer = targetContainer;
-        this.setTarget(targetPosition);
-        
-        this.hookLeft.open();
-        this.hookRight.open();
+        this.grabberMotion.play();
     }
 }
