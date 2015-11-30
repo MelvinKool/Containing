@@ -15,20 +15,8 @@ database::database(){
     else{
         open = true;
         createAllTables();
-
         //dropAllTables();
         //resetDatabase();
-        
-        /* select
-            MYSQL_RES* res = select("show tables;");
-            MYSQL_ROW row;
-            while((row = mysql_fetch_row(res)) != NULL){
-                cout << row[0] << endl;
-            }
-            mysql_free_result(res);
-        */
-        //execute("INSERT INTO Owner(name) VALUES('jantje');");
-        //execute("INSERT INTO Size(length, width, hight) VALUES(12, 54.9, 2.9476);");
     }
 }
 
@@ -70,9 +58,9 @@ bool database::createAllTables(){
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Size("
                                 "sizeID INT NOT NULL AUTO_INCREMENT,"
-                                "length DOUBLE,"
-                                "width DOUBLE,"
-                                "hight DOUBLE,"
+                                "length VARCHAR(10),"
+                                "width VARCHAR(10),"
+                                "height VARCHAR(10),"
                                 "PRIMARY KEY(SizeID)"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Content("
@@ -114,8 +102,8 @@ bool database::createAllTables(){
                                 "shippingType INT,"
                                 "shippingCompany INT,"
                                 "PRIMARY KEY(shipmentID),"
-                                "FOREIGN KEY (shippingType) REFERENCES ShippingType(shippingTypeID) ON DELETE RESTRICT,"
-                                "FOREIGN KEY (shippingCompany) REFERENCES ShippingCompany(shippingCompanyID) ON DELETE RESTRICT"
+                                "FOREIGN KEY(shippingType) REFERENCES ShippingType(shippingTypeID) ON DELETE RESTRICT,"
+                                "FOREIGN KEY(shippingCompany) REFERENCES ShippingCompany(shippingCompanyID) ON DELETE RESTRICT"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Container("
                                 "containerID INT NOT NULL AUTO_INCREMENT,"
@@ -133,11 +121,11 @@ bool database::createAllTables(){
                                 "arrivalInfo INT,"
                                 "departureInfo INT,"
                                 "PRIMARY KEY(containerID),"
-                                "FOREIGN KEY (owner) REFERENCES Owner(ownerID) ON DELETE RESTRICT,"
-                                "FOREIGN KEY (size) REFERENCES Size(sizeID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (contents) REFERENCES Content(contentID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (arrivalInfo) REFERENCES Arrival(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (departureInfo) REFERENCES Departure(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE"
+                                "FOREIGN KEY(owner) REFERENCES Owner(ownerID) ON DELETE RESTRICT,"
+                                "FOREIGN KEY(size) REFERENCES Size(sizeID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(contents) REFERENCES Content(contentID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(arrivalInfo) REFERENCES Arrival(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(departureInfo) REFERENCES Departure(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE"
                             ");");
     
     for(string createTable : createTables){

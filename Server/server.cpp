@@ -4,15 +4,17 @@
 
 Server::Server()
 {
-    //jsonGenerator.GenerateJSON();
     db = new database();
-    xmlParser.read_XML(db);
-    this->connections = new Connections();
+    if(db->isOpen()){
+        xmlParser.read_XML(db);
+    }
+    
+    //this->connections = new Connections();
 }
 
 Server::~Server()
 {
-    delete connections;
+    //delete connections;
     delete db;
 }
 

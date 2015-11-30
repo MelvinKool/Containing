@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
+#include <algorithm>
 
 #include "xmlparser.h"
 #include "Files/RapidXML/rapidxml.hpp"
@@ -10,20 +12,20 @@ using namespace rapidxml;
 
 void xmlparser::read_XML(database *db)
 {
-    cout << "Do you want to load the XML files ('y' or 'n')? ";
+    cout << "Do you want to load the XML files ('yes' or 'no')? ";
     string answer;
     cin >> answer;
-    if(answer == "y"){
+    if(answer == "yes"){
         cout << "Loading XML..." << endl;
         
         vector<string> xmlDocPaths;
         xmlDocPaths.push_back("../INFO/XML/xml1.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml2.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml3.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml4.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml5.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml6.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml7.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml2.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml3.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml4.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml5.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml6.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml7.xml");
         
         if(process_Data(xmlDocPaths, db))
             cout << "....Done!" << endl;
@@ -70,12 +72,12 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
             xml_node<> * time_Arrival = arrival->first_node("tijd");
                 string from_Arrival = time_Arrival->first_node("van")->value();
                 if(from_Arrival.size() == 4){
-                    from_Arrival.append("0");
+                    from_Arrival = "0"+from_Arrival;
                 }
                 from_Arrival[2] = ':';
                 string till_Arrival = time_Arrival->first_node("tot")->value();
                 if(till_Arrival.size() == 4){
-                    till_Arrival.append("0");
+                    till_Arrival = "0"+till_Arrival;
                 }
                 till_Arrival[2] = ':';
 
@@ -110,12 +112,12 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
             xml_node<> * time_Departure = departure->first_node("tijd");
                 string from_Departure = time_Departure->first_node("van")->value();
                 if(from_Departure.size() == 4){
-                    from_Departure.append("0");
+                    from_Departure = "0"+from_Departure;
                 }
                 from_Departure[2] = ':';
                 string till_Departure = time_Departure->first_node("tot")->value();
                 if(till_Departure.size() == 4){
-                    till_Departure.append("0");
+                    till_Departure = "0"+till_Departure;
                 }
                 till_Departure[2] = ':';
             /////////////////////////////////////////////////////////////////////
@@ -124,8 +126,11 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
             /////////////////////////////////////////////////////////////////////
             xml_node<> * dimensions = record->first_node("afmetingen");
                 string length = dimensions->first_node("l")->value();
+                    replace(length.begin(), length.end(), '\'' , ',');
                 string width = dimensions->first_node("b")->value();
+                    replace(width.begin(), width.end(), '\'' , ',');
                 string height = dimensions->first_node("h")->value();
+                    replace (height.begin(), height.end(), '\'' , ',');
             /////////////////////////////////////////////////////////////////////
 
             //weight
@@ -143,9 +148,6 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
                 string content_Danger =  content->first_node("gevaar")->value();
             /////////////////////////////////////////////////////////////////////
             
-            MYSQL_RES* res;
-            MYSQL_ROW row;
-            
             int ownerID                 = -1;
             int sizeID                  = -1;
             int contentID               = -1;
@@ -157,12 +159,14 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
             int departureShipmentID     = -1;
             int containerID             = -1;
             
+            //=================================================================================================
+            
             string select_ownerID                 = "SELECT ownerID FROM Owner"
                                                     " WHERE name = '"+owner_Name+"';";
             string select_sizeID                  = "SELECT sizeID FROM Size"
-                                                    " WHERE length = "+length+
-                                                    " AND width = "+width+
-                                                    " AND hight = "+height+";";
+                                                    " WHERE length = '"+length+
+                                                    "' AND width = '"+width+
+                                                    "' AND height = '"+height+"';";
             string select_contentID               = "SELECT contentID FROM Content"
                                                     " WHERE name = '"+content_Name+
                                                     "' AND type = '"+content_Type+
@@ -203,39 +207,134 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
             
             //=================================================================================================
             
-            string insert_Owner           = "INSERT INTO Owner(name) VALUES('"+owner_Name+"')";
-            string insert_Size            = "INSERT INTO Size(length, width, hight) VALUES()";
-            string insert_Content         = "INSERT INTO (name, type, danger) VALUES()";
-            string insert_ShippingType    = "INSERT INTO (sort) VALUES()";
-            string insert_ShippingCompany = "INSERT INTO (name) VALUES()";
-            string insert_Arrival         = "INSERT INTO (date, timeFrom, timeTill, positionX, positionY, positionZ, shippingType, shippingCompany) VALUES()";
-            string insert_Departure       = "INSERT INTO (date, timeFrom, timeTill, shippingType, shippingCompany) VALUES()";
-            string insert_Container       = "INSERT INTO (containerNr, iso, weightEmpty, weightContents, owner, size, contents, arrivalInfo, departureInfo) VALUES()";
+            string insert_Owner                    = "INSERT INTO Owner(name) VALUES('"+owner_Name+"')";
+            string insert_Size                     = "INSERT INTO Size(length, width, height) VALUES('"+length+"', '"+width+"', '"+height+"')";
+            string insert_Content                  = "INSERT INTO Content(name, type, danger) VALUES('"+content_Name+"', '"+content_Type+"', '"+content_Danger+"')";
+            string insert_ArrivalShippingType      = "INSERT INTO ShippingType(sort) VALUES('"+type_Transport_Arrival+"')";
+            string insert_ArrivalShippingCompany   = "INSERT INTO ShippingCompany(name) VALUES('"+company_Arrival+"')";
+            string insert_DepartureShippingType    = "INSERT INTO ShippingType(sort) VALUES('"+type_Transport_Departure+"')";
+            string insert_DepartureShippingCompany = "INSERT INTO ShippingCompany(name) VALUES('"+company_Departure+"')";
+            string insert_Arrival                  = "INSERT INTO Arrival(date, timeFrom, timeTill, positionX, positionY, positionZ, shippingType, shippingCompany) VALUES('"+
+                                                      arrival_Date+"', '"+from_Arrival+"', '"+till_Arrival+"', "+pos_X_Arrival+", "+pos_Y_Arrival+", "+
+                                                      pos_Z_Arrival+", "+to_string(arrivalShippingTypeID)+", "+to_string(arrivalCompanyID)+")";
+            string insert_Departure                = "INSERT INTO Departure(date, timeFrom, timeTill, shippingType, shippingCompany) VALUES('"+
+                                                      departure_Date+"', '"+from_Departure+"', '"+till_Departure+"', "+to_string(departureShippingTypeID)+", "+to_string(departureCompanyID)+")";
+            string insert_Container                = "INSERT INTO Container(containerNr, iso, weightEmpty, weightContents, owner, size, contents, arrivalInfo, departureInfo) VALUES("+
+                                                      containerNr+", '"+iso+"', "+empty_Weight+", "+content_Weight+", "+to_string(ownerID)+", "+to_string(sizeID)+", "+to_string(contentID)+", "+
+                                                      to_string(arrivalShipmentID)+", "+to_string(departureShipmentID)+")";
+            
+            //=================================================================================================
+            
+            auto getID = [db](string query){
+                MYSQL_RES* res = db->select(query);
+                MYSQL_ROW row;
+                int ID = -1;
+                while((row = mysql_fetch_row(res)) != NULL){
+                    ID = atoi(row[0]);
+                }
+                mysql_free_result(res);
+                return ID;
+            };
             
             //Owner
-            /*
-            res = select("SELECT ownerID FROM Owner WHERE name = '"+owner_Name+"';");
-            while((row = mysql_fetch_row(res)) != NULL){
-                ownerID = row[0];
-            }
-            mysql_free_result(res);
-            
+            ownerID = getID(select_ownerID);
             if(ownerID == -1){
-                if(db->execute("INSERT INTO Owner(name) VALUES('"+owner_Name+"')")){
-                    res = select("SELECT ownerID FROM Owner WHERE name = '"+owner_Name+"';");
-                    while((row = mysql_fetch_row(res)) != NULL){
-                        ownerID = row[0];
-                    }
-                    mysql_free_result(res);
-                }
-                else{
-                    return false;
-                }
+                if(db->execute(insert_Owner)) 
+                    ownerID = getID(select_ownerID);
+                else return false;
             }
-            */
+            
+            //Size
+            sizeID = getID(select_sizeID);
+            if(sizeID == -1){
+                if(db->execute(insert_Size)) 
+                    sizeID = getID(select_sizeID);
+                else return false;
+            }
+            
+            //Content
+            contentID = getID(select_contentID);
+            if(contentID == -1){
+                if(db->execute(insert_Content)) 
+                    contentID = getID(select_contentID);
+                else return false;
+            }
+            
+            //ArrivalShippingType
+            arrivalShippingTypeID = getID(select_arrivalShippingTypeID);
+            if(arrivalShippingTypeID == -1){
+                if(db->execute(insert_ArrivalShippingType)) 
+                    arrivalShippingTypeID = getID(select_arrivalShippingTypeID);
+                else return false;
+            }
+            
+            //ArrivalCompany
+            arrivalCompanyID = getID(select_arrivalCompanyID);
+            if(arrivalCompanyID == -1){
+                if(db->execute(insert_ArrivalShippingCompany)) 
+                    arrivalCompanyID = getID(select_arrivalShipmentID);
+                else return false;
+            }
+            
+            //DepartureShippingType
+            departureShippingTypeID = getID(select_departureShippingTypeID);
+            if(departureShippingTypeID == -1){
+                if(db->execute(insert_DepartureShippingType)) 
+                    departureShippingTypeID = getID(select_departureShippingTypeID);
+                else return false;
+            }
+            
+            //DepartureCompany
+            departureCompanyID = getID(select_departureCompanyID);
+            if(departureCompanyID == -1){
+                if(db->execute(insert_DepartureShippingCompany)) 
+                    departureCompanyID = getID(select_departureCompanyID);
+                else return false;
+            }
+            
+            
+            cout <<                           endl;
+            cout <<ownerID                 << endl;
+            cout <<sizeID                  << endl;
+            cout <<contentID               << endl;
+            cout <<arrivalShippingTypeID   << endl;
+            cout <<arrivalCompanyID        << endl;
+            cout <<departureShippingTypeID << endl;
+            cout <<departureCompanyID      << endl;
+            cout <<arrivalShipmentID       << endl;
+            cout <<departureShipmentID     << endl;
+            cout <<containerID             << endl;
+            cout <<                           endl;
+            
+            
+            
+            
+            //ArrivalShipment
+            arrivalShipmentID = getID(select_arrivalShipmentID);
+            if(arrivalShipmentID == -1){
+                if(db->execute(insert_Arrival)) 
+                    arrivalShipmentID = getID(select_arrivalShipmentID);
+                else return false;
+            }
+            
+            //DepartureShipment
+            departureShipmentID = getID(select_departureShipmentID);
+            if(departureShipmentID == -1){
+                if(db->execute(insert_Departure)) 
+                    departureShipmentID = getID(select_departureShipmentID);
+                else return false;
+            }
+            
+            //Container
+            containerID = getID(select_containerID);
+            if(containerID == -1){
+                if(db->execute(insert_Container)) 
+                    containerID = getID(select_containerID);
+                else return false;
+            }
         }
         theFile.close();
-        cout << "xml done : " << xmlDocPath << endl;
+        cout << "....XML file done > " << xmlDocPath << endl;
     }
     return true;
 }
