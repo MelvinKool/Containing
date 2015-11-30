@@ -35,6 +35,7 @@ void xmlparser::read_XML(database *db)
 //places data in the database
 bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
 {
+    db->resetDatabase();
     for(string xmlDocPath : xmlDocPaths)
     {
         //create xml_document object
@@ -63,11 +64,20 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
                 string day_Arrival = date_Arrival->first_node("d")->value();
                 string month_Arrival = date_Arrival->first_node("m")->value();
                 string year_Arrival = date_Arrival->first_node("j")->value();
+                string arrival_Date = year_Arrival+"-"+month_Arrival+"-"+day_Arrival;
 
             //time
             xml_node<> * time_Arrival = arrival->first_node("tijd");
                 string from_Arrival = time_Arrival->first_node("van")->value();
+                if(from_Arrival.size() == 4){
+                    from_Arrival.append("0");
+                }
+                from_Arrival[2] = ':';
                 string till_Arrival = time_Arrival->first_node("tot")->value();
+                if(till_Arrival.size() == 4){
+                    till_Arrival.append("0");
+                }
+                till_Arrival[2] = ':';
 
             //position
             xml_node<> * position_Arrival = arrival->first_node("positie");
@@ -94,11 +104,20 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
                 string day_Departure = date_Departure->first_node("d")->value();
                 string month_Departure = date_Departure->first_node("m")->value();
                 string year_Departure = date_Departure->first_node("j")->value();
+                string departure_Date = year_Departure+"-"+month_Departure+"-"+day_Departure;
 
             //time
             xml_node<> * time_Departure = departure->first_node("tijd");
                 string from_Departure = time_Departure->first_node("van")->value();
+                if(from_Departure.size() == 4){
+                    from_Departure.append("0");
+                }
+                from_Departure[2] = ':';
                 string till_Departure = time_Departure->first_node("tot")->value();
+                if(till_Departure.size() == 4){
+                    till_Departure.append("0");
+                }
+                till_Departure[2] = ':';
             /////////////////////////////////////////////////////////////////////
 
             //dimensions
@@ -124,18 +143,99 @@ bool xmlparser::process_Data(vector<string> &xmlDocPaths, database *db)
                 string content_Danger =  content->first_node("gevaar")->value();
             /////////////////////////////////////////////////////////////////////
             
-            //empty db
-            
-            MYSQL_RES* res = select("show tables;");
+            MYSQL_RES* res;
             MYSQL_ROW row;
+            
+            int ownerID                 = -1;
+            int sizeID                  = -1;
+            int contentID               = -1;
+            int arrivalShippingTypeID   = -1;
+            int arrivalCompanyID        = -1;
+            int departureShippingTypeID = -1;
+            int departureCompanyID      = -1;
+            int arrivalShipmentID       = -1;
+            int departureShipmentID     = -1;
+            int containerID             = -1;
+            
+            string select_ownerID                 = "SELECT ownerID FROM Owner"
+                                                    " WHERE name = '"+owner_Name+"';";
+            string select_sizeID                  = "SELECT sizeID FROM Size"
+                                                    " WHERE length = "+length+
+                                                    " AND width = "+width+
+                                                    " AND hight = "+height+";";
+            string select_contentID               = "SELECT contentID FROM Content"
+                                                    " WHERE name = '"+content_Name+
+                                                    "' AND type = '"+content_Type+
+                                                    "' AND danger = '"+content_Danger+"';";
+            string select_arrivalShippingTypeID   = "SELECT shippingTypeID FROM ShippingType"
+                                                    " WHERE sort = '"+type_Transport_Arrival+"';";
+            string select_arrivalCompanyID        = "SELECT shippingCompanyID FROM ShippingCompany"
+                                                    " WHERE name = '"+company_Arrival+"';";
+            string select_departureShippingTypeID = "SELECT shippingTypeID FROM ShippingType"
+                                                    " WHERE sort = '"+type_Transport_Departure+"';";
+            string select_departureCompanyID      = "SELECT shippingCompanyID FROM ShippingCompany"
+                                                    " WHERE name = '"+company_Departure+"';";
+            string select_arrivalShipmentID       = "SELECT shipmentID FROM Arrival"
+                                                    " WHERE date = '"+arrival_Date+
+                                                    "' AND timeFrom = '"+from_Arrival+
+                                                    "' AND timeTill = '"+till_Arrival+
+                                                    "' AND positionX = "+pos_X_Arrival+
+                                                    " AND positionY = "+pos_Y_Arrival+
+                                                    " AND positionZ = "+pos_Z_Arrival+
+                                                    " AND shippingType = "+to_string(arrivalShippingTypeID)+
+                                                    " AND shippingCompany = "+to_string(arrivalCompanyID)+";";
+            string select_departureShipmentID     = "SELECT shipmentID FROM Departure"
+                                                    " WHERE date = '"+departure_Date+
+                                                    "' AND timeFrom = '"+from_Departure+
+                                                    "' AND timeTill = '"+till_Departure+
+                                                    "' AND shippingType = "+to_string(departureShippingTypeID)+
+                                                    " AND shippingCompany = "+to_string(departureCompanyID)+";";
+            string select_containerID             = "SELECT containerID FROM Container"
+                                                    " WHERE containerNr = "+containerNr+
+                                                    " AND iso = '"+iso+
+                                                    "' AND weightEmpty = "+empty_Weight+
+                                                    " AND weightContents = "+content_Weight+
+                                                    " AND owner = "+to_string(ownerID)+
+                                                    " AND size = "+to_string(sizeID)+
+                                                    " AND contents = "+to_string(contentID)+
+                                                    " AND arrivalInfo = "+to_string(arrivalShipmentID)+
+                                                    " AND departureInfo = "+to_string(departureShipmentID)+";";
+            
+            //=================================================================================================
+            
+            string insert_Owner           = "INSERT INTO Owner(name) VALUES('"+owner_Name+"')";
+            string insert_Size            = "INSERT INTO Size(length, width, hight) VALUES()";
+            string insert_Content         = "INSERT INTO (name, type, danger) VALUES()";
+            string insert_ShippingType    = "INSERT INTO (sort) VALUES()";
+            string insert_ShippingCompany = "INSERT INTO (name) VALUES()";
+            string insert_Arrival         = "INSERT INTO (date, timeFrom, timeTill, positionX, positionY, positionZ, shippingType, shippingCompany) VALUES()";
+            string insert_Departure       = "INSERT INTO (date, timeFrom, timeTill, shippingType, shippingCompany) VALUES()";
+            string insert_Container       = "INSERT INTO (containerNr, iso, weightEmpty, weightContents, owner, size, contents, arrivalInfo, departureInfo) VALUES()";
+            
+            //Owner
+            /*
+            res = select("SELECT ownerID FROM Owner WHERE name = '"+owner_Name+"';");
             while((row = mysql_fetch_row(res)) != NULL){
-                cout << row[0] << endl;
+                ownerID = row[0];
             }
             mysql_free_result(res);
             
-            //db->execute("");
+            if(ownerID == -1){
+                if(db->execute("INSERT INTO Owner(name) VALUES('"+owner_Name+"')")){
+                    res = select("SELECT ownerID FROM Owner WHERE name = '"+owner_Name+"';");
+                    while((row = mysql_fetch_row(res)) != NULL){
+                        ownerID = row[0];
+                    }
+                    mysql_free_result(res);
+                }
+                else{
+                    return false;
+                }
+            }
+            */
         }
         theFile.close();
+        cout << "xml done : " << xmlDocPath << endl;
     }
     return true;
 }
