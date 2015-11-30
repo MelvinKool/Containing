@@ -24,8 +24,8 @@ public class Grabber extends WorldObject {
     public MotionEvent grabberMotion;
     public MotionPath motionPath;
     public Container container;
+    public float maxY;
     
-    private GrabberHolder grabbingHolder;
     private Hook hookLeft;
     private Hook hookRight;
     
@@ -36,11 +36,11 @@ public class Grabber extends WorldObject {
         
         this.hookLeft = new Hook(
                 this.node, this.assetManager, this.motionControls,
-                new Vector3f(0,0,0), "Models/crane/dockingcrane/hookLeft.j3o",
+                Vector3f.ZERO, "Models/crane/dockingcrane/hookLeft.j3o",
                 Hook.LEFT_HOOK);
         this.hookRight = new Hook(
                 this.node, this.assetManager, this.motionControls, 
-                new Vector3f(0,0,0), "Models/crane/dockingcrane/hookRight.j3o",
+                Vector3f.ZERO, "Models/crane/dockingcrane/hookRight.j3o",
                 Hook.RIGHT_HOOK);
     }
     

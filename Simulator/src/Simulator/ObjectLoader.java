@@ -158,6 +158,7 @@ public class ObjectLoader {
                     break;
             }
             if (craneObj != null) {
+                craneObj.craneType = type;
                 this.cranes.add(craneObj);
             }
         }

@@ -28,6 +28,7 @@ public class Crane extends WorldObject {
     public GrabberHolder grabberHolder;
     public Grabber grabber;
     public Container targetContainer;
+    public String craneType;
     
     private boolean grabbing = false;
     private MotionPath motionPath;
@@ -51,9 +52,10 @@ public class Crane extends WorldObject {
         // apparantly you need at least two waypoints
         this.motionPath.addWayPoint(this.getPosition());
         
-        if (this instanceof DockCrane) {
+        if (this.craneType.equals("FreightShip")) {
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
-        } else if (this instanceof SortCrane) {
+        } else if (this.craneType.equals("SeaShip") || this.craneType.equals("SortCrane")) {
+            this.motionPath.addWayPoint(new Vector3f(this.getPosition().x, this.getPosition().y, target.z));
         }
         
         craneMotion = new MotionEvent(this.node, this.motionPath);
@@ -92,6 +94,10 @@ public class Crane extends WorldObject {
         
         System.out.println("out: " + out.toString() + " targetPos: " + targetPos.toString() + " grabber " + this.grabberHolder.getPosition());
     }
+    
+    public void putContainer(Vector3f target) {
+        
+    }
 
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
@@ -99,14 +105,11 @@ public class Crane extends WorldObject {
             if (this.grabberHolder.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.grabbing == false) {
                 this.grabber.grabberMotion.play();
                 this.grabbing = true;
-                System.out.println("Not");
             } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1) {
                 this.grabber.attachContainer(this.targetContainer);
                 this.grabbing = false;
                 this.resetPosition();
                 this.grabber.resetPosition();
-                
-                System.out.println("Notnot");
             }
         }
     }

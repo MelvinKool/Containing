@@ -21,9 +21,12 @@ class GrabberHolder extends WorldObject {
 public Vector3f motionTarget;
     public Vector3f defaultPos;
     public MotionEvent grabberHolderMotion;
+    public float maxX;
+    public float maxZ;
     
     public MotionPath motionPath;
     private Container targetContainer;
+    
     
     public GrabberHolder(Node node, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String craneType) {
         super(node, assetManager, motionControls, position, "Models/crane/" + craneType + "/grabbingGearHolder.j3o");
