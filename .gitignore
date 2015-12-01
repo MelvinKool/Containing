@@ -6,6 +6,7 @@ Simulator/nbproject/private
 *.lock
 *.o
 *.db
+*.properties
 
 #Executables
 Simulator/dist/
