@@ -8,11 +8,11 @@
 */
 #include "transport.h"
 
-class agv : transport
+class AGV : Transport
 {
     private:
     public:
-        void Transfer(int x, int y);
+        void transfer(int x, int y);
 };
 
-#endif // AGV_H
+#endif //AGV_H

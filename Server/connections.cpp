@@ -1,9 +1,10 @@
 #include "connections.h"
 
+using namespace std;
+
 Connections::Connections()
 {
     this->socket = new ServerSocket(1337);
-    acceptClients();
 }
 
 Connections::~Connections()
@@ -46,7 +47,9 @@ int Connections::getFreeClientNumber()
     int number = 0;
     while(number < clients.size() && clients[number].used) number++;
     if(number == clients.size())
+    {
         clients.push_back(Client());
+    }
     else
     {
         clients[number].worker->join();
@@ -72,21 +75,26 @@ thread* Connections::newClientThread(int number)
         while(!this->stop)
         {
             string input;
-            try{
+            try
+            {
                 input = this->clients[number].socket->read();
             }
-            catch(...){
+            catch(...)
+            {
                 input = "disconnect";
             }
             
-            if(input == "disconnect"){
+            if(input == "disconnect")
+            {
                 cout << clients[number].type + " disconneced." << endl;
                 break;
             }
-            else if(input == "connection_check"){
+            else if(input == "connection_check")
+            {
                 //dont do anything.
             }
-            else{
+            else
+            {
                 //what to do with the input?
                 cout << input << endl;
             }
@@ -109,10 +117,12 @@ void Connections::writeToSim(string message)
 {
     if(simulator != nullptr)
     {
-        try{
+        try
+        {
             simulator->socket->write(message);
         }
-        catch(...){
+        catch(...)
+        {
             cout << "Could not write to Simulator." << endl;
         }
     }

@@ -8,32 +8,30 @@
 
 #include "socket.h"
 
-using namespace std;
-
 class Connections
 {
 public:
-	Connections();
-	~Connections();
-	void acceptClients();
-	void writeToSim(string message);
+    Connections();
+    ~Connections();
+    void acceptClients();
+    void writeToSim(std::string message);
 private:
-	struct Client
-	{
-		string type;
-		bool used;
-		ClientSocket* socket;
-		thread* worker;
-	};
+    struct Client
+    {
+        std::string type;
+        bool used;
+        ClientSocket* socket;
+        thread* worker;
+    };
 
-	ServerSocket* socket;
-	Client* simulator = nullptr;
-	bool stop = false;
-	vector<Client> clients;
-	thread* acceptThread;
+    ServerSocket* socket;
+    Client* simulator = nullptr;
+    bool stop = false;
+    std::vector<Client> clients;
+    thread* acceptThread;
 
-	int getFreeClientNumber();
-	thread* newClientThread(int number);
+    int getFreeClientNumber();
+    thread* newClientThread(int number);
 };
 
-#endif // CONNECTIONS_H
+#endif //CONNECTIONS_H

@@ -11,13 +11,11 @@ class Server
 {
 public:
     Server();
-    ~Server();
-    void writeToSim(string message);
+    void writeToSim(std::string message);
 private:
-    JSONGenerator jsonGenerator;
-    Connections* connections;
-    xmlparser xmlParser;
-    database* db;
+    Database db;
+    XmlParser xmlParser;
+    Connections connections;
 };
 
 #endif //SERVER_H

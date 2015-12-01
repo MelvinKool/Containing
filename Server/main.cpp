@@ -10,16 +10,15 @@ int main(int argc, char* argv[])
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
 
-    Server* server = new Server();
+    Server server;
 
     while(true)
     {
         string input;
         cin >> input;
         if(input == "exit") break;
-        else server->writeToSim(input);
+        else server.writeToSim(input);
     }
 
-    delete server;
     return 0;
 }

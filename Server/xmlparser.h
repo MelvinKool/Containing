@@ -5,12 +5,12 @@
 #include <vector>
 #include <string>
 
-class xmlparser
+class XmlParser
 {
     private:
-        bool process_Data(std::vector<std::string> &xmlDocPaths, database *db);
+        bool processData(std::vector<std::string> &xmlDocPaths, Database &db);
     public:
-        void read_XML(database *db);
+        void readXML(Database &db);
 };
 
-#endif // XMLPARSER_H
+#endif //XMLPARSER_H

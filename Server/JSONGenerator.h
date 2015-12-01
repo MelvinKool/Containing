@@ -1,12 +1,12 @@
-#ifndef JSONGENERATOR_H_
-#define JSONGENERATOR_H_
+#ifndef JSONGENERATOR_H
+#define JSONGENERATOR_H
 
-class JSONGenerator
+class JsonGenerator
 {
-  private:
-  public:
-    void GenerateJSON();
-  private:
+    private:
+    public:
+        void generateJson();
+    private:
 };
 
-#endif //JSONGENERATOR_H_
+#endif //JSONGENERATOR_H
