@@ -19,6 +19,6 @@ public class Container extends WorldObject {
     public String containerId;
     
     public Container(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
-        super(rootNode, assetManager, motionControls, position, model);
+        super(rootNode, assetManager, position, model);
     }    
 }

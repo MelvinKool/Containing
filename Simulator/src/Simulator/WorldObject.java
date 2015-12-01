@@ -22,20 +22,17 @@ public class WorldObject implements Cloneable, MotionPathListener {
     public Node node;
     public Node rootNode;
     public AssetManager assetManager;
-    public List<MotionEvent> motionControls;
     
-    public WorldObject(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String modelFile) {
+    public WorldObject(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
-        this.motionControls = motionControls;
         this.initObject(position, modelFile);
     }
     
-    public WorldObject(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
+    public WorldObject(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
 
         this.rootNode = rootNode;
         this.assetManager = assetManager;
-        this.motionControls = motionControls;
         this.initModel(position, model);
     }
     

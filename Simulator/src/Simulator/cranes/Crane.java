@@ -17,6 +17,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.List;
 
+
 /**
  *
  * @author erwin
@@ -34,13 +35,13 @@ public class Crane extends WorldObject {
     private MotionPath motionPath;
     private MotionEvent craneMotion;
     
-    public Crane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Vector3f magnetPos, Spatial model) {
-        super(rootNode, assetManager, motionControls, position, model);
+    public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model) {
+        super(rootNode, assetManager, position, model);
         this.defaultPos = position;
     }
     
     public final void initGrabber(String craneType) {
-        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, this.motionControls, new Vector3f(0f, 9.6f, 0f), craneType);
+        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, new Vector3f(0f, 9.6f, 0f), craneType);
         this.grabber = this.grabberHolder.initGrabber(craneType);
     }
     
@@ -65,13 +66,11 @@ public class Crane extends WorldObject {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 if (motionPath.getNbWayPoints() == wayPointIndex + 1) {
                     motionTarget = null;
-                    motionControls.remove(craneMotion);
                     craneMotion.dispose();
                 }
             }
         });
         
-        motionControls.add(craneMotion);
         craneMotion.play();
     }
     
@@ -81,24 +80,23 @@ public class Crane extends WorldObject {
     
     public void targetContainer(Container container) {
         Vector3f targetPos = container.node.getWorldTranslation();
-        Vector3f out = this.node.worldToLocal(targetPos, null);
+        Vector3f holderTarget = this.node.worldToLocal(targetPos, null);
+        Vector3f grabberTarget = this.grabberHolder.node.worldToLocal(targetPos, null);
         this.targetContainer = container;
         this.setTarget(targetPos);
         
-        this.grabberHolder.setTarget(out);
+        this.grabberHolder.setTarget(holderTarget);
         
         this.grabberHolder.motionPath.addListener(this);
-        this.grabber.setTarget(this.grabber.toRealPos(this.grabberHolder.node.worldToLocal(out, null)));
+        this.grabber.setTarget(this.grabber.toRealPos(grabberTarget));
         this.grabber.motionPath.addListener(this);
         this.grabberHolder.grabberHolderMotion.play();
-        
-        System.out.println("out: " + out.toString() + " targetPos: " + targetPos.toString() + " grabber " + this.grabberHolder.getPosition());
     }
     
     public void putContainer(Vector3f target) {
         
     }
-
+    
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if (this.targetContainer != null) {

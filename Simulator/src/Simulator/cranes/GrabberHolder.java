@@ -28,13 +28,13 @@ public Vector3f motionTarget;
     private Container targetContainer;
     
     
-    public GrabberHolder(Node node, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String craneType) {
-        super(node, assetManager, motionControls, position, "Models/crane/" + craneType + "/grabbingGearHolder.j3o");
+    public GrabberHolder(Node node, AssetManager assetManager, Vector3f position, String craneType) {
+        super(node, assetManager, position, "Models/crane/" + craneType + "/grabbingGearHolder.j3o");
         this.defaultPos = position;
     }
     
     public Grabber initGrabber(String craneType) {
-        return new Grabber(this.node, this.assetManager, this.motionControls, craneType);
+        return new Grabber(this.node, this.assetManager, craneType);
     }
     
     public void setTarget(Vector3f target) {
@@ -47,7 +47,6 @@ public Vector3f motionTarget;
         grabberHolderMotion = new MotionEvent(this.node, this.motionPath);
         grabberHolderMotion.setSpeed(5.0f);
         
-        this.motionControls.add(grabberHolderMotion);
     }
     
 }

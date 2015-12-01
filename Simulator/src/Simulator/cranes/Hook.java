@@ -25,8 +25,8 @@ class Hook extends WorldObject {
     private Quaternion openRotation;
     private Quaternion closeRotation;
     
-    public Hook(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, String modelFile, int hookType) {
-        super(rootNode, assetManager, motionControls, position, modelFile);
+    public Hook(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile, int hookType) {
+        super(rootNode, assetManager, position, modelFile);
         this.initRotations(hookType);
     }
     

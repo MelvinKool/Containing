@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class TrainCrane extends Crane {
     
-    public TrainCrane(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls, Vector3f position, Spatial model) {
-        super(rootNode, assetManager, motionControls, position, Vector3f.ZERO, model);
+    public TrainCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
+        super(rootNode, assetManager, position, Vector3f.ZERO, model);
     }   
 }

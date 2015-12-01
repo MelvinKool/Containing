@@ -1,6 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
+import Simulator.vehicles.AGV;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
@@ -13,6 +14,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Main extends SimpleApplication
@@ -59,7 +61,7 @@ public class Main extends SimpleApplication
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
-        rootNode.attachChild(this.dockCraneNode);       
+        rootNode.attachChild(this.dockCraneNode);
     }
     
     boolean test = false;
@@ -68,6 +70,11 @@ public class Main extends SimpleApplication
     {
         if (this.test == false) {
             this.test = true;
+            AGV tagv = this.objectLoader.agvs.get(0);
+            List<float[]> path = new ArrayList<>();
+            path.add(new float[] {0.0f, 0.0f, 0.0f});
+            tagv.setPath(path);
+            
         }
         
         //TODO Depending on wich way you're going (XYZ) 
@@ -125,6 +132,7 @@ public class Main extends SimpleApplication
         inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
         inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
         inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
+        
         ActionListener acl = new ActionListener() {
 
             public void onAction(String name, boolean keyPressed, float tpf) {
@@ -133,14 +141,9 @@ public class Main extends SimpleApplication
                 if (name.equals("play_stop") && keyPressed) {
                     if (playing) {
                         playing = false;
-                        for (MotionEvent motionControl : motionControls) {
-                            motionControl.pause();                            
-                        }
+                        
                     } else {
                         playing = true;
-                        for (MotionEvent motionControl : motionControls) {
-                            motionControl.play();                            
-                        }
                     }
                 } else if (keyPressed) {
                     switch (name) {
@@ -150,6 +153,9 @@ public class Main extends SimpleApplication
                         break;
                     case "xp":
                         cont.node.move(1,0,0);
+                        List<float[]> path = new ArrayList<>();
+                        path.add(new float[] {20.0f, 0.0f, 20.0f});
+                        objectLoader.agvs.get(0).setPath(path);
                         break;
                     case "xm":
                         cont.node.move(-1,0,0);
