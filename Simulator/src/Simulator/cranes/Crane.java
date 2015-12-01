@@ -21,13 +21,16 @@ import java.util.List;
  *
  * @author erwin
  */
-public class Crane extends WorldObject implements CinematicEventListener {
+public class Crane extends WorldObject {
     
     public Vector3f defaultPos;
     public Vector3f motionTarget;
     public GrabberHolder grabberHolder;
+    public Grabber grabber;
     public Container targetContainer;
-
+    public String craneType;
+    
+    private boolean grabbing = false;
     private MotionPath motionPath;
     private MotionEvent craneMotion;
     
@@ -37,7 +40,8 @@ public class Crane extends WorldObject implements CinematicEventListener {
     }
     
     public final void initGrabber(String craneType) {
-        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, this.motionControls, craneType);
+        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, this.motionControls, new Vector3f(0f, 9.6f, 0f), craneType);
+        this.grabber = this.grabberHolder.initGrabber(craneType);
     }
     
     public void setTarget(Vector3f target) {
@@ -48,9 +52,10 @@ public class Crane extends WorldObject implements CinematicEventListener {
         // apparantly you need at least two waypoints
         this.motionPath.addWayPoint(this.getPosition());
         
-        if (this instanceof DockCrane) {
+        if (this.craneType.equals("FreightShip")) {
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
-        } else if (this instanceof SortCrane) {
+        } else if (this.craneType.equals("SeaShip") || this.craneType.equals("SortCrane")) {
+            this.motionPath.addWayPoint(new Vector3f(this.getPosition().x, this.getPosition().y, target.z));
         }
         
         craneMotion = new MotionEvent(this.node, this.motionPath);
@@ -61,11 +66,13 @@ public class Crane extends WorldObject implements CinematicEventListener {
                 if (motionPath.getNbWayPoints() == wayPointIndex + 1) {
                     motionTarget = null;
                     motionControls.remove(craneMotion);
+                    craneMotion.dispose();
                 }
             }
         });
         
         motionControls.add(craneMotion);
+        craneMotion.play();
     }
     
     public void resetPosition() {
@@ -73,25 +80,37 @@ public class Crane extends WorldObject implements CinematicEventListener {
     }
     
     public void targetContainer(Container container) {
-        Vector3f containerPos = container.getRealPosition();
-        Vector3f containerSize = container.node.getLocalScale();
-        Vector3f targetPos = new Vector3f(containerPos.x, containerPos.y + (containerSize.y / 2), containerPos.z);
+        Vector3f targetPos = container.node.getWorldTranslation();
+        Vector3f out = this.node.worldToLocal(targetPos, null);
         this.targetContainer = container;
         this.setTarget(targetPos);
         
-        this.grabberHolder.setTarget(targetPos);
+        this.grabberHolder.setTarget(out);
         
-        this.grabberHolder.grabberHolderMotion.addListener(this);
-        this.grabberHolder.grabber.setTarget(targetPos);
+        this.grabberHolder.motionPath.addListener(this);
+        this.grabber.setTarget(this.grabber.toRealPos(this.grabberHolder.node.worldToLocal(out, null)));
+        this.grabber.motionPath.addListener(this);
+        this.grabberHolder.grabberHolderMotion.play();
+        
+        System.out.println("out: " + out.toString() + " targetPos: " + targetPos.toString() + " grabber " + this.grabberHolder.getPosition());
+    }
+    
+    public void putContainer(Vector3f target) {
+        
     }
 
+    @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        
+        if (this.targetContainer != null) {
+            if (this.grabberHolder.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.grabbing == false) {
+                this.grabber.grabberMotion.play();
+                this.grabbing = true;
+            } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1) {
+                this.grabber.attachContainer(this.targetContainer);
+                this.grabbing = false;
+                this.resetPosition();
+                this.grabber.resetPosition();
+            }
+        }
     }
-
-    public void onPlay(CinematicEvent cinematic) { }
-
-    public void onPause(CinematicEvent cinematic) { }
-
-    public void onStop(CinematicEvent cinematic) { }
 }

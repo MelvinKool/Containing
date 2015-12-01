@@ -5,6 +5,7 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author erwin
  */
-public class WorldObject implements Cloneable {
+public class WorldObject implements Cloneable, MotionPathListener {
     
     public Node node;
     public Node rootNode;
@@ -86,6 +87,11 @@ public class WorldObject implements Cloneable {
         
         this.setPosition(initialPosition);
         this.rootNode.attachChild(this.node);
+    }
+
+    @Override
+    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

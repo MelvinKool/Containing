@@ -1,6 +1,6 @@
 package Simulator;
 
-import Simulator.cranes.DockCrane;
+import Simulator.cranes.Crane;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
@@ -10,13 +10,10 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.BatchNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Main extends SimpleApplication
 {
@@ -27,8 +24,6 @@ public class Main extends SimpleApplication
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
     
-    private BatchNode bNode;
-    private Node containerNode;
     
     boolean playing;
 
@@ -41,25 +36,21 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        this.objectLoader = new ObjectLoader(this.assetManager);
+        long start = System.currentTimeMillis();
+        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        long end = System.currentTimeMillis();
+
+        System.out.println(end - start);
+        
         this.dockCraneNode = new Node();
-        //DockCrane dockCrane1 = new DockCrane(this.dockCraneNode, this.assetManager, this.motionControls, new Vector3f(0,0,0), this.objectLoader.getDockCraneModel());
         this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
-        this.bNode = new BatchNode();
-        this.containerNode = new Node();
-        
-        this.containers = new ArrayList<Container>();
-        int r;
-        for (int i = 0; i < 10; i++) {
-            for (r = 0; r < 750; r++) {
-                this.containers.add(new Container(this.containerNode, this.assetManager, this.motionControls, new Vector3f(i * 4, r * 4, 0), this.objectLoader.getContainerModel()));
-            }
-        }
-        
+        this.containers = new ArrayList<>();
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
+        this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
         
@@ -68,12 +59,7 @@ public class Main extends SimpleApplication
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
-        rootNode.attachChild(this.dockCraneNode);
-        
-        this.bNode.attachChild(containerNode);
-        this.rootNode.attachChild(this.bNode);
-        this.bNode.batch();
-        
+        rootNode.attachChild(this.dockCraneNode);       
     }
     
     boolean test = false;
@@ -82,7 +68,6 @@ public class Main extends SimpleApplication
     {
         if (this.test == false) {
             this.test = true;
-//            this.dockCrane1.targetContainer(this.containers.get(0));
         }
         
         //TODO Depending on wich way you're going (XYZ) 
@@ -119,16 +104,37 @@ public class Main extends SimpleApplication
         return tijd;
     }
     
+    public Crane getNearestCrane(Node obj) {
+        float dist;
+        float minDist = -1;
+        Crane nCrane = null;
+        for (Crane crane : this.objectLoader.cranes){
+            dist = obj.getLocalTranslation().distance(crane.getPosition());
+            if (dist < minDist || minDist == -1) {
+                minDist = dist;
+                nCrane = crane;
+            }
+        }
+        return nCrane;
+    }
+    
     private void initInputs() {
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
+        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
+        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
         ActionListener acl = new ActionListener() {
 
             public void onAction(String name, boolean keyPressed, float tpf) {
+                Container cont = containers.get(0);
+                
                 if (name.equals("play_stop") && keyPressed) {
                     if (playing) {
                         playing = false;
                         for (MotionEvent motionControl : motionControls) {
-                            motionControl.stop();                            
+                            motionControl.pause();                            
                         }
                     } else {
                         playing = true;
@@ -136,13 +142,36 @@ public class Main extends SimpleApplication
                             motionControl.play();                            
                         }
                     }
+                } else if (keyPressed) {
+                    switch (name) {
+                    case "target":
+                        Crane crane = getNearestCrane(cont.node);
+                        crane.targetContainer(cont);
+                        break;
+                    case "xp":
+                        cont.node.move(1,0,0);
+                        break;
+                    case "xm":
+                        cont.node.move(-1,0,0);
+                        break;
+                    case "zp":
+                        cont.node.move(0,0,1);
+                        break;
+                    case "zm":
+                        cont.node.move(0,0,-1);
+                        break;
+                    }
                 }
 
             }
         };
 
         inputManager.addListener(acl, "play_stop");
-
+        inputManager.addListener(acl, "xp");
+        inputManager.addListener(acl, "zp");
+        inputManager.addListener(acl, "xm");
+        inputManager.addListener(acl, "zm");
+        inputManager.addListener(acl, "target");
     }
     
     private Thread initReadThread(){
