@@ -10,12 +10,11 @@ public class Connection
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        SocketAddress socket;
+        SocketAddress socket = new InetSocketAddress("localhost", 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
             super(ip, port);
-            socket = getRemoteSocketAddress();
             in = new DataInputStream(getInputStream());
             out = getOutputStream();
         }
@@ -99,39 +98,16 @@ public class Connection
         {
             public void run() 
             {
-                int i = 0;
-                Boolean conn;
-                Boolean closed;
-                Boolean bound;
-                
                 while (true) 
                 {   
-                    try
-                    {    
-                        conn = simSocket.isConnected();
-                        closed = simSocket.isClosed();
-                        bound = simSocket.isBound();
-                        
-                        if(conn&&(!closed)&&bound&&false)
-                        {
-                            try 
-                            {
-                                System.out.println(i+":sleeping");
-                                i++;
-                                Thread.sleep(5000);
-                            } 
-                            catch (Exception e) 
-                            {
-                            }
-                        }
-                        else
-                        {
-                            reconnect();
-                        }
-                    }
-                    catch (Exception e)
+                    try 
                     {
-
+                        Thread.sleep(5000);
+                        write("connection_check");
+                    } 
+                    catch (Exception e) 
+                    {
+                        reconnect();
                     }
                 }
             }
@@ -140,10 +116,24 @@ public class Connection
     
     public void reconnect()
     {
-        System.out.println("Reconnecting");
         try 
         {
-            simSocket.connect(simSocket.socket);
+            if (simSocket==null)
+            {
+                try
+                {
+                    simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337);
+                } 
+                catch (Exception e)
+                {
+                }
+                
+            }
+            else
+            {
+                simSocket.close();
+                simSocket = null;
+            }
         } 
         catch (IOException ioe) 
         {

@@ -103,7 +103,7 @@ public class Main extends SimpleApplication
                         } 
                         catch (Exception e) 
                         {
-                            System.out.println("stuff went wrong");
+                            System.out.println("Creating connection");
                         }
                     }
                     
