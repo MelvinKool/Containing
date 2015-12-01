@@ -8,13 +8,12 @@ Server::Server()
     if(db->isOpen()){
         xmlParser.read_XML(db);
     }
-    
-    //this->connections = new Connections();
+    this->connections = new Connections();
 }
 
 Server::~Server()
 {
-    //delete connections;
+    delete connections;
     delete db;
 }
 
