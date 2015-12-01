@@ -9,7 +9,11 @@ class database
     private:
         MYSQL* connection;
         
-        char* server = "mator.eu";
+        //create database containing;
+        //create user 'containing'@'localhost' identified by 'e0d2c603414413df6b6d15dcb4f7c1fb';
+        //grant all privileges on containing.* to 'containing'@'localhost';
+        
+        char* server = "localhost";//"mator.eu";
         char* username = "containing";
         char* password = "e0d2c603414413df6b6d15dcb4f7c1fb";
         char* dbName = "containing";

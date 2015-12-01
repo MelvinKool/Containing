@@ -1,6 +1,6 @@
 CREATE TABLE Owner(
-	ownerID INT NOT NULL AUTOINCREMENT,
-	name VARCHAR(50),
+	ownerID INT NOT NULL AUTO_INCREMENT,
+	name TINYTEXT,
 	PRIMARY KEY(ownerID)
 	);
 
@@ -20,12 +20,12 @@ CREATE TABLE Content(
 	PRIMARY KEY(contentID)
 	);
 
-CREATE TABLE ShippingType(
+CREATE TABLE ShippingType(                  //id 2x
 	sort TINYTEXT NOT NULL,
-	PRIMARY KEY(sort);
+	PRIMARY KEY(sort)
 	);
 
-CREATE TABLE ShippingCompany(
+CREATE TABLE ShippingCompany(               //id 2x
 	name TINYTEXT NOT NULL,
 	PRIMARY KEY(name)
 	);

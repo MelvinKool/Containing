@@ -4,9 +4,10 @@
 
 Server::Server()
 {
-    //jsonGenerator.GenerateJSON();
     db = new database();
-    xmlParser.read_XML(db);
+    if(db->isOpen()){
+        xmlParser.read_XML(db);
+    }
     this->connections = new Connections();
 }
 

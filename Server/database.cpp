@@ -15,19 +15,8 @@ database::database(){
     else{
         open = true;
         createAllTables();
-
         //dropAllTables();
         //resetDatabase();
-        
-        /* select
-            MYSQL_RES* res = select("show tables;");
-            MYSQL_ROW row;
-            while((row = mysql_fetch_row(res)) != NULL){
-                cout << row[0] << endl;
-            }
-            mysql_free_result(res);
-        */
-        //execute("drop table test;");
     }
 }
 
@@ -69,9 +58,9 @@ bool database::createAllTables(){
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Size("
                                 "sizeID INT NOT NULL AUTO_INCREMENT,"
-                                "length DOUBLE,"
-                                "width DOUBLE,"
-                                "hight DOUBLE,"
+                                "length VARCHAR(10),"
+                                "width VARCHAR(10),"
+                                "height VARCHAR(10),"
                                 "PRIMARY KEY(SizeID)"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Content("
@@ -82,37 +71,39 @@ bool database::createAllTables(){
                                 "PRIMARY KEY(contentID)"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS ShippingType("
+                                "shippingTypeID INT NOT NULL AUTO_INCREMENT,"
                                 "sort VARCHAR(50) NOT NULL,"
-                                "PRIMARY KEY(sort)"
+                                "PRIMARY KEY(shippingTypeID)"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS ShippingCompany("
+                                "shippingCompanyID INT NOT NULL AUTO_INCREMENT,"
                                 "name VARCHAR(50) NOT NULL,"
-                                "PRIMARY KEY(name)"
+                                "PRIMARY KEY(shippingCompanyID)"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Arrival("
                                 "shipmentID INT NOT NULL AUTO_INCREMENT,"
                                 "date DATE,"
-                                "timeFrom TIME,"
-                                "timeTill TIME,"
+                                "timeFrom VARCHAR(5),"
+                                "timeTill VARCHAR(5),"
                                 "positionX INT,"
                                 "positionY INT,"
                                 "positionZ INT,"
-                                "shippingType VARCHAR(50),"
-                                "shippingCompany VARCHAR(50),"
+                                "shippingType INT,"
+                                "shippingCompany INT,"
                                 "PRIMARY KEY(shipmentID),"
-                                "FOREIGN KEY(shippingType) REFERENCES ShippingType(sort) ON DELETE RESTRICT,"
-                                "FOREIGN KEY(shippingCompany) REFERENCES ShippingCompany(name) ON DELETE RESTRICT"
+                                "FOREIGN KEY(shippingType) REFERENCES ShippingType(shippingTypeID) ON DELETE RESTRICT,"
+                                "FOREIGN KEY(shippingCompany) REFERENCES ShippingCompany(shippingCompanyID) ON DELETE RESTRICT"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Departure("
                                 "shipmentID INT NOT NULL AUTO_INCREMENT,"
                                 "date DATE,"
-                                "timeFrom TIME,"
-                                "timeTill TIME,"
-                                "shippingType VARCHAR(50),"
-                                "shippingCompany VARCHAR(50),"
+                                "timeFrom VARCHAR(5),"
+                                "timeTill VARCHAR(5),"
+                                "shippingType INT,"
+                                "shippingCompany INT,"
                                 "PRIMARY KEY(shipmentID),"
-                                "FOREIGN KEY (shippingType) REFERENCES ShippingType(sort) ON DELETE RESTRICT,"
-                                "FOREIGN KEY (shippingCompany) REFERENCES ShippingCompany(name) ON DELETE RESTRICT"
+                                "FOREIGN KEY(shippingType) REFERENCES ShippingType(shippingTypeID) ON DELETE RESTRICT,"
+                                "FOREIGN KEY(shippingCompany) REFERENCES ShippingCompany(shippingCompanyID) ON DELETE RESTRICT"
                             ");");
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Container("
                                 "containerID INT NOT NULL AUTO_INCREMENT,"
@@ -130,11 +121,11 @@ bool database::createAllTables(){
                                 "arrivalInfo INT,"
                                 "departureInfo INT,"
                                 "PRIMARY KEY(containerID),"
-                                "FOREIGN KEY (owner) REFERENCES Owner(ownerID) ON DELETE RESTRICT,"
-                                "FOREIGN KEY (size) REFERENCES Size(sizeID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (contents) REFERENCES Content(contentID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (arrivalInfo) REFERENCES Arrival(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE,"
-                                "FOREIGN KEY (departureInfo) REFERENCES Departure(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE"
+                                "FOREIGN KEY(owner) REFERENCES Owner(ownerID) ON DELETE RESTRICT,"
+                                "FOREIGN KEY(size) REFERENCES Size(sizeID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(contents) REFERENCES Content(contentID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(arrivalInfo) REFERENCES Arrival(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE,"
+                                "FOREIGN KEY(departureInfo) REFERENCES Departure(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE"
                             ");");
     
     for(string createTable : createTables){

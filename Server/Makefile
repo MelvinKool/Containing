@@ -1,5 +1,6 @@
-SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp \
-shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp database.cpp JSONGenerator.cpp
+SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp \
+crane.cpp shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp \
+database.cpp JSONGenerator.cpp
 
 #============================================
 CC=g++ -std=c++11
