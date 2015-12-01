@@ -13,6 +13,7 @@ public class Main extends SimpleApplication
     Object AGV = new Object();
     Connection connection;
     Thread readThread;
+    Thread connectionAlive;
 
     public static void main(String[] args)
     {
@@ -29,6 +30,19 @@ public class Main extends SimpleApplication
         
         readThread = initReadThread();
         readThread.start();
+        while (true)
+        {            
+            try
+            {
+                connectionAlive = connection.connectionThread();
+                connectionAlive.start();
+                break;
+            } 
+            catch (Exception e)
+            {
+            }
+        }
+        
         
         initLight();
         
@@ -80,7 +94,19 @@ public class Main extends SimpleApplication
             public void run() {
                 try
                 {
-                    connection = new Connection();
+                    while (true)
+                    {                        
+                        try 
+                        {
+                            connection = new Connection();
+                            break;
+                        } 
+                        catch (Exception e) 
+                        {
+                            System.out.println("Creating connection");
+                        }
+                    }
+                    
                     while(true)
                     {
                         //What to do with the input?
