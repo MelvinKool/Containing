@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <useStyles filename="nifty-default-styles.xml" />
+    <useControls filename="nifty-default-controls.xml" />
+    
+  
+    <style id="my-listbox-item-style" base="nifty-listbox-item">
+        <effect>
+            <onCustom name="updateScrollpanelPositionToDisplayElement" target="listBoxStatic" oneShot="true" />
+        </effect>
+    </style>
+  
+    <screen id="start" controller="containingsimulator.Screen_Start">
+      
+        
+       
+    
+        <layer id="foreground" backgroundColor="#0000" childLayout="vertical">
+            <!-- ... -->
+            <panel id="panel_top" height="25%" width="100%" align="left" childLayout="horizontal"
+                   backgroundColor="#0000">  
+                <text text="CONTAINING SIMULATOR" font="Interface/Fonts/Default.fnt" width="100%" height="100%" align="center" />
+            </panel>
+      
+            <panel id="panel_mid" height="50%" width="100%" align="center" childLayout="vertical"
+                   backgroundColor="#0399">  
+                 <panel id="panel_Connection" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                        backgroundColor="#0008"> 
+                      <text text="Connection Settings" font="Interface/Fonts/Default.fnt"   width = "100%"align="center"/>   
+                 </panel>
+                    <panel id="panel_IP" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                        
+                    <text text="Server IP:" font="Interface/Fonts/Default.fnt"   width = "50%"align="center"/>   
+                    <control name = "textfield" width="128px" id="ass" text="127.0.0.1" align="right" valign = "center"
+                             visibleToMouse="true" /> 
+                        </panel>
+                         <panel id="panel_Port" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                    <text text="Server Port:" font="Interface/Fonts/Default.fnt" width="50%" align="center"/>
+                    <control name = "textfield" width="128px" id="portField"  text="6066" align="right" valign = "center"
+                             visibleToMouse="true" />                         
+                         </panel>
+                          <panel id="panel_Display" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                        backgroundColor="#0008"> 
+                      <text text="Display Settings" font="Interface/Fonts/Default.fnt"   width = "100%"align="center"/>   
+                 </panel>
+                         <panel id="panel_Res" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                    <text text="Resolution:" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/>     
+                          <control id="dropDownRes" name="dropDown" width = "20%"displayItems="4"  />
+                         </panel>
+                          <panel id="panel_BPP"  width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                    <text text="Color Depth" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/>                     
+                           <control id="dropDownBPP" name="dropDown" width = "10%"displayItems="4" />
+                          </panel>   
+						  <panel id="panel_Quality"  width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                    <text text="Graphical quality" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/>                     
+                           <control id="dropDownQuality" name="dropDown" width = "12%"displayItems="3" />
+                          </panel>
+                           <panel id="panel_Other" height="10%" width="100%" valign="center" childLayout="horizontal" 
+                        backgroundColor="#0008"> 
+                      <text text="Other" font="Interface/Fonts/Default.fnt"   width = "100%"align="center"/>   
+                 </panel>
+                           <panel id="panel_Vsync"  width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008">  
+                                <text text="Enable VSync:" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/> 
+                           <control id="checkBoxVsync" name="checkbox" checked="true"/>
+                           </panel>   
+                           <panel id="panel_Fps" width="100%" valign="center" childLayout="horizontal" 
+                                  backgroundColor="#0008">  
+                                <text text="Show fps:" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/> 
+                            <control id="checkBoxFPS" name="checkbox" checked="true" />
+                           </panel>        
+                           <panel id="panel_Stats"  width="100%" valign="center" childLayout="horizontal" 
+                                  backgroundColor="#0008">     
+                                <text text="Show stats:" font="Interface/Fonts/Default.fnt" width="50%" align="right"/> 
+                    <control id="checkBoxStats" name="checkbox"/>
+                           
+            </panel> 
+  </panel>
+                    <panel id="panel_bottom" height="25%" width="100%" align="center" childLayout="horizontal" backgroundColor="#0000">  
+                <panel id="panel_bottom_left" height="100%" width="50%" valign="center" childLayout="center" 
+                       backgroundColor="#0000">  
+                    <control name="button" label="TO SIMULATOR" id="StartButton" align="center" valign="center"
+                             visibleToMouse="true" > 
+                        <interact onClick="startGame()"/>
+                    </control>
+                </panel>
+                <panel id="panel_bottom_right" height="100%" width="50%" valign="center" childLayout="center"
+                       backgroundColor="#0000">  
+                    <control name="button" label="QUIT" id="quitButton" align="center" valign="center"
+                             visibleToMouse="true" > 
+                        <interact onClick="quitGame()"/>
+                    </control>
+                </panel>
+                </panel>
+        </layer>
+    </screen>
+    <screen id="hud" controller="containingsimulator.Main">
+    </screen>
+    <screen id="hud2" controller="containingsimulator.Main">
+         <layer id="background_Image" childLayout="horizontal">
+            <image filename="Interface/hud2.png" width="40%" height="50%" valign= "bottom"align="left"></image>
+        </layer>
+    </screen>
+</nifty>

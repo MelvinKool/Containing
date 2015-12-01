@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Buffer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Buffer.java</span></div><h1>Buffer.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.CustomVector3f;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ *
+ * @author Ruben
+ */
+public class Buffer {
+
+    /**
+     * ID of buffer incremental
+     */
+<span class="nc" id="L22">    public static int ID = 1;</span>
+    /**
+     * Id of buffer
+     */
+    public String id;
+    /**
+     * Array of all containers
+     */
+    public Container[][][] containers;
+    /**
+     * List of all owned AGVs
+     */
+    public ArrayList&lt;AGV&gt; ownedAGV;
+    /**
+     * Buffer crane
+     */
+    public Crane crane;
+    /**
+     * Hashmap for reserved spaces
+     */
+    public HashMap&lt;Container, CustomVector3f&gt; reservedSpace;
+    /**
+     * PathNode
+     */
+    public PathNode pathNodeUp;
+    /**
+     * PathNode
+     */
+    public PathNode pathNodeDown;
+
+    /**
+     * Constructor
+     *
+     * @param crane
+     * @param ownedAGV
+     */
+<span class="nc" id="L58">    public Buffer(ArrayList&lt;AGV&gt; ownedAGV, Crane crane) {</span>
+<span class="nc" id="L59">        this.id = &quot;BFR&quot; + String.format(&quot;%03d&quot;, Buffer.ID++);</span>
+<span class="nc" id="L60">        this.containers = new Container[26][6][6];</span>
+<span class="nc" id="L61">        this.ownedAGV = new ArrayList&lt;AGV&gt;(ownedAGV);</span>
+<span class="nc" id="L62">        this.reservedSpace = new HashMap&lt;Container, CustomVector3f&gt;();</span>
+<span class="nc" id="L63">        this.crane = crane;</span>
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Create buffer with id
+     */
+<span class="nc" id="L69">    public Buffer() {</span>
+<span class="nc" id="L70">        this.id = &quot;BFR&quot; + String.format(&quot;%03d&quot;, Buffer.ID++);</span>
+<span class="nc" id="L71">        this.ownedAGV = new ArrayList&lt;AGV&gt;();</span>
+<span class="nc" id="L72">        this.reservedSpace = new HashMap&lt;Container, CustomVector3f&gt;();</span>
+<span class="nc" id="L73">        this.containers = new Container[26][6][6];</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Checks the list if there are containers to depart
+     *
+     * @param date
+     * @return ArrayList&lt;Container&gt;
+     */
+    public ArrayList&lt;Container&gt; checkDepartingContainers(Date date) {
+<span class="nc" id="L83">        ArrayList&lt;Container&gt; departingContainers = new ArrayList&lt;Container&gt;();</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        for (Container[][] containerArray3 : containers) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            for (Container[] containerArray2 : containerArray3) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">                for (Container container : containerArray2) {</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                    if (container != null) {</span>
+<span class="nc bnc" id="L88" title="All 4 branches missed.">                        if (container.getDateDeparture().before(date) || container.getDateDeparture().equals(date)) {</span>
+<span class="nc" id="L89">                            departingContainers.add(container);</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L95">        return departingContainers;</span>
+    }
+
+    /**
+     * Checks the best place for container
+     *
+     * @param container
+     * @return Vector3f
+     */
+    public CustomVector3f findBestBufferPlace(Container container, boolean up) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (up) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            for (int x = 0; x &lt; 26; x++) {</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                for (int z = 0; z &lt; 6; z++) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                    for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L109" title="All 4 branches missed.">                        if (containers[x][y][z] == null &amp;&amp; !checkSpaceReserved(x, y, z)) {</span>
+<span class="nc bnc" id="L110" title="All 4 branches missed.">                            if (y &gt; 0 &amp;&amp; containers[x][y - 1][z] != null) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                                if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {</span>
+<span class="nc" id="L112">                                    return new CustomVector3f(x, y, z);</span>
+                                }
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                            } else if (y == 0) {</span>
+<span class="nc" id="L115">                                return new CustomVector3f(x, y, z);</span>
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            for (int x = 25; x &gt;= 0; x--) {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                for (int z = 0; z &lt; 6; z++) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                    for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L125" title="All 4 branches missed.">                        if (containers[x][y][z] == null &amp;&amp; !checkSpaceReserved(x, y, z)) {</span>
+<span class="nc bnc" id="L126" title="All 4 branches missed.">                            if (y &gt; 0 &amp;&amp; containers[x][y - 1][z] != null) {</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                                if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {</span>
+<span class="nc" id="L128">                                    return new CustomVector3f(x, y, z);</span>
+                                }
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                            } else if (y == 0) {</span>
+<span class="nc" id="L131">                                return new CustomVector3f(x, y, z);</span>
+                            }
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L138">        return null;</span>
+    }
+
+    /**
+     * Check if space has been reserverd for other container
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public boolean checkSpaceReserved(float x, float y, float z) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (Map.Entry&lt;Container, CustomVector3f&gt; e : reservedSpace.entrySet()) {</span>
+<span class="nc" id="L151">            CustomVector3f value = e.getValue();</span>
+<span class="nc bnc" id="L152" title="All 6 branches missed.">            if (value.x == x &amp;&amp; value.y == y &amp;&amp; value.z == z) {</span>
+<span class="nc" id="L153">                return true;</span>
+            }
+<span class="nc" id="L155">        }</span>
+<span class="nc" id="L156">        return false;</span>
+    }
+
+    /**
+     * Adds a container to buffer
+     *
+     * @param container
+     */
+    public void addContainer(Container container) {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (reservedSpace.containsKey(container)) {</span>
+<span class="nc" id="L166">            containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] = container;</span>
+<span class="nc" id="L167">            reservedSpace.remove(container);</span>
+        }
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Removes container
+     *
+     * @param container
+     */
+    public void removeContainer(Container container) {
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        for (int x = 0; x &lt; 26; x++) {</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            for (int z = 0; z &lt; 6; z++) {</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                    if (containers[x][y][z] != null) {</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                        if (containers[x][y][z].getId().equals(container.getId())) {</span>
+<span class="nc" id="L182">                            containers[x][y][z] = null;</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L188">    }</span>
+
+    /**
+     * Reserves container position
+     *
+     * @param container
+     */
+    public void reservePosition(Container container) {
+<span class="nc" id="L196">        reservedSpace.put(container, container.getBufferPosition());</span>
+<span class="nc" id="L197">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L201">        return &quot;Buffer{&quot; + &quot;id=&quot; + id + &quot;, containers=&quot; + containers + &quot;, crane=&quot; + crane.id + &quot;, reservedSpace=&quot; + reservedSpace + &quot;, pathNodeUp=&quot; + pathNodeUp.getId() + &quot;, pathNodeDown=&quot; + pathNodeDown.getId() + '}';</span>
+    }
+
+    /**
+     * Check if there is an AGV Abailable from up or down-side
+     *
+     * @param up
+     * @return
+     */
+    public AGV AGVAvailable(boolean up) {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        for (AGV a : ownedAGV) {</span>
+<span class="nc bnc" id="L212" title="All 12 branches missed.">            if (a.isIsHome() &amp;&amp; a.isReady()</span>
+                    &amp;&amp; ((up &amp;&amp; a.home.getId().toLowerCase().contains(&quot;BFA&quot;.toLowerCase()))
+                    || (!up &amp;&amp; a.home.getId().toLowerCase().contains(&quot;BFB&quot;.toLowerCase())))) {
+
+<span class="nc" id="L216">                return a;</span>
+            }
+<span class="nc" id="L218">        }</span>
+<span class="nc" id="L219">        return null;</span>
+    }
+
+    /**
+     * get number of containers in buffer
+     *
+     * @return
+     */
+    public int getContainerCount() {
+<span class="nc" id="L228">        int counter = 0;</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        for (int x = 0; x &lt; 26; x++) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            for (int z = 0; z &lt; 6; z++) {</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                    if (containers[x][y][z] != null) {</span>
+<span class="nc" id="L233">                        counter++;</span>
+                    }
+                }
+            }
+        }
+<span class="nc" id="L238">        return counter;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

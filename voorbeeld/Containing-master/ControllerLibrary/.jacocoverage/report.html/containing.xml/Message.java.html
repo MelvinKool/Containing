@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Message.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.xml</a> &gt; <span class="el_source">Message.java</span></div><h1>Message.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containing.xml;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.simpleframework.xml.*;
+import org.simpleframework.xml.core.Persister;
+
+/**
+ *
+ * @author Hendrik
+ */
+@Root(name = &quot;message&quot;)
+public class Message {
+
+    @Attribute
+    private int command;//Command number
+    @ElementArray(name = &quot;parameters&quot;, entry = &quot;parameter&quot;)
+    private Object[] parameters;//Parameters for command
+
+    /**
+     * Empty message
+     */
+<span class="nc" id="L30">    public Message() {</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Filled message
+     *
+     * @param command
+     * @param parameters
+     */
+<span class="nc" id="L39">    public Message(int command, Object[] parameters) {</span>
+<span class="nc" id="L40">        this.command = command;</span>
+<span class="nc" id="L41">        this.parameters = parameters;</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     *
+     * @return command number
+     */
+    public int getCommand() {
+<span class="nc" id="L49">        return command;</span>
+    }
+
+    /**
+     *
+     * @param command
+     */
+    public void setCommand(int command) {
+<span class="nc" id="L57">        this.command = command;</span>
+<span class="nc" id="L58">    }</span>
+
+    /**
+     * parameters toevoegen
+     *
+     * @return parameters
+     */
+    public Object[] getParameters() {
+<span class="nc" id="L66">        return parameters;</span>
+    }
+
+    /**
+     * parameters toevoegen aan de command
+     *
+     * @param parameters
+     */
+    public void setParameters(Object[] parameters) {
+<span class="nc" id="L75">        this.parameters = parameters;</span>
+<span class="nc" id="L76">    }</span>
+
+    /**
+     * Get message object from xml string
+     *
+     * @param XML
+     * @return
+     */
+    static public Message decodeMessage(String XML) {
+        try {
+<span class="nc" id="L86">            Serializer serializer = new Persister();</span>
+
+<span class="nc" id="L88">            return serializer.read(Message.class, XML);</span>
+            
+<span class="nc" id="L90">        } catch (Exception ex) {</span>
+<span class="nc" id="L91">            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L92">            return null;</span>
+        }
+    }
+
+    /**
+     * encode message from object to xml
+     *
+     * @param message
+     * @return
+     */
+    static public String encodeMessage(Message message) {
+        try {
+<span class="nc" id="L104">            Serializer serializer = new Persister();</span>
+<span class="nc" id="L105">            StringWriter xmlString = new StringWriter();</span>
+
+<span class="nc" id="L107">            serializer.write(message, xmlString);</span>
+<span class="nc" id="L108">            return xmlString.toString().replace(&quot;\n&quot;, &quot;&quot;);</span>
+<span class="nc" id="L109">        } catch (Exception ex) {</span>
+<span class="nc" id="L110">            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L111">            return null;</span>
+        }
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L117">        return &quot;Message{&quot; + &quot;command=&quot; + command + &quot;, parameters=&quot; + parameters.length + '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

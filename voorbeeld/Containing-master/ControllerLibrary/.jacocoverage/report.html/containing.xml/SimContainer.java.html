@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SimContainer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containing.xml</a> &gt; <span class="el_source">SimContainer.java</span></div><h1>SimContainer.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containing.xml;
+
+import containingcontroller.Container;
+import org.simpleframework.xml.*;
+
+/**
+ *
+ * @author Hendrik
+ */
+@Root
+public class SimContainer {
+
+    @Attribute
+    private String id;
+    @Attribute
+    private String bedrijf;
+    @Element
+    private CustomVector3f indexPosition;
+
+    /**
+     *
+     * @param c
+     */
+<span class="nc" id="L28">    public SimContainer(Container c) {</span>
+<span class="nc" id="L29">        this.id = c.getId();</span>
+<span class="nc" id="L30">        this.indexPosition = c.getPosition();</span>
+<span class="nc" id="L31">        this.bedrijf = c.getOwner();</span>
+<span class="nc" id="L32">    }</span>
+
+<span class="nc" id="L34">    public SimContainer(String id, CustomVector3f pos, String bedrijf) {</span>
+<span class="nc" id="L35">        this.id = id;</span>
+<span class="nc" id="L36">        this.indexPosition = pos;</span>
+<span class="nc" id="L37">        this.bedrijf = bedrijf;</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public SimContainer() {</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public String getId() {
+<span class="nc" id="L48">        return id;</span>
+    }
+
+    /**
+     *
+     * @param id
+     */
+    public void setId(String id) {
+<span class="nc" id="L56">        this.id = id;</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     *
+     * @return
+     */
+    public CustomVector3f getIndexPosition() {
+<span class="nc" id="L64">        return indexPosition;</span>
+    }
+
+    /**
+     *
+     * @param indexPosition
+     */
+    public void setIndexPosition(CustomVector3f indexPosition) {
+<span class="nc" id="L72">        this.indexPosition = indexPosition;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getBedrijf() {
+<span class="nc" id="L76">        return bedrijf;</span>
+    }
+
+    public void setBedrijf(String bedrijf) {
+<span class="nc" id="L80">        this.bedrijf = bedrijf;</span>
+<span class="nc" id="L81">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

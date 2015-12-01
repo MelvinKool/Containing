@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ServerClient.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">ServerClient.java</span></div><h1>ServerClient.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.Message;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Hendrik
+ */
+public class ServerClient {
+
+    private BufferedReader input;//input stream from client
+    private Socket client;//client's socket connection
+    private PrintWriter output;//output stream from client
+    private Server server;//server to relay message's
+<span class="nc" id="L27">    private boolean sendOnly = false;</span>
+<span class="nc" id="L28">    private boolean android = true;</span>
+
+    /**
+     *
+     * @param client
+     * @param s
+     */
+<span class="nc" id="L35">    public ServerClient(Socket client, Server s) {</span>
+<span class="nc" id="L36">        this.client = client;</span>
+<span class="nc" id="L37">        server = s;</span>
+        try {
+<span class="nc" id="L39">            client.setTcpNoDelay(true);</span>
+<span class="nc" id="L40">        } catch (SocketException ex) {</span>
+<span class="nc" id="L41">            Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L42">        }</span>
+<span class="nc" id="L43">    }</span>
+
+    ServerClient(Socket client, Server s, boolean b) {
+<span class="nc" id="L46">        this(client, s);</span>
+<span class="nc" id="L47">        sendOnly = b;</span>
+<span class="nc" id="L48">    }</span>
+
+    /**
+     * Send message to client, must be in xml format
+     *
+     * @param message
+     */
+    public void sendMessage(String message) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (!android) {</span>
+            //   System.out.println(&quot;message to ip:&quot; + client.getRemoteSocketAddress());
+            //System.out.println(message);
+
+<span class="nc" id="L60">            output.println(message);</span>
+<span class="nc" id="L61">            output.flush();</span>
+            /*  try {
+             //   Thread.sleep(10/Controller.Speed);
+             } catch (InterruptedException ex) {
+             Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+             }*/
+        }
+<span class="nc" id="L68">    }</span>
+
+    public void sendAndroidMessage(String message) {
+     //  System.out .println(&quot;message to ip:&quot; + client.getRemoteSocketAddress());
+        //System.out.println(message);
+<span class="nc" id="L73">        output.println(message);</span>
+
+<span class="nc" id="L75">    }</span>
+  //  String last = &quot;&quot;;
+
+    /**
+     * main function that listens to client
+     */
+    public void Run() {
+<span class="nc" id="L82">        boolean firstMessage = true;</span>
+        try {
+<span class="nc" id="L84">            input = new BufferedReader(new InputStreamReader(client.getInputStream()));</span>
+<span class="nc" id="L85">            output = new PrintWriter(client.getOutputStream(), true);</span>
+<span class="nc" id="L86">        } catch (IOException e) {</span>
+<span class="nc" id="L87">            System.out.println(&quot;Read failed&quot;);</span>
+<span class="nc" id="L88">        }</span>
+        while (true) {
+            try {
+             //   System.out.println(&quot;lisining&quot; +last);
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                if (input.ready()) {</span>
+
+<span class="nc" id="L94">                    String s = input.readLine();</span>
+                        //    System.out.println(&quot;heard&quot; +s);
+                   // last = s;
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                    if (firstMessage) {</span>
+<span class="nc" id="L98">                        firstMessage = false;</span>
+<span class="nc" id="L99">                        Message m = Message.decodeMessage(s);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                        if (((String) m.getParameters()[0]).equalsIgnoreCase(&quot;simulator&quot;)) {</span>
+<span class="nc" id="L101">                            server.controller.PrintMessage(&quot;Connected simulator - &quot; + client.getRemoteSocketAddress());</span>
+<span class="nc" id="L102">                            android = false;</span>
+                        } else {
+<span class="nc" id="L104">                            android = true;</span>
+                            //server.controller.PrintMessage(&quot;Connected Android - &quot; + client.getRemoteSocketAddress());
+
+<span class="nc" id="L107">                            sendAndroidMessage(server.controller.getAndroidData());</span>
+
+<span class="nc" id="L109">                            break;</span>
+                        }
+
+<span class="nc" id="L112">                    } else {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                        if (!s.isEmpty()) {</span>
+<span class="nc" id="L114">                            server.MessageRecieved(s);</span>
+                          //  System.out.println(&quot;message from ip:&quot; + client.getRemoteSocketAddress());
+                            // System.out.println(s);
+                        }
+                    }
+                }
+<span class="nc" id="L120">            } catch (IOException ex) {</span>
+<span class="nc" id="L121">                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L122">                return;</span>
+<span class="nc" id="L123">            }</span>
+
+        }
+<span class="nc" id="L126">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">androidControlller</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="selecteerxml">Selecteer XML</string>
+    <string name="laden">Laden</string>
+    <string name="Start">start</string>
+
+</resources>

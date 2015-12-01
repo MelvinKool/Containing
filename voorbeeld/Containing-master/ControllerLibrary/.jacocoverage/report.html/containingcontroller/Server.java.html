@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Server.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ControllerLibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Server.java</span></div><h1>Server.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.Message;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+/**
+ *
+ * @author Hendrik
+ */
+public class Server {
+
+    private ServerSocket  serverSocket;
+    Controller controller;
+    ArrayList&lt;ServerClient&gt; clients;//list of connected clients
+
+    /**
+     * create server
+     *
+     * @param c controller
+     * @throws IOException
+     */
+<span class="nc" id="L40">    public Server(Controller c) throws IOException {</span>
+<span class="nc" id="L41">        serverSocket = new ServerSocket(6066);</span>
+<span class="nc" id="L42">        serverSocket.setSoTimeout(100000000);</span>
+       
+<span class="nc" id="L44">        controller = c;</span>
+<span class="nc" id="L45">        clients = new ArrayList&lt;ServerClient&gt;();</span>
+<span class="nc" id="L46">    }</span>
+
+    /**
+     * main run function listining to clients
+     */
+    public void Run() {
+<span class="nc" id="L52">        System.out.println(&quot;Server running&quot;);</span>
+        while (true) {
+            try {
+<span class="nc" id="L55">                Socket server = serverSocket.accept();</span>
+               // System.out.println(&quot;new client at ip:&quot; + server.getRemoteSocketAddress());
+<span class="nc bnc" id="L57" title="All 2 branches missed.">                if (clients.size() &gt; 0) {</span>
+
+<span class="nc" id="L59">                     final ServerClient c = new ServerClient(server, this, true);</span>
+<span class="nc" id="L60">                    clients.add(c);</span>
+<span class="nc" id="L61">                    new Thread(new Runnable() {</span>
+                        @Override
+                        public void run() {
+<span class="nc" id="L64">                            c.Run();</span>
+<span class="nc" id="L65">                        }</span>
+                    }).start();
+<span class="nc" id="L67">                } else {</span>
+<span class="nc" id="L68">                    final ServerClient c = new ServerClient(server, this, false);</span>
+<span class="nc" id="L69">                    clients.add(c);</span>
+<span class="nc" id="L70">                    new Thread(new Runnable() {</span>
+                        @Override
+                        public void run() {
+<span class="nc" id="L73">                            c.Run();</span>
+<span class="nc" id="L74">                        }</span>
+                    }).start();
+
+
+                }
+
+<span class="nc" id="L80">            } catch (SocketTimeoutException s) {</span>
+<span class="nc" id="L81">                System.out.println(&quot;Socket timed out!&quot;);</span>
+<span class="nc" id="L82">                break;</span>
+<span class="nc" id="L83">            } catch (IOException e) {</span>
+<span class="nc" id="L84">                e.printStackTrace();</span>
+<span class="nc" id="L85">                break;</span>
+<span class="nc" id="L86">            }</span>
+        }
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Set simulator to create tranporter
+     */
+    public void createTransporter() {
+
+<span class="nc" id="L95">        Message message = new Message();</span>
+<span class="nc" id="L96">        message.setCommand(Commands.CREATE_TRANSPORTER);</span>
+<span class="nc" id="L97">        message.setParameters(null);</span>
+<span class="nc" id="L98">        sendCommand(message);</span>
+
+<span class="nc" id="L100">    }</span>
+
+    /**
+     * send command to clients
+     *
+     * @param mes
+     * @return
+     */
+    public boolean sendCommand(Message mes) {
+<span class="nc" id="L109">        ServerClient c = null;</span>
+        try {
+<span class="nc" id="L111">            String xml = Message.encodeMessage(mes);</span>
+<span class="nc" id="L112">            xml = xml.replace(&quot;\n&quot;, &quot;&quot;);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            for (int i = 0; i &lt; clients.size(); i++) {</span>
+<span class="nc" id="L114">                c = clients.get(i);</span>
+<span class="nc" id="L115">                c.sendMessage(xml);</span>
+            }
+<span class="nc" id="L117">            return true;</span>
+<span class="nc" id="L118">        } catch (Exception e) {</span>
+<span class="nc" id="L119">            clients.remove(c);</span>
+<span class="nc" id="L120">            return false;</span>
+        }
+
+    }
+
+    void MessageRecieved(String ln) {
+<span class="nc" id="L126">        controller.recievedMessage(ln);</span>
+<span class="nc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
