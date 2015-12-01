@@ -14,6 +14,7 @@ public class Main extends SimpleApplication
     Connection connection;
     Thread readThread;
     Thread connectionAlive;
+    boolean connected = false;
 
     public static void main(String[] args)
     {
@@ -24,25 +25,33 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        //flyCam.setEnabled(false);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
         readThread = initReadThread();
         readThread.start();
-        while (true)
-        {            
-            try
-            {
-                connectionAlive = connection.connectionThread();
-                connectionAlive.start();
-                break;
-            } 
-            catch (Exception e)
-            {
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                while (true)
+                {            
+                    try
+                    {
+                        if(connected)
+                        {
+                            connectionAlive = connection.connectionThread();
+                            connectionAlive.start();
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    } 
+                    catch (Exception e)
+                    {
+                    }
+                }
             }
-        }
-        
+        });
+        t.start();
         
         initLight();
         
@@ -73,6 +82,7 @@ public class Main extends SimpleApplication
     public void destroy()
     {
         super.destroy();
+        connectionAlive.stop();
         readThread.stop();
         connection.stop();
     }
@@ -99,6 +109,7 @@ public class Main extends SimpleApplication
                         try 
                         {
                             connection = new Connection();
+                            connected = true;
                             break;
                         } 
                         catch (Exception e) 

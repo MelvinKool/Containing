@@ -24,8 +24,8 @@ void xmlparser::read_XML(database *db)
         xmlDocPaths.push_back("../INFO/XML/xml3.xml");
         xmlDocPaths.push_back("../INFO/XML/xml4.xml");
         xmlDocPaths.push_back("../INFO/XML/xml5.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml6.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml7.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml6.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml7.xml");
         
         if(process_Data(xmlDocPaths, db))
             cout << "....Done!" << endl;
