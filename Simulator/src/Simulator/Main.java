@@ -1,20 +1,32 @@
 package Simulator;
 
+import Simulator.cranes.Crane;
+import Simulator.vehicles.AGV;
 import com.jme3.app.SimpleApplication;
+import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends SimpleApplication
 {
-    Object AGV = new Object();
-    Connection connection;
-    Thread readThread;
-    Thread connectionAlive;
-    boolean connected = false;
+    private Node dockCraneNode;
+    private List<Container> containers;
+    private Connection connection;
+    private Thread readThread;
+    private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
+    private ObjectLoader objectLoader;
+    
+    
+    boolean playing;
 
     public static void main(String[] args)
     {
@@ -25,10 +37,21 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        flyCam.setEnabled(false);
+        long start = System.currentTimeMillis();
+        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        long end = System.currentTimeMillis();
+
+        System.out.println(end - start);
+        
+        this.dockCraneNode = new Node();
+        this.playing = false;
+        flyCam.setEnabled(true);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
+        this.containers = new ArrayList<>();
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
+        this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
         Thread t = new Thread(new Runnable() {
@@ -54,15 +77,26 @@ public class Main extends SimpleApplication
         t.start();
         
         initLight();
+        initInputs();
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
         
     }
     
+    boolean test = false;
     @Override
     public void simpleUpdate(float tpf)
     {
+        if (this.test == false) {
+            this.test = true;
+            AGV tagv = this.objectLoader.agvs.get(0);
+            List<float[]> path = new ArrayList<>();
+            path.add(new float[] {0.0f, 0.0f, 0.0f});
+            tagv.setPath(path);
+            
+        }
+        
         //TODO Depending on wich way you're going (XYZ) 
         //float afstand = AGV.GetMaxSpeed()*tpf;
         //AGV.SetLocalTranslation(afstand);
@@ -96,6 +130,75 @@ public class Main extends SimpleApplication
         //The AGV always moves at top speed, because reasons
         float tijd = verplaatsing/snelheid;
         return tijd;
+    }
+    
+    public Crane getNearestCrane(Node obj) {
+        float dist;
+        float minDist = -1;
+        Crane nCrane = null;
+        for (Crane crane : this.objectLoader.cranes){
+            dist = obj.getLocalTranslation().distance(crane.getPosition());
+            if (dist < minDist || minDist == -1) {
+                minDist = dist;
+                nCrane = crane;
+            }
+        }
+        return nCrane;
+    }
+    
+    private void initInputs() {
+        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
+        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
+        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
+        
+        ActionListener acl = new ActionListener() {
+
+            public void onAction(String name, boolean keyPressed, float tpf) {
+                Container cont = containers.get(0);
+                
+                if (name.equals("play_stop") && keyPressed) {
+                    if (playing) {
+                        playing = false;
+                        
+                    } else {
+                        playing = true;
+                    }
+                } else if (keyPressed) {
+                    switch (name) {
+                    case "target":
+                        Crane crane = getNearestCrane(cont.node);
+                        crane.targetContainer(cont);
+                        break;
+                    case "xp":
+                        cont.node.move(1,0,0);
+                        List<float[]> path = new ArrayList<>();
+                        path.add(new float[] {20.0f, 0.0f, 20.0f});
+                        objectLoader.agvs.get(0).setPath(path);
+                        break;
+                    case "xm":
+                        cont.node.move(-1,0,0);
+                        break;
+                    case "zp":
+                        cont.node.move(0,0,1);
+                        break;
+                    case "zm":
+                        cont.node.move(0,0,-1);
+                        break;
+                    }
+                }
+
+            }
+        };
+
+        inputManager.addListener(acl, "play_stop");
+        inputManager.addListener(acl, "xp");
+        inputManager.addListener(acl, "zp");
+        inputManager.addListener(acl, "xm");
+        inputManager.addListener(acl, "zm");
+        inputManager.addListener(acl, "target");
     }
     
     private Thread initReadThread(){

@@ -1,8 +1,8 @@
 #Folders
-/Simulator/build
-/Simulator/nbproject/private
+Simulator/build
+Simulator/nbproject/private
 
-#Files
+#Temporary files
 *.lock
 *.o
 *.properties
