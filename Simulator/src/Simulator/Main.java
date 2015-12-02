@@ -119,7 +119,8 @@ public class Main extends SimpleApplication
     public void destroy()
     {
         super.destroy();
-        connectionAlive.stop();
+        if(connectionAlive!= null)
+            connectionAlive.stop();
         readThread.stop();
         connection.stop();
     }
