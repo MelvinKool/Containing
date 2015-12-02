@@ -18,10 +18,13 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
+    boolean connected = false;
+        
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
     private Thread readThread;
+    private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
     
