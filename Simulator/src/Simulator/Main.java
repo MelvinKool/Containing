@@ -68,14 +68,14 @@ public class Main extends SimpleApplication
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (this.test == false) {
-            this.test = true;
-            AGV tagv = this.objectLoader.agvs.get(0);
-            List<float[]> path = new ArrayList<>();
-            path.add(new float[] {0.0f, 0.0f, 0.0f});
-            tagv.setPath(path);
-            
-        }
+//        if (this.test == false) {
+//            this.test = true;
+//            AGV tagv = this.objectLoader.agvs.get(0);
+//            List<float[]> path = new ArrayList<>();
+//            path.add(new float[] {0.0f, 0.0f, 0.0f});
+//            tagv.setPath(path);
+//            
+//        }
         
         //TODO Depending on wich way you're going (XYZ) 
         //float afstand = AGV.GetMaxSpeed()*tpf;
@@ -104,8 +104,7 @@ public class Main extends SimpleApplication
      * @param snelheid snelheid waarmee het object zich beweegt
      * @return
      */
-    public float movementTijd(int verplaatsing,float snelheid)
-    {
+    public float movementTijd(int verplaatsing,float snelheid){
         //The AGV always moves at top speed, because reasons
         float tijd = verplaatsing/snelheid;
         return tijd;
