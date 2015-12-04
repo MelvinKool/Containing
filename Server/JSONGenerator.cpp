@@ -1,41 +1,62 @@
 #include <iostream>
 #include <string>
-#include "Files/rapidjson/document.h"
-#include "Files/rapidjson/stringbuffer.h"
-#include "Files/rapidjson/writer.h"
 #include "JSONGenerator.h"
 
 using namespace std;
 using namespace rapidjson;
 
-void JsonGenerator::generateJson()
+//creates a default json document
+rapidjson::Document JSONGenerator::createJSONDocument()
 {
-    // document is the root of a json message
-    rapidjson::Document document;
-    // define the document as an object rather than an array
-    document.SetObject();
-    // must pass an allocator when the object may need to allocate memory
-    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	// document is the root of a json message
+	rapidjson::Document document;
+	// define the document as an object rather than an array
+	document.SetObject();
+	return document;
+}
 
-    document.AddMember("Command", "GoToPosition", allocator);
-    document.AddMember("transportId", 2, allocator);
-    // create a rapidjson array type with similar syntax to std::vector
-    rapidjson::Value array(rapidjson::kArrayType);
-    // chain methods as rapidjson provides a fluent interface when modifying its objects
-    array.PushBack("Yet", allocator).PushBack("Another", allocator).PushBack("Array",allocator);
-    document.AddMember("array", array, allocator);
+//generates JSON for moving a vehicle
+string JSONGenerator::moveTo()
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
-    // create a rapidjson object type
-    rapidjson::Value object(rapidjson::kObjectType);
-    object.AddMember("X", "50", allocator);
-    object.AddMember("Y", "70", allocator);
-    object.AddMember("X", "50", allocator);
-    document.AddMember("Coords", object, allocator);
-    //  fromScratch["object"]["hello"] = "Yourname";
+	document.AddMember("Command", "moveTo", allocator);
+	document.AddMember("vehicleId", 2, allocator);
+	// create a rapidjson array type with similar syntax to std::vector
+	//rapidjson::Value array(rapidjson::kArrayType);
+	// chain methods as rapidjson provides a fluent interface when modifying its objects
+	//array.PushBack("Yet", allocator).PushBack("Another", allocator).PushBack("Array",allocator);
+	//document.AddMember("array", array, allocator);
 
-    StringBuffer strbuf;
-    Writer<StringBuffer> writer(strbuf);
-    document.Accept(writer);
-    string JsonData = strbuf.GetString();
-    cout << JsonData << endl;
+	rapidjson::Value route(rapidjson::kObjectType);
+	rapidjson::Value node1(rapidjson::kObjectType);
+	node1.AddMember("X", -1600, allocator);
+	node1.AddMember("Y", 0, allocator);
+	node1.AddMember("Z", -55.75, allocator);
+	route.AddMember("Node1",node1, allocator);
+	rapidjson::Value node2(rapidjson::kObjectType);
+	node2.AddMember("X", -30.75, allocator);
+	node2.AddMember("Y", 0, allocator);
+	node2.AddMember("Z", -55.75, allocator);
+	route.AddMember("Node2",node2, allocator);
+	rapidjson::Value node3(rapidjson::kObjectType);
+	node3.AddMember("X", -30.75, allocator);
+	node3.AddMember("Y", 0, allocator);
+	node3.AddMember("Z", -675.25, allocator);
+	route.AddMember("Node3",node3, allocator);
+	document.AddMember("Route", route, allocator);
+	//	fromScratch["object"]["hello"] = "Yourname";
+	return toString(&document);
+}
+
+//converts json document to string
+string JSONGenerator::toString(rapidjson::Document *document)
+{
+	StringBuffer strbuf;
+	Writer<StringBuffer> writer(strbuf);
+	document->Accept(writer);
+	return strbuf.GetString();
 }

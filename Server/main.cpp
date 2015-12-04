@@ -4,7 +4,6 @@
 #include "server.h"
 
 using namespace std;
-
 int main(int argc, char* argv[])
 {
     cout << endl << "Containing Server." << endl;
@@ -19,6 +18,6 @@ int main(int argc, char* argv[])
         if(input == "exit") break;
         else server.writeToSim(input);
     }
-
+    
     return 0;
 }

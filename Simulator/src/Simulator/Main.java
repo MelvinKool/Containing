@@ -122,7 +122,8 @@ public class Main extends SimpleApplication
         if(connectionAlive!= null)
             connectionAlive.stop();
         readThread.stop();
-        connection.stop();
+        if(connection != null)
+            connection.stop();
     }
     
     /**@param verplaatsing afstand die afgelegd moet worden
@@ -215,6 +216,7 @@ public class Main extends SimpleApplication
                     {                        
                         try 
                         {
+                            Thread.sleep(5000);
                             connection = new Connection();
                             connected = true;
                             break;
