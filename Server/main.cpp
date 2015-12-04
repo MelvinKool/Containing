@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
         if(input == "exit") break;
         JSONGenerator jsongenerator;
         string jsonMoveToData = jsongenerator.moveTo();
+        cout << jsonMoveToData << endl;
         server->writeToSim(jsonMoveToData);
     }
 
