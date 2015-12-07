@@ -21,8 +21,8 @@ void XmlParser::readXML(Database &db)
         
         vector<string> xmlDocPaths;
         xmlDocPaths.push_back("../INFO/XML/xml1.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml2.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml3.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml2.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml3.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml4.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml5.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml6.xml");
@@ -56,7 +56,6 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
         
         //find our root node
         xml_node<> * root = doc.first_node("recordset");
-        
         for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
         {
             string iso = record->first_node("ISO")->value();
