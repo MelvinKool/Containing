@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
 {
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
-
+    
     Server server;
-
+    
     while(true)
     {
         string input;

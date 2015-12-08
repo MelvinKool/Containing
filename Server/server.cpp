@@ -8,6 +8,7 @@ Server::Server()
         xmlParser.readXML(db);
     }
     connections.acceptClients();
+    httpserver.init("4000");
 }
 
 void Server::writeToSim(string message)
