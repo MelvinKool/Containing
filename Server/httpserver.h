@@ -1,24 +1,17 @@
 #ifndef HTTPSERVER_H
 #define HTTPSERVER_H
 
-//include's
 #include <netdb.h>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <regex>
-#include <memory>
-#include <cstdlib>
-#include <unistd.h>
-//#include <thread>
+#include <thread>
 
 constexpr int BACKLOG = 10;
 
 class HttpServer
 {
 public:
-    HttpServer();
+    HttpServer(){} //Default contructor, do not remove.
     ~HttpServer();
+    void init(char* port);
 private:
     int sockfd; //listen on sock_fd
     struct addrinfo hints, *serverinfo;//, *p;
@@ -26,10 +19,12 @@ private:
     socklen_t sin_size;
     int yes = 1;
     int rv;
-    //thread *handleConnectionsThread;
+    bool stop = false;
+    std::thread *handleConnectionsThread;
     
-    bool init(char* port);
+    bool initSocket(char* port);
     void handleConnections();
+    int acceptClient();
 };
 
 #endif //HTTPSERVER_H
