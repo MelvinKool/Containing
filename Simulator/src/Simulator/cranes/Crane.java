@@ -47,7 +47,13 @@ public class Crane extends WorldObject {
     }
     
     public final void initGrabber() {
-        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, new Vector3f(0f, 9.6f, 0f), craneType);
+        Vector3f position = Vector3f.ZERO;
+        switch (this.craneType) {
+            case "dockingcrane":
+                position = new Vector3f(0.0f, 10.2f, 0.0f);
+                break;
+        }
+        this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType);
         this.grabber = this.grabberHolder.initGrabber(craneType);
     }
     

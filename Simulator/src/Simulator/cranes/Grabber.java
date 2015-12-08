@@ -29,8 +29,8 @@ public class Grabber extends WorldObject {
     private Hook hookRight;
     
     public Grabber(Node rootNode, AssetManager assetManager, String craneType) {
-        super(rootNode, assetManager, new Vector3f(0.0f, 0.0f, 0.0f), "Models/crane/" + craneType + "/grabbingGear.j3o");
-        this.defaultPos = new Vector3f(0.0f, 0.0f, 0.0f);
+        super(rootNode, assetManager, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
+        this.defaultPos = Vector3f.ZERO;
         this.container = null;
         
         this.hookLeft = new Hook(
