@@ -12,10 +12,14 @@ import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.CinematicEvent;
 import com.jme3.cinematic.events.CinematicEventListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -35,12 +39,14 @@ public class Crane extends WorldObject {
     private MotionPath motionPath;
     private MotionEvent craneMotion;
     
-    public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model) {
+    public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model, String craneType) {
         super(rootNode, assetManager, position, model);
+        this.craneType = craneType;
         this.defaultPos = position;
+        this.initGrabber();
     }
     
-    public final void initGrabber(String craneType) {
+    public final void initGrabber() {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, new Vector3f(0f, 9.6f, 0f), craneType);
         this.grabber = this.grabberHolder.initGrabber(craneType);
     }
@@ -53,9 +59,9 @@ public class Crane extends WorldObject {
         // apparantly you need at least two waypoints
         this.motionPath.addWayPoint(this.getPosition());
         
-        if (this.craneType.equals("FreightShip")) {
+        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) {
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
-        } else if (this.craneType.equals("SeaShip") || this.craneType.equals("SortCrane")) {
+        } else if (this.craneType.equals("dockingcrane") || this.craneType.equals("storagecrane")) {
             this.motionPath.addWayPoint(new Vector3f(this.getPosition().x, this.getPosition().y, target.z));
         }
         
@@ -75,7 +81,7 @@ public class Crane extends WorldObject {
     }
     
     public void resetPosition() {
-        this.setTarget(this.defaultPos);      
+        this.setTarget(this.defaultPos);
     }
     
     public void targetContainer(Container container) {
@@ -94,7 +100,13 @@ public class Crane extends WorldObject {
     }
     
     public void putContainer(Vector3f target) {
+        Vector3f holderTarget = this.node.worldToLocal(target, null);
+        Vector3f grabberTarget = this.node.worldToLocal(target, null);
         
+        this.setTarget(target);
+        this.grabberHolder.setTarget(holderTarget);
+        this.grabber.setTarget(this.grabber.toRealPos(grabberTarget));
+        this.grabber.motionPath.addListener(this);
     }
     
     @Override

@@ -147,23 +147,23 @@ public class ObjectLoader {
             positionVec = new Vector3f(posX, posY, posZ);
             switch (type) {
                 case "Storage":
-                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel());
+                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "Train": 
-                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel());
+                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "SeaShip":
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel());
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "TruckCrane": 
-                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel());
+                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "FreightShip": 
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel());
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "AGV":
@@ -171,7 +171,6 @@ public class ObjectLoader {
                     agvObj.node.rotate(rotX, rotY, rotZ);
             }
             if (craneObj != null) {
-                craneObj.craneType = type;
                 this.cranes.add(craneObj);
             } else if (agvObj != null) {
                 this.agvs.add(agvObj);

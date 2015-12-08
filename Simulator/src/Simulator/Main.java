@@ -152,9 +152,6 @@ public class Main extends SimpleApplication
                         break;
                     case "xp":
                         cont.node.move(1,0,0);
-                        List<float[]> path = new ArrayList<>();
-                        path.add(new float[] {20.0f, 0.0f, 20.0f});
-                        objectLoader.agvs.get(0).setPath(path);
                         break;
                     case "xm":
                         cont.node.move(-1,0,0);

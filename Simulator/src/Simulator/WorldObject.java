@@ -5,13 +5,13 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.List;
 
 /**
  *
@@ -30,7 +30,6 @@ public class WorldObject implements Cloneable, MotionPathListener {
     }
     
     public WorldObject(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
-
         this.rootNode = rootNode;
         this.assetManager = assetManager;
         this.initModel(position, model);
@@ -56,28 +55,24 @@ public class WorldObject implements Cloneable, MotionPathListener {
         return this.node.getLocalTranslation();
     }
     
-    public Vector3f getRealPosition() {
-        Vector3f pos = this.getPosition();
-        Vector3f size = this.node.getLocalScale();
-        
-        float realX = (pos.x + size.x) / 2f;
-        float realY = (pos.y + size.y) / 2f;
-        float realZ = (pos.z + size.z) / 2f;
-
-        return new Vector3f(realX, realY, realZ);
-    }
-    
     public WorldObject clone() throws CloneNotSupportedException {
        return (WorldObject) super.clone();
     }
     
     
     public void initObject(Vector3f initialPosition, String modelFile) {
-        Spatial spatial = this.assetManager.loadModel(modelFile);
+        Spatial spatial = null;
+        try {
+            spatial = this.assetManager.loadModel(modelFile);        
+        } catch (AssetNotFoundException e) {
+            System.err.println("Model not found: " + modelFile);
+        }
         
         if (spatial instanceof Geometry) {
             this.node = new Node();
             this.node.attachChild(spatial);
+        } else if (spatial == null) {
+            this.node = new Node();
         } else {
             this.node = (Node) spatial;
         }
