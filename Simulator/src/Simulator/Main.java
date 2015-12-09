@@ -183,10 +183,13 @@ public class Main extends SimpleApplication
                 try
                 {
                     connection = new Connection();
+                    CommandHandler commandHandler = new CommandHandler(objectLoader);
                     while(true)
                     {
                         //What to do with the input?
-                        System.out.println(connection.read());
+                        String input = connection.read();
+                        System.out.println(input);
+                        commandHandler.ParseJSON(input);
                     }
                 }
                 catch(Exception e)

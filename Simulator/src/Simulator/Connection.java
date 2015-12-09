@@ -37,7 +37,7 @@ public class Connection
     {
         try
         {
-            simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337);
+            simSocket = new Connection.SimSocket(InetAddress.getByName("141.252.236.91"), 1337);
             if(simSocket != null)
                 write("Simulator");
         }
