@@ -4,12 +4,11 @@
     Transport:
     class where all transport classes are deriving from.
 */
-class transport
+class Transport
 {
     private:
         int loaded_Speed, unloaded_Speed;
     public:
 };
 
-
-#endif // TRANSPORT_H
+#endif //TRANSPORT_H

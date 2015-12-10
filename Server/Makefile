@@ -1,16 +1,14 @@
-SOURCES=main.cpp connections.cpp server.cpp socket.cpp agv.cpp container.cpp crane.cpp \
-shortestPath.cpp transfer.cpp transport.cpp xmlparser.cpp
-#database.cpp
+SOURCES=main.cpp server.cpp connections.cpp socket.cpp xmlparser.cpp \
+database.cpp JSONGenerator.cpp httpserver.cpp
+#shortestPath.cpp agv.cpp container.cpp crane.cpp transfer.cpp transport.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -Wall
-#-I/lib/Containing/include
+CFLAGS=-c -Wall $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
-LIBS=
-#-L/lib/Containing/lib -lmysqlcppconn -lmysqlcppconn-static
+LIBS=$(shell mysql_config --libs)
 
 all: $(SOURCES) $(EXECUTABLE)
 

@@ -14,15 +14,17 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Main extends SimpleApplication
 {
+    boolean connected = false;
+        
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
     private Thread readThread;
+    private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
     
@@ -55,13 +57,34 @@ public class Main extends SimpleApplication
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                while (true)
+                {            
+                    try
+                    {
+                        if(connected)
+                        {
+                            connectionAlive = connection.connectionThread();
+                            connectionAlive.start();
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    } 
+                    catch (Exception e)
+                    {
+                    }
+                }
+            }
+        });
+        t.start();
         
         initLight();
         initInputs();
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
-        rootNode.attachChild(this.dockCraneNode);
+        
     }
     
     boolean test = false;
@@ -96,8 +119,11 @@ public class Main extends SimpleApplication
     public void destroy()
     {
         super.destroy();
+        if(connectionAlive!= null)
+            connectionAlive.stop();
         readThread.stop();
-        connection.stop();
+        if(connection != null)
+            connection.stop();
     }
     
     /**@param verplaatsing afstand die afgelegd moet worden
@@ -186,7 +212,21 @@ public class Main extends SimpleApplication
             public void run() {
                 try
                 {
-                    connection = new Connection();
+                    while (true)
+                    {                        
+                        try 
+                        {
+                            Thread.sleep(5000);
+                            connection = new Connection();
+                            connected = true;
+                            break;
+                        } 
+                        catch (Exception e) 
+                        {
+                            System.out.println("Creating connection");
+                        }
+                    }
+                    
                     while(true)
                     {
                         //What to do with the input?

@@ -4,16 +4,14 @@
 
 Server::Server()
 {
-	parser.read_XML();
-	this->connections = new Connections();
-}
-
-Server::~Server()
-{
-	delete this->connections;
+    if(db.isConnected()){
+        xmlParser.readXML(db);
+    }
+    connections.acceptClients();
+    httpserver.init("4000");
 }
 
 void Server::writeToSim(string message)
 {
-	connections->writeToSim(message);
+    connections.writeToSim(message);
 }

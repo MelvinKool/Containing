@@ -1,18 +1,12 @@
 #ifndef AGV_H
 #define AGV_H
 
-/*
-    AGV: Automatic Guided Vehicle
-    All AGV's are controlled in this class.
-    The AGV gets a replace call, but the AGV is driving itself.
-*/
 #include "transport.h"
 
-class agv : transport
+class AGV : Transport
 {
-    private:
-    public:
-        void Transfer(int x, int y);
+private:
+public:
 };
 
-#endif // AGV_H
+#endif //AGV_H
