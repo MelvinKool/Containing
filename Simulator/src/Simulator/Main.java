@@ -47,7 +47,7 @@ public class Main extends SimpleApplication
         this.dockCraneNode = new Node();
         this.playing = false;
         flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(250);
+        flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
