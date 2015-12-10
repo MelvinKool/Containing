@@ -1,10 +1,10 @@
+//Deze class is niet af, en er klopt nog geen ruk van
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
 #include <chrono>
 #include <string>
 
-//Deze class is niet af, en er klopt nog geen ruk van
 class Container
 {
     private:

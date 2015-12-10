@@ -9,7 +9,8 @@ constexpr int BACKLOG = 10;
 class HttpServer
 {
 public:
-    HttpServer(){} //Default contructor, do not remove.
+    // Do not remove this default constructor.
+    HttpServer(){}
     ~HttpServer();
     void init(char* port);
 private:

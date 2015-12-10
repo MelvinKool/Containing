@@ -1,5 +1,7 @@
 #include "connections.h"
 
+#include <iostream>
+
 using namespace std;
 
 Connections::Connections()
@@ -7,6 +9,7 @@ Connections::Connections()
     this->socket = new ServerSocket(1337);
 }
 
+// Stop all the running threads and delete them, then delete the socket.
 Connections::~Connections()
 {
     cout << "Closing..." << endl;
@@ -24,6 +27,7 @@ Connections::~Connections()
     delete this->socket;
 }
 
+// The thread that accepts new clients.
 void Connections::acceptClients()
 {
     this->acceptThread = new thread([this](){
@@ -42,6 +46,7 @@ void Connections::acceptClients()
     });
 }
 
+// Looks for a unused client to reuse, else makes a new client.
 int Connections::getFreeClientNumber()
 {
     int number = 0;
@@ -58,6 +63,7 @@ int Connections::getFreeClientNumber()
     return number;
 }
 
+// The readthread of the client.
 thread* Connections::newClientThread(int number)
 {
     return new thread([number, this]()
@@ -113,6 +119,7 @@ thread* Connections::newClientThread(int number)
     });
 }
 
+// Writes message to the first simulator.
 void Connections::writeToSim(string message)
 {
     if(simulator != nullptr)

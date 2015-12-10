@@ -4,10 +4,11 @@
 #include <vector>
 #include <string>
 #include <thread>
-#include <iostream>
 
 #include "socket.h"
 
+
+// Handles all connections with simulators and mobile app's.
 class Connections
 {
 public:
@@ -16,6 +17,11 @@ public:
     void acceptClients();
     void writeToSim(std::string message);
 private:
+    // Holds som information about the client.
+    //   type - either simulator or mobile app
+    //   used - is this client used or not
+    //   socket - the socket of this client
+    //   worker - the thread that reads from this client
     struct Client
     {
         std::string type;
@@ -23,7 +29,6 @@ private:
         ClientSocket* socket;
         thread* worker;
     };
-
     ServerSocket* socket;
     Client* simulator = nullptr;
     bool stop = false;

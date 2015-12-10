@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Make connection to the db.
 Database::Database()
 {
     connection = mysql_init(NULL);
@@ -31,6 +32,7 @@ bool Database::isConnected()
     return connected;
 }
 
+// Use this for any statement that does not return data like: update, insert or drop.
 bool Database::execute(string sqlStatement)
 {
     if(connected)
@@ -48,6 +50,7 @@ bool Database::execute(string sqlStatement)
     return false;
 }
 
+// Use this for select statment.
 MYSQL_RES* Database::select(string sqlStatement)
 {
     if(execute(sqlStatement))
@@ -57,6 +60,7 @@ MYSQL_RES* Database::select(string sqlStatement)
     return NULL;
 }
 
+// Creates all the tables in the database.
 bool Database::createAllTables()
 {
     vector<string> createTables;
@@ -165,6 +169,7 @@ bool Database::dropAllTables()
     return true;
 }
 
+// Drops all the tables in the database and then create's them again.
 bool Database::resetDatabase()
 {
     return (dropAllTables() && createAllTables());
