@@ -1,0 +1,5 @@
+"<recordset>"
+
+"<record id=\"id[0-9]+\"><aankomst><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf><positie><x>[0-9]+</x><y>[0-9]+</y><z>[0-9]+</z></positie></aankomst><eigenaar><naam>[a-zA-Z0-9]+</naam><containernr>[0-9]+</containernr></eigenaar><vertrek><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf></vertrek><afmetingen><l>.+</l><b>.+</b><h>.+</h></afmetingen><gewicht><leeg>[0-9]+</leeg><inhoud>[0-9]+</leeg></gewicht><inhoud><naam>[a-z]+</naam><soort>[a-z]+</soort><gevaar>[a-z]+</gevaar></inhoud><ISO>.+</ISO></record>"
+
+"</recordset>"

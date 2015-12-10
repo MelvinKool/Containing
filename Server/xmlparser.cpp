@@ -18,16 +18,16 @@ void XmlParser::readXML(Database &db)
     if(answer == "yes")
     {
         cout << "Loading XML..." << endl;
-        
+
         vector<string> xmlDocPaths;
         xmlDocPaths.push_back("../INFO/XML/xml1.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml2.xml");
-        xmlDocPaths.push_back("../INFO/XML/xml3.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml2.xml");
+        //xmlDocPaths.push_back("../INFO/XML/xml3.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml4.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml5.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml6.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml7.xml");
-        
+
         if(processData(xmlDocPaths, db))
         {
             cout << "....Done!" << endl;
@@ -50,10 +50,10 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
         ifstream theFile (xmlDocPath.c_str());
         vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
         buffer.push_back('\0');
-        
-        //parse the contents of file
+
+        //parse the contents of fildde
         doc.parse<0>(&buffer[0]);
-        
+
         //find our root node
         xml_node<> * root = doc.first_node("recordset");
         for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
@@ -65,7 +65,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
             xml_node<> * arrival = record->first_node("aankomst");
                 string type_Transport_Arrival = arrival->first_node("soort_vervoer")->value();
                 string company_Arrival = arrival->first_node("bedrijf")->value();
-            
+
             //date
             xml_node<> * date_Arrival = arrival->first_node("datum");
                 string day_Arrival = date_Arrival->first_node("d")->value();
@@ -152,7 +152,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 string content_Type =  content->first_node("soort")->value();
                 string content_Danger =  content->first_node("gevaar")->value();
             /////////////////////////////////////////////////////////////////////
-            
+
             int ownerID                 = -1;
             int sizeID                  = -1;
             int contentID               = -1;
@@ -163,7 +163,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
             int arrivalShipmentID       = -1;
             int departureShipmentID     = -1;
             int containerID             = -1;
-            
+
             auto getID = [&db](string query){
                 MYSQL_RES* res = db.select(query);
                 MYSQL_ROW row;
@@ -174,7 +174,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 mysql_free_result(res);
                 return ID;
             };
-            
+
             //Owner
             string select_ownerID = "SELECT ownerID FROM Owner WHERE name = '"+owner_Name+"';";
             string insert_Owner = "INSERT INTO Owner(name) VALUES('"+owner_Name+"')";
@@ -187,7 +187,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //Size
             string select_sizeID = "SELECT sizeID FROM Size WHERE length = '"+length+"' AND width = '"+width+"' AND height = '"+height+"';";
             string insert_Size = "INSERT INTO Size(length, width, height) VALUES('"+length+"', '"+width+"', '"+height+"')";
@@ -200,7 +200,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //Content
             string select_contentID = "SELECT contentID FROM Content WHERE name = '"+content_Name+"' AND type = '"+content_Type+"' AND danger = '"+content_Danger+"';";
             string insert_Content = "INSERT INTO Content(name, type, danger) VALUES('"+content_Name+"', '"+content_Type+"', '"+content_Danger+"')";
@@ -213,7 +213,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //ArrivalShippingType
             string select_arrivalShippingTypeID = "SELECT shippingTypeID FROM ShippingType WHERE sort = '"+type_Transport_Arrival+"';";
             string insert_ArrivalShippingType = "INSERT INTO ShippingType(sort) VALUES('"+type_Transport_Arrival+"')";
@@ -226,7 +226,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //ArrivalCompany
             string select_arrivalCompanyID = "SELECT shippingCompanyID FROM ShippingCompany WHERE name = '"+company_Arrival+"';";
             string insert_ArrivalShippingCompany = "INSERT INTO ShippingCompany(name) VALUES('"+company_Arrival+"')";
@@ -239,7 +239,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //DepartureShippingType
             string select_departureShippingTypeID = "SELECT shippingTypeID FROM ShippingType WHERE sort = '"+type_Transport_Departure+"';";
             string insert_DepartureShippingType = "INSERT INTO ShippingType(sort) VALUES('"+type_Transport_Departure+"')";
@@ -252,7 +252,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //DepartureCompany
             string select_departureCompanyID = "SELECT shippingCompanyID FROM ShippingCompany WHERE name = '"+company_Departure+"';";
             string insert_DepartureShippingCompany = "INSERT INTO ShippingCompany(name) VALUES('"+company_Departure+"')";
@@ -265,7 +265,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //ArrivalShipment
             string select_arrivalShipmentID = "SELECT shipmentID FROM Arrival WHERE date = '"+arrival_Date+"' AND timeFrom = '"+from_Arrival+"' AND timeTill = '"+till_Arrival+"' AND positionX = "+pos_X_Arrival+" AND positionY = "+pos_Y_Arrival+" AND positionZ = "+pos_Z_Arrival+" AND shippingType = "+to_string(arrivalShippingTypeID)+" AND shippingCompany = "+to_string(arrivalCompanyID)+";";
             string insert_Arrival = "INSERT INTO Arrival(date, timeFrom, timeTill, positionX, positionY, positionZ, shippingType, shippingCompany) VALUES('"+arrival_Date+"', '"+from_Arrival+"', '"+till_Arrival+"', "+pos_X_Arrival+", "+pos_Y_Arrival+", "+pos_Z_Arrival+", "+to_string(arrivalShippingTypeID)+", "+to_string(arrivalCompanyID)+")";
@@ -278,7 +278,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //DepartureShipment
             string select_departureShipmentID = "SELECT shipmentID FROM Departure WHERE date = '"+departure_Date+"' AND timeFrom = '"+from_Departure+"' AND timeTill = '"+till_Departure+"' AND shippingType = "+to_string(departureShippingTypeID)+" AND shippingCompany = "+to_string(departureCompanyID)+";";
             string insert_Departure = "INSERT INTO Departure(date, timeFrom, timeTill, shippingType, shippingCompany) VALUES('"+departure_Date+"', '"+from_Departure+"', '"+till_Departure+"', "+to_string(departureShippingTypeID)+", "+to_string(departureCompanyID)+")";
@@ -291,7 +291,7 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
                 }
                 else return false;
             }
-            
+
             //Container
             string select_containerID = "SELECT containerID FROM Container WHERE containerNr = "+containerNr+" AND iso = '"+iso+"' AND weightEmpty = "+empty_Weight+" AND weightContents = "+content_Weight+" AND owner = "+to_string(ownerID)+" AND size = "+to_string(sizeID)+" AND contents = "+to_string(contentID)+" AND arrivalInfo = "+to_string(arrivalShipmentID)+" AND departureInfo = "+to_string(departureShipmentID)+";";
             string insert_Container = "INSERT INTO Container(containerNr, iso, weightEmpty, weightContents, owner, size, contents, arrivalInfo, departureInfo) VALUES("+containerNr+", '"+iso+"', "+empty_Weight+", "+content_Weight+", "+to_string(ownerID)+", "+to_string(sizeID)+", "+to_string(contentID)+", "+to_string(arrivalShipmentID)+", "+to_string(departureShipmentID)+")";
@@ -309,4 +309,36 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
         cout << "....XML file done > " << xmlDocPath << endl;
     }
     return true;
+}
+
+int XmlParser::checkData(vector<string> &xmlPaths)
+{
+    regex reg("<record id=\"id[0-9]+\"><aankomst><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf><positie><x>[0-9]+</x><y>[0-9]+</y><z>[0-9]+</z></positie></aankomst><eigenaar><naam>[a-zA-Z0-9]+</naam><containernr>[0-9]+</containernr></eigenaar><vertrek><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf></vertrek><afmetingen><l>.+</l><b>.+</b><h>.+</h></afmetingen><gewicht><leeg>[0-9]+</leeg><inhoud>[0-9]+</leeg></gewicht><inhoud><naam>[a-z]+</naam><soort>[a-z]+</soort><gevaar>[a-z]+</gevaar></inhoud><ISO>.+</ISO></record>");
+
+    for(string path:xmlPaths)
+    {
+        ifstream input(path);
+
+        if (input)
+        {
+            // get length of file:
+            input.seekg (0, input.end);
+            int length = input.tellg();
+            input.seekg (0, input.beg);
+
+            char* buffer = new char [length];
+
+            // read data as a block:
+            input.read (buffer,length);
+
+            input.close();
+            // buffer contains the entire file
+            replace("<resultset>", NULL);
+            buffer.Replace("</resultset>", NULL);
+            buffer.Remove("\n");
+
+            delete[] buffer;
+        }
+    }
+    return 1;
 }
