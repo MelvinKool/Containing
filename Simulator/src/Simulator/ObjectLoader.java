@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Simulator;
 
 import Simulator.cranes.Crane;
@@ -25,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 /**
- *
  * @author erwin
  */
 public class ObjectLoader {

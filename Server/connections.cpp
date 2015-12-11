@@ -12,7 +12,6 @@ Connections::Connections()
 // Stop all the running threads and delete them, then delete the socket.
 Connections::~Connections()
 {
-    cout << "Closing..." << endl;
     this->stop = true;
     this->acceptThread->join();
     delete this->acceptThread;

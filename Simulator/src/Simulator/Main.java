@@ -48,7 +48,7 @@ public class Main extends SimpleApplication
         
         this.dockCraneNode = new Node();
         this.playing = false;
-        flyCam.setEnabled(true);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(250);
         cam.setFrustumFar(2000);
         
@@ -84,20 +84,19 @@ public class Main extends SimpleApplication
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
-        
     }
     
     boolean test = false;
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (this.test == false) {
+        if(this.test == false)
+        {
             this.test = true;
             AGV tagv = this.objectLoader.agvs.get(0);
             List<float[]> path = new ArrayList<>();
             path.add(new float[] {0.0f, 0.0f, 0.0f});
             tagv.setPath(path);
-            
         }
         
         //TODO Depending on wich way you're going (XYZ) 
