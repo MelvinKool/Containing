@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include "vector3f.h"
 #include "JSONGenerator.h"
 
 using namespace std;
@@ -16,7 +18,7 @@ rapidjson::Document JSONGenerator::createJSONDocument()
 }
 
 //generates JSON for moving a vehicle
-string JSONGenerator::moveTo()
+string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -24,29 +26,17 @@ string JSONGenerator::moveTo()
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 	document.AddMember("Command", "moveTo", allocator);
-	document.AddMember("vehicleId", 2, allocator);
+	document.AddMember("vehicleId", vehicleId, allocator);
 	// create a rapidjson array type with similar syntax to std::vector
-	//rapidjson::Value array(rapidjson::kArrayType);
 	// chain methods as rapidjson provides a fluent interface when modifying its objects
-	//array.PushBack("Yet", allocator).PushBack("Another", allocator).PushBack("Array",allocator);
-	//document.AddMember("array", array, allocator);
-
-	rapidjson::Value route(rapidjson::kObjectType);
-	rapidjson::Value node1(rapidjson::kObjectType);
-	node1.AddMember("X", -1600, allocator);
-	node1.AddMember("Y", 0, allocator);
-	node1.AddMember("Z", -55.75, allocator);
-	route.AddMember("Node1",node1, allocator);
-	rapidjson::Value node2(rapidjson::kObjectType);
-	node2.AddMember("X", -30.75, allocator);
-	node2.AddMember("Y", 0, allocator);
-	node2.AddMember("Z", -55.75, allocator);
-	route.AddMember("Node2",node2, allocator);
-	rapidjson::Value node3(rapidjson::kObjectType);
-	node3.AddMember("X", -30.75, allocator);
-	node3.AddMember("Y", 0, allocator);
-	node3.AddMember("Z", -675.25, allocator);
-	route.AddMember("Node3",node3, allocator);
+	rapidjson::Value route(rapidjson::kArrayType);
+	for(vector3f coord: coordinates)
+	{
+		rapidjson::Value coordinate(rapidjson::kArrayType);
+		coordinate.PushBack(coord.getX(), allocator).PushBack(coord.getY(), allocator).PushBack(coord.getZ(),allocator);
+		route.PushBack(coordinate, allocator);
+	}
+	//add the route to the document
 	document.AddMember("Route", route, allocator);
 	//	fromScratch["object"]["hello"] = "Yourname";
 	return toString(&document);
