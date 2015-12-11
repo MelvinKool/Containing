@@ -23,12 +23,12 @@ void XmlParser::readXML(Database &db)
         xmlDocPaths.push_back("../INFO/XML/xml1.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml2.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml3.xml");
-        //xmlDocPaths.push_back("../INFO/XML/xml4.xml");
+        xmlDocPaths.push_back("../INFO/XML/xml4.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml5.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml6.xml");
         //xmlDocPaths.push_back("../INFO/XML/xml7.xml");
 
-        if(processData(xmlDocPaths, db))
+        if(checkData(xmlDocPaths))//processData(xmlDocPaths, db))
         {
             cout << "....Done!" << endl;
         }
@@ -313,31 +313,61 @@ bool XmlParser::processData(vector<string> &xmlDocPaths, Database &db)
 
 int XmlParser::checkData(vector<string> &xmlPaths)
 {
-    regex reg("<record id=\"id[0-9]+\"><aankomst><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf><positie><x>[0-9]+</x><y>[0-9]+</y><z>[0-9]+</z></positie></aankomst><eigenaar><naam>[a-zA-Z0-9]+</naam><containernr>[0-9]+</containernr></eigenaar><vertrek><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf></vertrek><afmetingen><l>.+</l><b>.+</b><h>.+</h></afmetingen><gewicht><leeg>[0-9]+</leeg><inhoud>[0-9]+</leeg></gewicht><inhoud><naam>[a-z]+</naam><soort>[a-z]+</soort><gevaar>[a-z]+</gevaar></inhoud><ISO>.+</ISO></record>");
+    regex regNode("<record id=  \"id[0-9]+\"><aankomst><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-zA-Z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf><positie><x>[0-9]+</x><y>[0-9]+</y><z>[0-9]+</z></positie></aankomst><eigenaar><naam>[a-zA-Z0-9]+</naam><containernr>[0-9]+</containernr></eigenaar><vertrek><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-zA-Z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf></vertrek><afmetingen><l>[0-9']+</l><b>[0-9']+</b><h>[0-9']+</h></afmetingen><gewicht><leeg>[0-9]+</leeg><inhoud>[0-9]+</inhoud></gewicht><inhoud><naam>[a-zA-Z]+</naam><soort>[a-zA-Z]+</soort><gevaar>[a-zA-Z]+</gevaar></inhoud><ISO>[0-9-]+</ISO></record>");
+    regex regEndNode("</record>");
+    regex regStart("<recordset>");
+    regex regStop("</recordset>");
+
+    bool started;
+
+    string line, node;
 
     for(string path:xmlPaths)
     {
         ifstream input(path);
-
+        started = false;
         if (input)
         {
-            // get length of file:
-            input.seekg (0, input.end);
-            int length = input.tellg();
-            input.seekg (0, input.beg);
+            while (getline(input, line))
+            {
+                if (!started)
+                {
+                    //if not started, look for start of xml
+                    if (regex_search(line, regStart))
+                    {
+                        started = true;
+                        //output line to file
+                        //TODO OUTPUT
+                        cout<<line<<endl;
+                    }
+                } else //Als het is gestart
+                {
+                    if (regex_search(line, regStop))
+                    {
+                        //If end of recordset, stop while loop
+                        //TODO OUTPUT line to file
+                        cout<<line<<endl;
+                        break;
+                    }
 
-            char* buffer = new char [length];
-
-            // read data as a block:
-            input.read (buffer,length);
-
-            input.close();
-            // buffer contains the entire file
-            replace("<resultset>", NULL);
-            buffer.Replace("</resultset>", NULL);
-            buffer.Remove("\n");
-
-            delete[] buffer;
+                    if (regex_search(line, regEndNode))
+                    {
+                        //if at end of node, check if node is complete
+                        node = node + line;
+                        //cout<<node<<endl;
+                        if (regex_search(node, regNode))//voeg een ! toe om als output alles te krijgen wat niet goed is.
+                        {
+                            //TODO OUTPUT node to file
+                            cout<<node<<endl;
+                        }
+                        node = "";
+                    } else
+                    {
+                        //if not at end of set or node
+                        node = node + line;
+                    }
+                }
+            }
         }
     }
     return 1;
