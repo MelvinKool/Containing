@@ -29,7 +29,9 @@ int main(int argc, char* argv[])
         coords.push_back(coordinate3);
         string jsontest = jsongenerator.moveTo(2,coords);
         cout << jsontest << endl;
-        server.writeToSim(jsontest);
+        cout << "spawnobjectjson: " << jsongenerator.spawnObject(999,coordinate1) << endl;
+        cout << "transferObjectJSON: " << jsongenerator.transferContainer(1,2,3) << endl;
+        //server.writeToSim(jsontest);
     }
 
     return 0;

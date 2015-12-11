@@ -24,16 +24,27 @@ string JSONGenerator::transferContainer(int containerId, int sourceId, int targe
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "transferContainer", allocator);
+	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("sourceId", sourceId, allocator);
+	document.AddMember("targetId", targetId, allocator);
 	return toString(&document);
 }
 
-//generates JSON for spawning an
-string JSONGenerator::spawnObject(int objectId, vector3f coordinates)
+//generates JSON for spawning an object
+string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "spawnObject", allocator);
+	document.AddMember("objectId",objectId, allocator);
+	rapidjson::Value coordinateObject(rapidjson::kObjectType);
+	coordinateObject.AddMember("X",coordinate.getX(),allocator);
+	coordinateObject.AddMember("Y",coordinate.getY(),allocator);
+	coordinateObject.AddMember("Z",coordinate.getZ(),allocator);
+	document.AddMember("spawnLocation",coordinateObject,allocator);
 	return toString(&document);
 }
 
