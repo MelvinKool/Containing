@@ -48,8 +48,8 @@ public class Main extends SimpleApplication
         
         this.dockCraneNode = new Node();
         this.playing = false;
-        flyCam.setEnabled(false);
-        flyCam.setMoveSpeed(250);
+        //flyCam.setEnabled(false);
+        flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
@@ -57,8 +57,10 @@ public class Main extends SimpleApplication
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
-        Thread t = new Thread(new Runnable() {
-            public void run() {
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
                 while (true)
                 {            
                     try
@@ -90,20 +92,7 @@ public class Main extends SimpleApplication
     @Override
     public void simpleUpdate(float tpf)
     {
-        if(this.test == false)
-        {
-            this.test = true;
-            AGV tagv = this.objectLoader.agvs.get(0);
-            List<float[]> path = new ArrayList<>();
-            path.add(new float[] {0.0f, 0.0f, 0.0f});
-            tagv.setPath(path);
-        }
         
-        //TODO Depending on wich way you're going (XYZ) 
-        //float afstand = AGV.GetMaxSpeed()*tpf;
-        //AGV.SetLocalTranslation(afstand);
-        //AGV.afstandToGo -= afstand;
-        //This kinda works, but it doesn't, since I don't specify the X, Y or Z
     }
 
     @Override
@@ -119,30 +108,26 @@ public class Main extends SimpleApplication
     {
         super.destroy();
         if(connectionAlive!= null)
-            connectionAlive.stop();
+        {
+            connectionAlive.stop();    
+        }
         readThread.stop();
         if(connection != null)
+        {
             connection.stop();
+        }
     }
-    
-    /**@param verplaatsing afstand die afgelegd moet worden
-     * @param snelheid snelheid waarmee het object zich beweegt
-     * @return
-     */
-    public float movementTijd(int verplaatsing,float snelheid)
+
+    public Crane getNearestCrane(Node obj)
     {
-        //The AGV always moves at top speed, because reasons
-        float tijd = verplaatsing/snelheid;
-        return tijd;
-    }
-    
-    public Crane getNearestCrane(Node obj) {
         float dist;
         float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.objectLoader.cranes){
+        for (Crane crane : this.objectLoader.cranes)
+        {
             dist = obj.getLocalTranslation().distance(crane.getPosition());
-            if (dist < minDist || minDist == -1) {
+            if (dist < minDist || minDist == -1)
+            {
                 minDist = dist;
                 nCrane = crane;
             }
@@ -150,7 +135,8 @@ public class Main extends SimpleApplication
         return nCrane;
     }
     
-    private void initInputs() {
+    private void initInputs()
+    {
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
@@ -158,45 +144,45 @@ public class Main extends SimpleApplication
         inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
         inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
         
-        ActionListener acl = new ActionListener() {
-
-            public void onAction(String name, boolean keyPressed, float tpf) {
+        ActionListener acl = new ActionListener()
+        {
+            public void onAction(String name, boolean keyPressed, float tpf)
+            {
                 Container cont = containers.get(0);
-                
-                if (name.equals("play_stop") && keyPressed) {
+                if(name.equals("play_stop") && keyPressed)
+                {
                     if (playing) {
                         playing = false;
                         
                     } else {
                         playing = true;
                     }
-                } else if (keyPressed) {
-                    switch (name) {
-                    case "target":
-                        Crane crane = getNearestCrane(cont.node);
-                        crane.targetContainer(cont);
-                        break;
-                    case "xp":
-                        cont.node.move(1,0,0);
-                        List<float[]> path = new ArrayList<>();
-                        path.add(new float[] {20.0f, 0.0f, 20.0f});
-                        objectLoader.agvs.get(0).setPath(path);
-                        break;
-                    case "xm":
-                        cont.node.move(-1,0,0);
-                        break;
-                    case "zp":
-                        cont.node.move(0,0,1);
-                        break;
-                    case "zm":
-                        cont.node.move(0,0,-1);
-                        break;
+                }
+                else if(keyPressed)
+                {
+                    switch(name)
+                    {
+                        case "target":
+                            Crane crane = getNearestCrane(cont.node);
+                            crane.targetContainer(cont);
+                            break;
+                        case "xp":
+                            cont.node.move(1,0,0);
+                            break;
+                        case "xm":
+                            cont.node.move(-1,0,0);
+                            break;
+                        case "zp":
+                            cont.node.move(0,0,1);
+                            break;
+                        case "zm":
+                            cont.node.move(0,0,-1);
+                            break;
                     }
                 }
 
             }
         };
-
         inputManager.addListener(acl, "play_stop");
         inputManager.addListener(acl, "xp");
         inputManager.addListener(acl, "zp");
@@ -205,31 +191,36 @@ public class Main extends SimpleApplication
         inputManager.addListener(acl, "target");
     }
     
-    private Thread initReadThread(){
+    private Thread initReadThread()
+    {
         return new Thread(new Runnable()
         {
-            public void run() {
+            public void run()
+            {
                 try
                 {
-                    while (true)
-                    {                        
-                        try 
-                        {
-                            Thread.sleep(5000);
-                            connection = new Connection();
-                            connected = true;
-                            break;
-                        } 
-                        catch (Exception e) 
-                        {
-                            System.out.println("Creating connection");
-                        }
-                    }
-                    
+                    //while (true)
+                    //{                        
+                    //    try 
+                    //    {
+                    //        Thread.sleep(5000);
+                    //        connection = new Connection();
+                    //        connected = true;
+                    //        break;
+                    //    } 
+                    //    catch (Exception e) 
+                    //    {
+                    //        System.out.println("Creating connection");
+                    //    }
+                    //}
+                    connection = new Connection();
+                    CommandHandler commandHandler = new CommandHandler(objectLoader);
                     while(true)
                     {
                         //What to do with the input?
-                        System.out.println(connection.read());
+                        String input = connection.read();
+                        System.out.println(input);
+                        commandHandler.ParseJSON(input);
                     }
                 }
                 catch(Exception e)
@@ -241,7 +232,8 @@ public class Main extends SimpleApplication
         });
     }
     
-    private void initLight(){
+    private void initLight()
+    {
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);

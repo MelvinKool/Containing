@@ -30,20 +30,23 @@ public class AGV extends WorldObject {
         super(rootNode, assetManager, position, model);
     }
     
-    public void setPath(List<float[]> wayPoints) {
+    public void setPath(List<Vector3f> wayPoints) {
         if (this.motionPath == null) {
             this.motionPath = new MotionPath();
             this.motionPath.addWayPoint(this.node.getWorldTranslation());
             System.out.println("new motionpath");
         }
         
-        for (float[] wayPoint : wayPoints) {
-            this.motionPath.addWayPoint(new Vector3f(wayPoint[0], wayPoint[1], wayPoint[2]));
+        for (Vector3f wayPoint : wayPoints) {
+            this.motionPath.addWayPoint(wayPoint);
             System.out.println("new waypoint at: " + wayPoint.toString());
         }
         
         if (this.motionEvent == null) {
             this.motionEvent = new MotionEvent(this.node, this.motionPath);
+            //this.motionPath.setCurveTension(0.0f);
+            this.motionEvent.setLookAt(Vector3f.NAN, Vector3f.ZERO);
+            this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
             
             System.out.println("new motionevent");
         }

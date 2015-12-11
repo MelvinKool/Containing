@@ -18,8 +18,7 @@ import java.util.List;
  */
 public class DockCrane extends Crane {
     
-    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
-        super(rootNode, assetManager, position, Vector3f.ZERO, model);
-        this.initGrabber("dockingcrane");
+    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType) {
+        super(rootNode, assetManager, position, Vector3f.ZERO, model, craneType);
     }   
 }
