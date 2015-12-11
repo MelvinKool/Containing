@@ -1,7 +1,6 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import Simulator.vehicles.AGV;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
@@ -27,7 +26,6 @@ public class Main extends SimpleApplication
     private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
-    
     
     boolean playing;
 
@@ -116,6 +114,8 @@ public class Main extends SimpleApplication
         {
             connection.stop();
         }
+        //Dirty as fuck, fix it later...
+        Runtime.getRuntime().exit(1);
     }
 
     public Crane getNearestCrane(Node obj)

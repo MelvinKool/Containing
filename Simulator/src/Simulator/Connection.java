@@ -5,6 +5,8 @@ import java.io.*;
 
 public class Connection
 {
+    private boolean stop = false;
+    
     private class SimSocket extends Socket
     {
         private DataInputStream in;
@@ -54,6 +56,7 @@ public class Connection
     {
         try
         {
+            stop = true;
             if(simSocket != null)
             {
                 simSocket.write("disconnect");
@@ -81,7 +84,9 @@ public class Connection
             return input;
         }
         else
+        {
             throw new Exception("Connection.read() - simSocket = null");
+        }
     }
     
     public void write(String message) throws Exception
@@ -98,7 +103,7 @@ public class Connection
         {
             public void run() 
             {
-                while (true) 
+                while (true && !stop) 
                 {   
                     try 
                     {
@@ -118,7 +123,7 @@ public class Connection
     {
         try 
         {
-            if (simSocket==null)
+            if (simSocket==null && !stop)
             {
                 try
                 {
