@@ -19,5 +19,6 @@ int main(int argc, char* argv[])
         else server.writeToSim(input);
     }
     
+    cout << "Closing..." << endl;
     return 0;
 }

@@ -24,23 +24,22 @@ public class Grabber extends WorldObject {
     public MotionEvent grabberMotion;
     public MotionPath motionPath;
     public Container container;
-    public float maxY;
     
     private Hook hookLeft;
     private Hook hookRight;
     
     public Grabber(Node rootNode, AssetManager assetManager, String craneType) {
         super(rootNode, assetManager, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
-        this.defaultPos = new Vector3f(0.0f, 0.0f, 0.0f);
+        this.defaultPos = Vector3f.ZERO;
         this.container = null;
         
         this.hookLeft = new Hook(
                 this.node, this.assetManager,
-                Vector3f.ZERO, "Models/crane/dockingcrane/hookLeft.j3o",
+                Vector3f.ZERO, "Models/crane/" + craneType + "/hookLeft.j3o",
                 Hook.LEFT_HOOK);
         this.hookRight = new Hook(
                 this.node, this.assetManager,
-                Vector3f.ZERO, "Models/crane/dockingcrane/hookRight.j3o",
+                Vector3f.ZERO, "Models/crane/" + craneType + "/hookRight.j3o",
                 Hook.RIGHT_HOOK);
     }
     

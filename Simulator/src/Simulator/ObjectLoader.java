@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Simulator;
 
 import Simulator.cranes.Crane;
@@ -25,10 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-/**
- *
- * @author erwin
- */
+
 public class ObjectLoader {
     
     public Spatial container;
@@ -51,7 +44,6 @@ public class ObjectLoader {
     public List<Crane> cranes = new ArrayList<>();
     public List<AGV> agvs = new ArrayList<>();
 
-    
     public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
         this.sortCrane = assetManager.loadModel("Models/crane/storagecrane/crane.j3o");
@@ -70,13 +62,16 @@ public class ObjectLoader {
         String content = "";
         String line;
         Path path = Paths.get(filePath);
-        try {
+        try
+        {
             reader = Files.newBufferedReader(path, Charset.forName("utf-8"));
-            
-            while ((line = reader.readLine()) != null) {
+            while((line = reader.readLine()) != null)
+            {
                 content += line;
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             ex.printStackTrace();
         }
         
@@ -107,12 +102,14 @@ public class ObjectLoader {
         return this.agv.clone();
     }
     
-    private void initObjects() {
+    private void initObjects()
+    {
         JSONObject spawnData = this.loadJson("assets/data/ObjectLocations.json");
         this.craneNode = new Node();
         this.dockCraneNode = new Node();
         
-        for (String crane : spawnData.keySet()) {
+        for(String crane : spawnData.keySet())
+        {
             this.spawnObjects(spawnData.getJSONObject(crane), crane);
         }
         
@@ -120,7 +117,8 @@ public class ObjectLoader {
         this.rootNode.attachChild(this.craneNode);
     }
 
-    private void spawnObjects(JSONObject craneObject, String type) {
+    private void spawnObjects(JSONObject craneObject, String type)
+    {
         float rotX = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(0));
         float rotY = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(1));
         float rotZ = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(2));
@@ -135,7 +133,8 @@ public class ObjectLoader {
         Crane craneObj;
         AGV agvObj;
         
-        for (Object positionObj : craneObject.getJSONArray("positions")) {
+        for(Object positionObj : craneObject.getJSONArray("positions"))
+        {
             agvObj = null;
             craneObj = null;
             position = (JSONArray) positionObj;
@@ -145,38 +144,40 @@ public class ObjectLoader {
             posZ = (float) position.getDouble(2);
             
             positionVec = new Vector3f(posX, posY, posZ);
-            switch (type) {
+            switch (type)
+            {
                 case "Storage":
-                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel());
+                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "Train": 
-                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel());
+                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "SeaShip":
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel());
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "TruckCrane": 
-                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel());
+                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "FreightShip": 
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel());
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
                     craneObj.node.rotate(rotX, rotY, rotZ);
                     break;
                 case "AGV":
                     agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel());
                     agvObj.node.rotate(rotX, rotY, rotZ);
             }
-            if (craneObj != null) {
-                craneObj.craneType = type;
+            if (craneObj != null)
+            {
                 this.cranes.add(craneObj);
-            } else if (agvObj != null) {
+            }
+            else if (agvObj != null)
+            {
                 this.agvs.add(agvObj);
             }
         }
-    }
-    
+    } 
 }

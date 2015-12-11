@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class TruckCrane extends Crane {
     
-    public TruckCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
-        super(rootNode, assetManager, position, Vector3f.ZERO, model);
+    public TruckCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType) {
+        super(rootNode, assetManager, position, Vector3f.ZERO, model, craneType);
         //this.initGrabber("truckcrane");
     }   
 }
