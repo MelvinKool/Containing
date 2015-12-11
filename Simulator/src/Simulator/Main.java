@@ -25,6 +25,7 @@ public class Main extends SimpleApplication
     private Thread readThread;
     private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
+    private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader objectLoader;
     
     boolean playing;
@@ -43,6 +44,8 @@ public class Main extends SimpleApplication
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
+        
+        locations.add(new Vector3f(0,0,0));
         
         this.dockCraneNode = new Node();
         this.playing = false;
@@ -177,6 +180,22 @@ public class Main extends SimpleApplication
                             break;
                         case "zm":
                             cont.node.move(0,0,-1);
+                            objectLoader.agvs.get(0).setPath(locations);
+                            objectLoader.agvs.get(1).setPath(locations);
+                            objectLoader.agvs.get(2).setPath(locations);
+                            objectLoader.agvs.get(3).setPath(locations);
+                            objectLoader.agvs.get(4).setPath(locations);
+                            objectLoader.agvs.get(5).setPath(locations);
+                            objectLoader.agvs.get(6).setPath(locations);
+                            objectLoader.agvs.get(7).setPath(locations);
+                            objectLoader.agvs.get(8).setPath(locations);
+                            objectLoader.agvs.get(9).setPath(locations);
+                            objectLoader.agvs.get(10).setPath(locations);
+                            objectLoader.agvs.get(11).setPath(locations);
+                            objectLoader.agvs.get(12).setPath(locations);
+                            objectLoader.agvs.get(13).setPath(locations);
+                            objectLoader.agvs.get(14).setPath(locations);
+                            objectLoader.agvs.get(15).setPath(locations);
                             break;
                     }
                 }
