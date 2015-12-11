@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
         vector3f coordinate3(-500,0,1500);
         coords.push_back(coordinate3);
         string jsontest = jsongenerator.moveTo(2,coords);
+        cout << jsontest << endl;
         server.writeToSim(jsontest);
     }
 

@@ -17,6 +17,26 @@ rapidjson::Document JSONGenerator::createJSONDocument()
 	return document;
 }
 
+//generates JSON for doing a container transfer between two vehicles
+string JSONGenerator::transferContainer(int containerId, int sourceId, int targetId)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	return toString(&document);
+}
+
+//generates JSON for spawning an
+string JSONGenerator::spawnObject(int objectId, vector3f coordinates)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	return toString(&document);
+}
+
 //generates JSON for moving a vehicle
 string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates)
 {
