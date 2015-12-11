@@ -44,6 +44,9 @@ public class AGV extends WorldObject {
         
         if (this.motionEvent == null) {
             this.motionEvent = new MotionEvent(this.node, this.motionPath);
+            //this.motionPath.setCurveTension(0.0f);
+            this.motionEvent.setLookAt(Vector3f.NAN, Vector3f.ZERO);
+            this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
             
             System.out.println("new motionevent");
         }

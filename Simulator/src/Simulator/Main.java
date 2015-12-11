@@ -68,20 +68,7 @@ public class Main extends SimpleApplication
     @Override
     public void simpleUpdate(float tpf)
     {
-//        if (this.test == false) {
-//            this.test = true;
-//            AGV tagv = this.objectLoader.agvs.get(0);
-//            List<float[]> path = new ArrayList<>();
-//            path.add(new float[] {0.0f, 0.0f, 0.0f});
-//            tagv.setPath(path);
-//            
-//        }
-        
-        //TODO Depending on wich way you're going (XYZ) 
-        //float afstand = AGV.GetMaxSpeed()*tpf;
-        //AGV.SetLocalTranslation(afstand);
-        //AGV.afstandToGo -= afstand;
-        //This kinda works, but it doesn't, since I don't specify the X, Y or Z
+
     }
 
     @Override
@@ -99,17 +86,7 @@ public class Main extends SimpleApplication
         readThread.stop();
         connection.stop();
     }
-    
-    /**@param verplaatsing afstand die afgelegd moet worden
-     * @param snelheid snelheid waarmee het object zich beweegt
-     * @return
-     */
-    public float movementTijd(int verplaatsing,float snelheid){
-        //The AGV always moves at top speed, because reasons
-        float tijd = verplaatsing/snelheid;
-        return tijd;
-    }
-    
+
     public Crane getNearestCrane(Node obj) {
         float dist;
         float minDist = -1;
