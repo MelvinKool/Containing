@@ -72,8 +72,17 @@ public class Grabber extends WorldObject {
         this.container = container;
     }
     
-    public void resetPosition() {
+    public void detachContainer() {
+        Vector3f pos = container.node.getWorldTranslation();
+        Quaternion rot = container.node.getWorldRotation();
+        container.node.setLocalTranslation(pos);
+        container.node.setLocalRotation(rot);
+        //container = null;
+    }
+    
+    public void resetPosition(Crane listener) {
         this.setTarget(this.defaultPos);
+        this.motionPath.addListener(listener);
         this.grabberMotion.play();
     }
 }

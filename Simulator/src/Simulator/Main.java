@@ -148,19 +148,19 @@ public class Main extends SimpleApplication
                     switch (name) {
                     case "target":
                         Crane crane = getNearestCrane(cont.node);
-                        crane.targetContainer(cont);
+                        crane.moveContainer(cont, new Vector3f(30,0,30));
                         break;
                     case "xp":
-                        cont.node.move(1,0,0);
+                        cont.node.move(5,0,0);
                         break;
                     case "xm":
-                        cont.node.move(-1,0,0);
+                        cont.node.move(-5,0,0);
                         break;
                     case "zp":
-                        cont.node.move(0,0,1);
+                        cont.node.move(0,0,5);
                         break;
                     case "zm":
-                        cont.node.move(0,0,-1);
+                        cont.node.move(0,0,-5);
                         break;
                     }
                 }
