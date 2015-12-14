@@ -16,23 +16,23 @@ using namespace std;
 class ClientSocket
 {
 public:
-	ClientSocket(string ip, int port);
-	ClientSocket(int sock);
-	~ClientSocket();
-	string read();
-	void write(string message);
+    ClientSocket(string ip, int port);
+    ClientSocket(int sock);
+    ~ClientSocket();
+    string read();
+    void write(string message);
 private:
-	int sock;
+    int sock;
 };
 
 class ServerSocket
 {
 public:
-	ServerSocket(int port);
-	~ServerSocket();
-	int accept();
+    ServerSocket(int port);
+    ~ServerSocket();
+    int accept();
 private:
-	int sock;
+    int sock;
 };
 
 #endif //SOCKET_H

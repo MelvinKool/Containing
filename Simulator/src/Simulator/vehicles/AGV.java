@@ -30,25 +30,26 @@ public class AGV extends WorldObject {
         super(rootNode, assetManager, position, model);
     }
     
-    public void setPath(List<float[]> wayPoints) {
+    public void setPath(List<Vector3f> wayPoints) {
         if (this.motionPath == null) {
             this.motionPath = new MotionPath();
             this.motionPath.addWayPoint(this.node.getWorldTranslation());
             System.out.println("new motionpath");
         }
         
-        for (float[] wayPoint : wayPoints) {
-            this.motionPath.addWayPoint(new Vector3f(wayPoint[0], wayPoint[1], wayPoint[2]));
+        for (Vector3f wayPoint : wayPoints) {
+            this.motionPath.addWayPoint(wayPoint);
             System.out.println("new waypoint at: " + wayPoint.toString());
         }
         
         if (this.motionEvent == null) {
             this.motionEvent = new MotionEvent(this.node, this.motionPath);
+            this.motionEvent.setLookAt(wayPoints.get(0), Vector3f.ZERO);
+            this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
             
             System.out.println("new motionevent");
         }
-        
-        //this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
+            this.motionPath.setCurveTension(0.0f);
         
         if (this.motionEvent.getPlayState() != PlayState.Playing) {
             this.motionEvent.play();
@@ -65,8 +66,7 @@ public class AGV extends WorldObject {
         if (this.motionPath.getNbWayPoints() == wayPointIndex + 1) {
             System.out.println("delete motion");
             this.motionPath = null;
-            this.motionEvent = null;
-            
+            this.motionEvent = null; 
         }
     }
 }

@@ -1,11 +1,11 @@
 #ifndef TRANSFER_H
 #define TRANSFER_H
 
-class transfer
+class Transfer
 {
     private:
     public:
     protected:
 };
 
-#endif // TRANSFER_H
+#endif //TRANSFER_H

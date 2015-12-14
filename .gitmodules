@@ -1,3 +1,0 @@
-[submodule "Simulator/libs/JSON-java"]
-	path = Simulator/libs/JSON-java
-	url = https://github.com/douglascrockford/JSON-java

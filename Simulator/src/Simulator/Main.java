@@ -19,11 +19,15 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
+    boolean connected = false;
+        
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
     private Thread readThread;
+    private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
+    private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader objectLoader;
     
     
@@ -44,6 +48,8 @@ public class Main extends SimpleApplication
 
         System.out.println(end - start);
         
+        locations.add(new Vector3f(0,0,0));
+        
         this.dockCraneNode = new Node();
         this.playing = false;
         flyCam.setEnabled(true);
@@ -55,6 +61,29 @@ public class Main extends SimpleApplication
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while (true)
+                {            
+                    try
+                    {
+                        if(connected)
+                        {
+                            connectionAlive = connection.connectionThread();
+                            connectionAlive.start();
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    } 
+                    catch (Exception e)
+                    {
+                    }
+                }
+            }
+        });
+        t.start();
         
         initLight();
         initInputs();
@@ -96,27 +125,29 @@ public class Main extends SimpleApplication
     public void destroy()
     {
         super.destroy();
+        if(connectionAlive!= null)
+        {
+            connectionAlive.stop();    
+        }
         readThread.stop();
-        connection.stop();
+        if(connection != null)
+        {
+            connection.stop();
+        }
+        //Dirty as fuck, fix it later...
+        Runtime.getRuntime().exit(1);
     }
-    
-    /**@param verplaatsing afstand die afgelegd moet worden
-     * @param snelheid snelheid waarmee het object zich beweegt
-     * @return
-     */
-    public float movementTijd(int verplaatsing,float snelheid){
-        //The AGV always moves at top speed, because reasons
-        float tijd = verplaatsing/snelheid;
-        return tijd;
-    }
-    
-    public Crane getNearestCrane(Node obj) {
+
+    public Crane getNearestCrane(Node obj)
+    {
         float dist;
         float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.objectLoader.cranes){
+        for (Crane crane : this.objectLoader.cranes)
+        {
             dist = obj.getLocalTranslation().distance(crane.getPosition());
-            if (dist < minDist || minDist == -1) {
+            if (dist < minDist || minDist == -1)
+            {
                 minDist = dist;
                 nCrane = crane;
             }
@@ -124,7 +155,8 @@ public class Main extends SimpleApplication
         return nCrane;
     }
     
-    private void initInputs() {
+    private void initInputs()
+    {
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
@@ -132,12 +164,13 @@ public class Main extends SimpleApplication
         inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
         inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
         
-        ActionListener acl = new ActionListener() {
-
-            public void onAction(String name, boolean keyPressed, float tpf) {
+        ActionListener acl = new ActionListener()
+        {
+            public void onAction(String name, boolean keyPressed, float tpf)
+            {
                 Container cont = containers.get(0);
-                
-                if (name.equals("play_stop") && keyPressed) {
+                if(name.equals("play_stop") && keyPressed)
+                {
                     if (playing) {
                         playing = false;
                         
@@ -161,6 +194,22 @@ public class Main extends SimpleApplication
                         break;
                     case "zm":
                         cont.node.move(0,0,-5);
+                        objectLoader.agvs.get(0).setPath(locations);
+                        objectLoader.agvs.get(1).setPath(locations);
+                        objectLoader.agvs.get(2).setPath(locations);
+                        objectLoader.agvs.get(3).setPath(locations);
+                        objectLoader.agvs.get(4).setPath(locations);
+                        objectLoader.agvs.get(5).setPath(locations);
+                        objectLoader.agvs.get(6).setPath(locations);
+                        objectLoader.agvs.get(7).setPath(locations);
+                        objectLoader.agvs.get(8).setPath(locations);
+                        objectLoader.agvs.get(9).setPath(locations);
+                        objectLoader.agvs.get(10).setPath(locations);
+                        objectLoader.agvs.get(11).setPath(locations);
+                        objectLoader.agvs.get(12).setPath(locations);
+                        objectLoader.agvs.get(13).setPath(locations);
+                        objectLoader.agvs.get(14).setPath(locations);
+                        objectLoader.agvs.get(15).setPath(locations);
                         break;
                     }
                 }
@@ -176,17 +225,36 @@ public class Main extends SimpleApplication
         inputManager.addListener(acl, "target");
     }
     
-    private Thread initReadThread(){
+    private Thread initReadThread()
+    {
         return new Thread(new Runnable()
         {
-            public void run() {
+            public void run()
+            {
                 try
                 {
+                    //while (true)
+                    //{                        
+                    //    try 
+                    //    {
+                    //        Thread.sleep(5000);
+                    //        connection = new Connection();
+                    //        connected = true;
+                    //        break;
+                    //    } 
+                    //    catch (Exception e) 
+                    //    {
+                    //        System.out.println("Creating connection");
+                    //    }
+                    //}
                     connection = new Connection();
+                    CommandHandler commandHandler = new CommandHandler(objectLoader);
                     while(true)
                     {
                         //What to do with the input?
-                        System.out.println(connection.read());
+                        String input = connection.read();
+                        System.out.println(input);
+                        commandHandler.ParseJSON(input);
                     }
                 }
                 catch(Exception e)
@@ -198,7 +266,8 @@ public class Main extends SimpleApplication
         });
     }
     
-    private void initLight(){
+    private void initLight()
+    {
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
