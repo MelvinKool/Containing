@@ -60,7 +60,8 @@ public class Crane extends WorldObject {
     
     // motionPaths are not as accurate as we like
     private void fixPositionToTarget() {
-        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) {
+        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) 
+        {
             this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
         } else 
         {
@@ -79,7 +80,8 @@ public class Crane extends WorldObject {
         // apparantly you need at least two waypoints
         this.motionPath.addWayPoint(this.getPosition());
         
-        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) {
+        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) 
+        {
             distance = FastMath.abs(target.x - this.getPosition().x);
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
         } else {
@@ -94,16 +96,19 @@ public class Crane extends WorldObject {
         craneMotion.play();
     }
     
-    public void resetPosition() {
+    public void resetPosition() 
+    {
         this.setTarget(this.defaultPos);
     }
     
-    public void moveContainer(Container container, Vector3f target) {
+    public void moveContainer(Container container, Vector3f target) 
+    {
         this.containerTarget = target;
         this.grabContainer(container);        
     }
     
-    public void grabContainer(Container container) {
+    public void grabContainer(Container container)
+    {
         Vector3f targetPos = container.node.getWorldTranslation();
         Vector3f holderTarget = this.node.worldToLocal(targetPos, null);
         Vector3f grabberTarget = this.grabberHolder.node.worldToLocal(targetPos, null);
@@ -122,7 +127,8 @@ public class Crane extends WorldObject {
         this.motionPath.addListener(this);
     }
     
-    public void putContainer(Vector3f target) {
+    public void putContainer(Vector3f target) 
+    {
         Vector3f holderTarget = this.node.worldToLocal(target, null);
         Vector3f grabberTarget = this.node.worldToLocal(target, null);
         
@@ -132,42 +138,54 @@ public class Crane extends WorldObject {
         this.grabber.setTarget(this.grabber.toRealPos(grabberTarget));
         this.grabber.motionPath.addListener(this);
         this.grabberHolder.grabberHolderMotion.play();
+        this.motionPath.addListener(this);
     }
     
-    private void grabIfReady() {
-        if (this.holderDone && this.craneDone) {
-            this.grabber.grabberMotion.play();
+    private void moveGrabberIfReady() 
+    {            
+        System.err.println("trymove");
 
-            System.out.println("grabbing");
-            this.cmd = Cmd.Nothing;
+        if (this.holderDone && this.craneDone) {
+            System.err.println("move");
+            this.grabber.grabberMotion.play();
+            if (this.cmd == Cmd.GRABBING) {
+                this.cmd = Cmd.Nothing;
+            }
         }
     }
-    
-    private void craneMotionDone() {
+        
+    private void craneMotionDone() 
+    {
         if (this.cmd == Cmd.GRABBING)
         {
             this.craneDone = true;
-            this.grabIfReady();
+            this.moveGrabberIfReady();
+        } else if (this.cmd == Cmd.PUTTING) {
+            this.craneDone = true;
+            this.moveGrabberIfReady();
         }
         this.fixPositionToTarget();
         this.motionPath = null;
     }
     
-    private void holderMotionDone() {
-        
+    private void holderMotionDone() 
+    {
         if (this.cmd == Cmd.GRABBING) 
         {
             this.holderDone = true;
-            this.grabIfReady();
+            this.moveGrabberIfReady();
         } else if (this.cmd == Cmd.PUTTING) 
         {
-            this.grabber.grabberMotion.play();
+            this.holderDone = true;
+            this.moveGrabberIfReady();
         }
+        
         this.grabberHolder.motionPath = null;
         this.grabberHolder.fixPositionToTarget();
     }
     
-    private void grabbermotionDone() {
+    private void grabbermotionDone() 
+    {
         if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
         {
             this.grabber.attachContainer(this.targetContainer);
@@ -188,20 +206,20 @@ public class Crane extends WorldObject {
             targetContainer.node.setLocalTranslation(pos);
             targetContainer.node.setLocalRotation(rot);
 
-            //this.targetContainer = null;
-            this.grabber.resetPosition(this);
             this.cmd = Cmd.RESET;
-            this.targetContainer = null;
+            this.grabber.resetPosition(this);
         } else if (this.cmd == Cmd.RESET) 
         {
             System.err.println("reset");
             this.cmd = Cmd.Nothing;
             this.grabber.motionPath = null;
+            this.targetContainer = null;
         }
     }
     
     @Override
-    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
+    {
         if (this.targetContainer != null) {            
             if (motionControl == this.craneMotion && 
                     this.motionPath.getNbWayPoints() == wayPointIndex + 1) 
