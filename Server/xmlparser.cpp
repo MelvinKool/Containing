@@ -11,7 +11,7 @@ void XmlParser::readXML(Database &db)
 {
     cout << "Do you want to load the XML files ('yes' or 'no')? ";
     string answer;
-    get(cin, answer);
+    getline(cin, answer);
     if(answer == "yes")
     {
         cout << "Loading XML..." << endl;
