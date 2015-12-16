@@ -126,74 +126,89 @@ public class Crane extends WorldObject {
         this.grabberHolder.grabberHolderMotion.play();
     }
     
+    private void craneMotionDone(int wayPointIndex) {
+        if (this.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBING)
+        {
+            this.craneDone = true;
+            if (this.holderDone == true) {
+                this.grabber.grabberMotion.play();
+
+                System.err.println("grabbing");
+                this.cmd = Cmd.Nothing;
+            }
+        }
+    }
+    
+    private void holderMotionDone(int wayPointIndex) {
+        int holderWaypoints = 1;
+        
+        try {
+            holderWaypoints = this.grabberHolder.motionPath.getNbWayPoints();
+        } catch (NullPointerException ex) {
+            System.err.println("not holder motionpath");
+        }
+        
+        if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.GRABBING) 
+        {
+            this.holderDone = true;
+            if (this.craneDone == true) {
+                this.grabber.grabberMotion.play();
+
+                System.err.println("grabbing");
+                this.cmd = Cmd.Nothing;
+            }
+        } else if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
+        {
+            this.grabber.grabberMotion.play();
+            this.grabberHolder.motionPath = null;
+        }
+    }
+    
+    private void grabbermotionDone(int wayPointIndex) {
+        if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && 
+            this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
+        {
+            this.grabber.attachContainer(this.targetContainer);
+            System.err.println("grabbed");
+            this.cmd = Cmd.GRABBER;
+            this.grabber.resetPosition(this);
+        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBER) 
+        {
+            this.putContainer(this.containerTarget);
+            System.err.println("putting");
+            this.cmd = Cmd.PUTTING;
+        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
+        {
+            System.err.println("detach");
+            Vector3f pos = targetContainer.node.getWorldTranslation();
+            Quaternion rot = targetContainer.node.getWorldRotation();
+            this.rootNode.attachChild(this.targetContainer.node);
+            targetContainer.node.setLocalTranslation(pos);
+            targetContainer.node.setLocalRotation(rot);
+
+            //this.targetContainer = null;
+            this.grabber.resetPosition(this);
+            this.cmd = Cmd.RESET;
+        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.RESET) 
+        {
+            System.err.println("reset");
+            this.cmd = Cmd.Nothing;
+            this.motionPath = null;
+            this.grabber.motionPath = null;
+        } 
+    }
+    
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if (this.targetContainer != null) {
             System.out.println("waypoint");
-            int holderWaypoints = 1;
-            try {
-                holderWaypoints = this.grabberHolder.motionPath.getNbWayPoints();
-            } catch (NullPointerException ex) {
-                System.err.println("not holder motionpath");
-            }
+            
             if (motionControl == this.craneMotion) { // handlers for crane
-                if (this.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBING)
-                {
-                    this.craneDone = true;
-                    if (this.holderDone == true) {
-                        this.grabber.grabberMotion.play();
-
-                        System.err.println("grabbing");
-                        this.cmd = Cmd.Nothing;
-                    }
-                }
+                this.craneMotionDone(wayPointIndex);
             } else if (motionControl == this.grabberHolder.grabberHolderMotion) { // handlers for grabberHolder
-                if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.GRABBING) 
-                {
-                    this.holderDone = true;
-                    if (this.craneDone == true) {
-                        this.grabber.grabberMotion.play();
-
-                        System.err.println("grabbing");
-                        this.cmd = Cmd.Nothing;
-                    }
-                } else if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
-                {
-                    this.grabber.grabberMotion.play();
-                    this.grabberHolder.motionPath = null;
-                }
+                this.holderMotionDone(wayPointIndex);
             } else if (motionControl == this.grabber.grabberMotion) { // handlers for grabber
-                if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && 
-                    this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
-                {
-                    this.grabber.attachContainer(this.targetContainer);
-                    System.err.println("grabbed");
-                    this.cmd = Cmd.GRABBER;
-                    this.grabber.resetPosition(this);
-                } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBER) 
-                {
-                    this.putContainer(this.containerTarget);
-                    System.err.println("putting");
-                    this.cmd = Cmd.PUTTING;
-                } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
-                {
-                    System.err.println("detach");
-                    Vector3f pos = targetContainer.node.getWorldTranslation();
-                    Quaternion rot = targetContainer.node.getWorldRotation();
-                    this.rootNode.attachChild(this.targetContainer.node);
-                    targetContainer.node.setLocalTranslation(pos);
-                    targetContainer.node.setLocalRotation(rot);
-
-                    //this.targetContainer = null;
-                    this.grabber.resetPosition(this);
-                    this.cmd = Cmd.RESET;
-                } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.RESET) 
-                {
-                    System.err.println("reset");
-                    this.cmd = Cmd.Nothing;
-                    this.motionPath = null;
-                    this.grabber.motionPath = null;
-                } 
+                this.grabbermotionDone(wayPointIndex);
             } 
         }
     }
