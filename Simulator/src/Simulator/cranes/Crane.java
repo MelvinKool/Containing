@@ -27,18 +27,19 @@ import java.util.Set;
  * @author erwin
  */
 public class Crane extends WorldObject {
+
+    private enum Cmd { GRABBING, PUTTING, GRABBER, RESET, Nothing  };
+
     
     public Vector3f defaultPos;
     public Vector3f motionTarget;
-    public GrabberHolder grabberHolder;
-    public Grabber grabber;
     public Container targetContainer;
     public String craneType;
     
-    private boolean grabbing = false;
+    private GrabberHolder grabberHolder;
+    private Grabber grabber;
     private MotionPath motionPath;
     private MotionEvent craneMotion;
-    private enum Cmd { GRABBING, PUTTING, GRABBER, RESET, Nothing  };
     private Cmd cmd;
     private Vector3f containerTarget;
     private float speed;
@@ -55,6 +56,16 @@ public class Crane extends WorldObject {
     public final void initGrabber(Vector3f position, float holderSpeed) {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType, holderSpeed);
         this.grabber = this.grabberHolder.initGrabber(craneType);
+    }
+    
+    // motionPaths are not as accurate as we like
+    private void fixPositionToTarget() {
+        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) {
+            this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
+        } else 
+        {
+            this.setPosition(new Vector3f(this.getPosition().x, this.getPosition().y, this.motionTarget.z));
+        }
     }
     
     public void setTarget(Vector3f target) {
@@ -126,58 +137,51 @@ public class Crane extends WorldObject {
         this.grabberHolder.grabberHolderMotion.play();
     }
     
-    private void craneMotionDone(int wayPointIndex) {
-        if (this.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBING)
-        {
-            this.craneDone = true;
-            if (this.holderDone == true) {
-                this.grabber.grabberMotion.play();
+    private void grabIfReady() {
+        if (this.holderDone && this.craneDone) {
+            this.grabber.grabberMotion.play();
 
-                System.err.println("grabbing");
-                this.cmd = Cmd.Nothing;
-            }
+            System.err.println("grabbing");
+            this.cmd = Cmd.Nothing;
         }
     }
     
-    private void holderMotionDone(int wayPointIndex) {
-        int holderWaypoints = 1;
-        
-        try {
-            holderWaypoints = this.grabberHolder.motionPath.getNbWayPoints();
-        } catch (NullPointerException ex) {
-            System.err.println("not holder motionpath");
+    private void craneMotionDone() {
+        if (this.cmd == Cmd.GRABBING)
+        {
+            this.craneDone = true;
+            this.grabIfReady();
         }
+        this.fixPositionToTarget();
+    }
+    
+    private void holderMotionDone() {
         
-        if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.GRABBING) 
+        if (this.cmd == Cmd.GRABBING) 
         {
             this.holderDone = true;
-            if (this.craneDone == true) {
-                this.grabber.grabberMotion.play();
-
-                System.err.println("grabbing");
-                this.cmd = Cmd.Nothing;
-            }
-        } else if (holderWaypoints == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
+            this.grabIfReady();
+        } else if (this.cmd == Cmd.PUTTING) 
         {
             this.grabber.grabberMotion.play();
             this.grabberHolder.motionPath = null;
         }
+        this.grabberHolder.fixPositionToTarget();
     }
     
-    private void grabbermotionDone(int wayPointIndex) {
-        if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && 
-            this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
+    private void grabbermotionDone() {
+        if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
         {
             this.grabber.attachContainer(this.targetContainer);
             System.err.println("grabbed");
             this.cmd = Cmd.GRABBER;
             this.grabber.resetPosition(this);
-        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.GRABBER) 
+        } else if (this.cmd == Cmd.GRABBER) 
         {
             this.putContainer(this.containerTarget);
             System.err.println("putting");
             this.cmd = Cmd.PUTTING;
-        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.PUTTING) 
+        } else if (this.cmd == Cmd.PUTTING) 
         {
             System.err.println("detach");
             Vector3f pos = targetContainer.node.getWorldTranslation();
@@ -189,13 +193,13 @@ public class Crane extends WorldObject {
             //this.targetContainer = null;
             this.grabber.resetPosition(this);
             this.cmd = Cmd.RESET;
-        } else if (this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1 && this.cmd == Cmd.RESET) 
+        } else if (this.cmd == Cmd.RESET) 
         {
             System.err.println("reset");
             this.cmd = Cmd.Nothing;
             this.motionPath = null;
             this.grabber.motionPath = null;
-        } 
+        }
     }
     
     @Override
@@ -203,12 +207,18 @@ public class Crane extends WorldObject {
         if (this.targetContainer != null) {
             System.out.println("waypoint");
             
-            if (motionControl == this.craneMotion) { // handlers for crane
-                this.craneMotionDone(wayPointIndex);
-            } else if (motionControl == this.grabberHolder.grabberHolderMotion) { // handlers for grabberHolder
-                this.holderMotionDone(wayPointIndex);
-            } else if (motionControl == this.grabber.grabberMotion) { // handlers for grabber
-                this.grabbermotionDone(wayPointIndex);
+            if (motionControl == this.craneMotion && 
+                    this.motionPath.getNbWayPoints() == wayPointIndex + 1) 
+            { // handlers for crane
+                this.craneMotionDone();
+            } else if (motionControl == this.grabberHolder.grabberHolderMotion && 
+                    this.grabberHolder.motionPath.getNbWayPoints() == wayPointIndex + 1) 
+            { // handlers for grabberHolder
+                this.holderMotionDone();
+            } else if (motionControl == this.grabber.grabberMotion &&
+                    this.grabber.motionPath.getNbWayPoints() == wayPointIndex + 1) 
+            { // handlers for grabber
+                this.grabbermotionDone();
             } 
         }
     }

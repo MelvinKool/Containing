@@ -40,6 +40,11 @@ public Vector3f motionTarget;
         return new Grabber(this.node, this.assetManager, craneType);
     }
     
+    // motionPaths are not as accurate as we like
+    public void fixPositionToTarget() {
+        this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
+    }
+    
     public void setTarget(Vector3f target) {        
         this.motionTarget = target;
         this.motionPath = new MotionPath();
