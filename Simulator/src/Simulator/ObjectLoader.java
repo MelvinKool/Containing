@@ -119,6 +119,9 @@ public class ObjectLoader {
 
     private void spawnObjects(JSONObject craneObject, String type)
     {
+        float speed = 5.0f; // TODO: get speed from file
+        float holderSpeed = 5.0f; // TODO: get speed from file
+        
         float rotX = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(0));
         float rotY = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(1));
         float rotZ = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(2));
@@ -128,10 +131,23 @@ public class ObjectLoader {
         float posZ;
         
         Vector3f positionVec;
+        Vector3f holderPosition = null;
         
         JSONArray position;
         Crane craneObj;
         AGV agvObj;
+        
+        if (!type.equals("AGV")) {        
+            JSONObject grabberInfo = craneObject.getJSONObject("grabber");
+            JSONArray grabberPosition = grabberInfo.getJSONArray("position");
+            boolean hasHolder = grabberInfo.getBoolean("has_holder");
+            
+             holderPosition = new Vector3f(
+                    (float) grabberPosition.getDouble(0),
+                    (float) grabberPosition.getDouble(1),
+                    (float) grabberPosition.getDouble(2)
+            );
+        }
         
         for(Object positionObj : craneObject.getJSONArray("positions"))
         {
@@ -147,35 +163,32 @@ public class ObjectLoader {
             switch (type)
             {
                 case "Storage":
-                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane", speed);
                     break;
                 case "Train": 
-                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane", speed);
                     break;
                 case "SeaShip":
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                     break;
                 case "TruckCrane": 
-                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane", speed);
                     break;
                 case "FreightShip": 
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                     break;
                 case "AGV":
                     agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel());
-                    agvObj.node.rotate(rotX, rotY, rotZ);
             }
             if (craneObj != null)
             {
+                craneObj.node.rotate(rotX, rotY, rotZ);
+                craneObj.initGrabber(holderPosition, holderSpeed);
                 this.cranes.add(craneObj);
             }
             else if (agvObj != null)
             {
+                agvObj.node.rotate(rotX, rotY, rotZ);
                 this.agvs.add(agvObj);
             }
         }

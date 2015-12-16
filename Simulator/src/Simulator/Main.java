@@ -194,22 +194,22 @@ public class Main extends SimpleApplication
                         break;
                     case "zm":
                         cont.node.move(0,0,-5);
-                        objectLoader.agvs.get(0).setPath(locations);
-                        objectLoader.agvs.get(1).setPath(locations);
-                        objectLoader.agvs.get(2).setPath(locations);
-                        objectLoader.agvs.get(3).setPath(locations);
-                        objectLoader.agvs.get(4).setPath(locations);
-                        objectLoader.agvs.get(5).setPath(locations);
-                        objectLoader.agvs.get(6).setPath(locations);
-                        objectLoader.agvs.get(7).setPath(locations);
-                        objectLoader.agvs.get(8).setPath(locations);
-                        objectLoader.agvs.get(9).setPath(locations);
-                        objectLoader.agvs.get(10).setPath(locations);
-                        objectLoader.agvs.get(11).setPath(locations);
-                        objectLoader.agvs.get(12).setPath(locations);
-                        objectLoader.agvs.get(13).setPath(locations);
-                        objectLoader.agvs.get(14).setPath(locations);
-                        objectLoader.agvs.get(15).setPath(locations);
+//                        objectLoader.agvs.get(0).setPath(locations);
+//                        objectLoader.agvs.get(1).setPath(locations);
+//                        objectLoader.agvs.get(2).setPath(locations);
+//                        objectLoader.agvs.get(3).setPath(locations);
+//                        objectLoader.agvs.get(4).setPath(locations);
+//                        objectLoader.agvs.get(5).setPath(locations);
+//                        objectLoader.agvs.get(6).setPath(locations);
+//                        objectLoader.agvs.get(7).setPath(locations);
+//                        objectLoader.agvs.get(8).setPath(locations);
+//                        objectLoader.agvs.get(9).setPath(locations);
+//                        objectLoader.agvs.get(10).setPath(locations);
+//                        objectLoader.agvs.get(11).setPath(locations);
+//                        objectLoader.agvs.get(12).setPath(locations);
+//                        objectLoader.agvs.get(13).setPath(locations);
+//                        objectLoader.agvs.get(14).setPath(locations);
+//                        objectLoader.agvs.get(15).setPath(locations);
                         break;
                     }
                 }

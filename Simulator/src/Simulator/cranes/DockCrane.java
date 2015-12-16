@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class DockCrane extends Crane {
     
-    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType) {
-        super(rootNode, assetManager, position, Vector3f.ZERO, model, craneType);
+    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType, float speed) {
+        super(rootNode, assetManager, position, Vector3f.ZERO, model, craneType, speed);
     }   
 }
