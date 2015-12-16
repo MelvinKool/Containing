@@ -6,6 +6,7 @@ Simulator/nbproject/private
 *.lock
 *.o
 *.properties
+tempXML.xml
 
 #Executables
 /Simulator/dist/
