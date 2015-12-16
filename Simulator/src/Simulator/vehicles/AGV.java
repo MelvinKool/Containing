@@ -34,6 +34,7 @@ public class AGV extends WorldObject {
         if (this.motionPath == null) {
             this.motionPath = new MotionPath();
             this.motionPath.addWayPoint(this.node.getWorldTranslation());
+
             System.out.println("new motionpath");
         }
         
@@ -49,11 +50,10 @@ public class AGV extends WorldObject {
             
             System.out.println("new motionevent");
         }
-            this.motionPath.setCurveTension(0.0f);
         
         if (this.motionEvent.getPlayState() != PlayState.Playing) {
             this.motionEvent.play();
-            
+                        this.motionPath.setCurveTension(0.0f);
             System.out.println("start play");
         }
         

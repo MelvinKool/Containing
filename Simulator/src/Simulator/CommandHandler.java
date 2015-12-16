@@ -1,5 +1,6 @@
 package Simulator;
 
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,12 +23,13 @@ public class CommandHandler
     {
         JSONObject jsonObject = new JSONObject(json);
         String command = jsonObject.getString("Command");
+        int vehicleId;
         switch(command)
         {
             case "moveTo":
                 //code for parsing moveto
                 //get the vehicle ID
-                int vehicleId = jsonObject.getInt("vehicleId");
+                vehicleId = jsonObject.getInt("vehicleId");
                 //get the route node
                 JSONArray route = jsonObject.getJSONArray("Route");
                 List Locations = new ArrayList<Vector3f>();
@@ -40,8 +42,22 @@ public class CommandHandler
                     z = coord.getInt(2);
                     Locations.add(new Vector3f(x,y,z));
                 }
-                
                 objectloader.agvs.get(vehicleId).setPath(Locations);
+                break;   
+            case "transferContainer":
+                break;
+            case "spawnObject":
+                break;
+            case "teleportObject":
+                vehicleId = jsonObject.getInt("vehicleId");
+                float rotation = (float)jsonObject.getDouble("rotation");
+                JSONObject teleportVector = jsonObject.getJSONObject("teleportLocation");
+                float telX,telY,telZ;
+                telX = (float)teleportVector.getDouble("X");
+                telY = (float)teleportVector.getDouble("Y");
+                telZ = (float)teleportVector.getDouble("Z");
+                objectloader.agvs.get(vehicleId).node.rotate(0, rotation*FastMath.DEG_TO_RAD, 0);
+                objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));
                 break;
         }
     }
