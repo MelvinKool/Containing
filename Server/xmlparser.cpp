@@ -11,16 +11,16 @@ void XmlParser::readXML(Database &db)
 {
     cout << "Do you want to load the XML files ('yes' or 'no')? ";
     string answer;
-    cin >> answer;
+    get(cin, answer);
     if(answer == "yes")
     {
         cout << "Loading XML..." << endl;
 
         vector<string> xmlDocPaths;
         xmlDocPaths.push_back("../docs/XML/xml1.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml2.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml3.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml4.xml");
+        xmlDocPaths.push_back("../docs/XML/xml2.xml");
+        xmlDocPaths.push_back("../docs/XML/xml3.xml");
+        xmlDocPaths.push_back("../docs/XML/xml4.xml");
         //xmlDocPaths.push_back("../docs/XML/xml5.xml");
         //xmlDocPaths.push_back("../docs/XML/xml6.xml");
         //xmlDocPaths.push_back("../docs/XML/xml7.xml");
@@ -315,50 +315,57 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
 {
     db.resetDatabase();
     string outFile = "../tempXML.xml";
+    remove(outFile.c_str());
     ofstream outputFile(outFile);
     regex regNode("<record id=  \"id[0-9]+\"><aankomst><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-zA-Z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf><positie><x>[0-9]+</x><y>[0-9]+</y><z>[0-9]+</z></positie></aankomst><eigenaar><naam>[a-zA-Z0-9]+</naam><containernr>[0-9]+</containernr></eigenaar><vertrek><datum><d>[0-9]+</d><m>[0-9]+</m><j>[0-9]+</j></datum><tijd><van>[0-9]{1,2}\\.[0-9]{2}</van><tot>[0-9]{1,2}\\.[0-9]{2}</tot></tijd><soort_vervoer>[a-zA-Z]+</soort_vervoer><bedrijf>[a-zA-Z0-9]+</bedrijf></vertrek><afmetingen><l>[0-9']+</l><b>[0-9']+</b><h>[0-9']+</h></afmetingen><gewicht><leeg>[0-9]+</leeg><inhoud>[0-9]+</inhoud></gewicht><inhoud><naam>[a-zA-Z]+</naam><soort>[a-zA-Z]+</soort><gevaar>[a-zA-Z]+</gevaar></inhoud><ISO>[0-9-]+</ISO></record>");
     regex regEndNode("</record>");
     regex regStart("<recordset>");
     regex regStop("</recordset>");
-    regex regXML("<\\?xml.+\\?>");
-    bool started, result;
+    bool started, result, lastSetStanding;
     string line, node;
+    lastSetStanding = false;
     result=true;
 
 
-    for(string path:xmlPaths)
+    for(int i = 0; i<xmlPaths.size(); i++)
     {
+        string path = xmlPaths[i];
         ifstream input(path);
         started = false;
+        if (i == (xmlPaths.size()-1))
+        {
+            lastSetStanding = true;
+        }
+
         if (input)
         {
             while (getline(input, line))
             {
                 if (!started)
                 {
-                    if (regex_search(line, regXML))
-                    {
-                        //xmlinfo is found
-                        outputFile<<line<<endl;
-                        //cout<<line<<endl;
-                    }
                     //if not started, look for start of xml
-                    else if (regex_search(line, regStart))
+                    if (regex_search(line, regStart))
                     {
                         started = true;
-                        //OUTPUT line to file
-                        outputFile<<line<<endl;
-                        //cout<<line<<endl;
+                        if (i == 0)
+                        {
+                            //OUTPUT line to file
+                            outputFile<<line<<endl;
+                            //cout<<line<<endl;
+                        }
                     }
-                } else //Als het is gestart
+                }
+                else //If started
                 {
                     if (regex_search(line, regStop))
                     {
                         //At end of recordset
-                        // OUTPUT line to file
-                        outputFile<<line<<endl;
-                        //cout<<line<<endl;
-
+                        if (i == (xmlPaths.size()-1))//If at last xmlfile, do end resultset
+                        {
+                            // OUTPUT line to file
+                            outputFile<<line<<endl;
+                            //cout<<line<<endl;
+                        }
                         //If end of recordset, stop while loop
                         break;
                     }
@@ -367,27 +374,27 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                     {
                         //if at end of node, check if node is complete
                         node = node + line;
-                        if (regex_search(node, regNode))//voeg een ! toe om als output alles te krijgen wat niet goed is.
+                        if (regex_search(node, regNode))//Add ! to return incorrect xml nodes
                         {
                             //OUTPUT node to file
                             outputFile<<node<<endl;
                             //cout<<node<<endl;
-                        } else
+                        }
+                        else
                         {
                             cout<<"foutieve node tegen gekomen"<<endl;
                         }
                         node = "";
-                    } else
+                    }
+                    else//if not at end of set or node
                     {
-                        //if not at end of set or node
                         node = node + line;
                     }
                 }
             }
         }
         input.close();
-        result = (result && processData(outFile, db));
     }
     outputFile.close();
-    return result;
+    return processData(outFile, db);
 }

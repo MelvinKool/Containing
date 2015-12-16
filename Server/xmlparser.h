@@ -8,6 +8,7 @@
 #include <regex>
 #include <algorithm>
 #include <fstream>
+#include <stdio.h>
 
 
 class XmlParser
