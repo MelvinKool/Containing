@@ -1,6 +1,5 @@
 #include "shortestPath.h"
 
-/*
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -10,22 +9,22 @@
 
 using namespace std;
 
-KortstePad::KortstePad(string fPath){
+ShortestPath::ShortestPath(string fPath){
     initRoutes(fPath);
 }
 
-KortstePad::~KortstePad(){
+ShortestPath::~ShortestPath(){
     //delete every item in plaatsen
-    for(pair<const string,Plaats*> &place : plaatsen){
+    for(pair<const vector3f,Place*> &place : places){
         //Plaats *p = place.second;
         delete place.second;
         place.second = nullptr;
     }
 }
 
-
-void KortstePad::initRoutes(string fPath){
-    ifstream loadRoutes(fPath.c_str());
+void ShortestPath::initRoutes(Database db){
+    //load routes from db
+    /*ifstream loadRoutes(fPath.c_str());
     if(loadRoutes.is_open()){
         //init the routes
         string from, to;
@@ -56,67 +55,66 @@ void KortstePad::initRoutes(string fPath){
                 add(toPlace,fromPlace,distance);
             }
         }
-    }
+    }*/
 }
 
 //gives the shortest route
-pair<int, string> KortstePad::route(string naam1, string naam2){
-    string route;
-    Plaats *plaats1,*plaats2,*huidige,*temp;
+pair<int, vector<vector3f>> ShortestPath::route(vector3f location1, vector3f location2){
+    vector<vector3f> route;
+    Place *place1,*place2,*current,*temp;
     int shortestDistance;
     //validate placenames
-    if((plaats1 = getPlaats(naam1)) == nullptr || (plaats2 = getPlaats(naam2)) == nullptr)
+    if((place1 = getPlace(place1)) == nullptr || (place2 = getPlace(place2)) == nullptr)
         throw string("One or both of the placenames are incorrect, please enter the valid placenames");
-    huidige = plaats1;
+    current = place1;
     //From place = 0
-    plaats1->afstand = 0;
-    plaats1->klaar = true;
-    while(!plaats2->klaar){
-        shortestDistance = verweg;
-        for(pair<Plaats*, int> &road : huidige->wegen){
-            if(!road.first->klaar && road.first->afstand > road.second + huidige->afstand){
-                road.first->afstand = huidige->afstand + road.second;
-                road.first->voorganger = huidige;
+    place1->distance = 0;
+    place1->done = true;
+    while(!place2->done){
+        shortestDistance = faraway;
+        for(pair<Place2*, int> &road : current->roads){
+            if(!road.first->done && road.first->distance > road.second + current->distance){
+                road.first->distance = current->distance + road.second;
+                road.first->previous = current;
             }
         }
-        for(pair<const string, Plaats*> naamEnPlaats : plaatsen){
-            Plaats* p = naamEnPlaats.second;
-            if(!p->klaar && p->afstand <= shortestDistance){
-                shortestDistance = p->afstand;
+        for(pair<const string, Place*> nameAndPlace : places){
+            Place* p = nameAndPlace.second;
+            if(!p->done && p->distance <= shortestDistance){
+                shortestDistance = p->distance;
                 temp = p;
             }
         }
-        temp->klaar = true;
-        huidige = temp;
+        temp->done = true;
+        current = temp;
     }
     //trace back the route
-    while(huidige != plaats1){
-        huidige = huidige->voorganger;
-        route = huidige->naam + ", " + route;
+    while(current != place1){
+        current = current->previous;
+        route = current->location + ", " + route;
     }
-    route += plaats2->naam;
-    return pair<int,string>(shortestDistance,route);
+    route.push_back(plaats2->location);
+    return pair<int,vector<vector3f>>(shortestDistance,route);
 }
 
 //checks whether a road exists
-bool KortstePad::roadExists(Plaats* fromPlace, Plaats* toPlace, int distance){
-    return (std::find(fromPlace->wegen.begin(), fromPlace->wegen.end(),pair<Plaats*, int>(toPlace,distance)) != fromPlace->wegen.end());
+bool ShortestPath::roadExists(Place* fromPlace, Place* toPlace, int distance){
+    return (std::find(fromPlace->roads.begin(), fromPlace->roads.end(),pair<Place*, int>(toPlace,distance)) != fromPlace->roads.end());
 }
 //gets the place pointer of a given placename
-KortstePad::Plaats* KortstePad::getPlaats(string naam){
-    return (plaatsen.find(naam) != plaatsen.end()) ? plaatsen[naam] : nullptr;
+KortstePad::Place* ShortestPath::getPlaats(vector3f location){
+    return (places.find(location) != places.end()) ? places[location] : nullptr;
 }
 
 //adds a road to a place
-void KortstePad::add(Plaats* fromPlace, Plaats* toPlace, int distance){
-    fromPlace->wegen.push_back(pair<Plaats*, int>(toPlace,distance));
+void ShortestPath::add(Place* fromPlace, Place* toPlace, int distance){
+    fromPlace->roads.push_back(pair<Place*, int>(toPlace,distance));
 }
 
-void KortstePad::reset(){
-    for(pair<const string, Plaats*> &naamEnPlaats : plaatsen){
-        naamEnPlaats.second->klaar = false;
-        naamEnPlaats.second->afstand = verweg;
-        naamEnPlaats.second->voorganger = nullptr;
+void ShortestPath::reset(){
+    for(pair<const string, Place*> &nameAndPlace : places){
+        nameAndPlace.second->done = false;
+        nameAndPlace.second->distance = faraway;
+        nameAndPlace.second->previous = nullptr;
     }
 }
-*/
