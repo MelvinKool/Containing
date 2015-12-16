@@ -91,9 +91,6 @@ public class Crane extends WorldObject {
         craneMotion.setSpeed(1.0f);
         craneMotion.setInitialDuration(distance / this.speed);
         
-        System.out.println(distance);
-        System.out.println(craneMotion.getDuration());
-        
         craneMotion.play();
     }
     
@@ -141,7 +138,7 @@ public class Crane extends WorldObject {
         if (this.holderDone && this.craneDone) {
             this.grabber.grabberMotion.play();
 
-            System.err.println("grabbing");
+            System.out.println("grabbing");
             this.cmd = Cmd.Nothing;
         }
     }
@@ -153,6 +150,7 @@ public class Crane extends WorldObject {
             this.grabIfReady();
         }
         this.fixPositionToTarget();
+        this.motionPath = null;
     }
     
     private void holderMotionDone() {
@@ -164,8 +162,8 @@ public class Crane extends WorldObject {
         } else if (this.cmd == Cmd.PUTTING) 
         {
             this.grabber.grabberMotion.play();
-            this.grabberHolder.motionPath = null;
         }
+        this.grabberHolder.motionPath = null;
         this.grabberHolder.fixPositionToTarget();
     }
     
@@ -173,7 +171,7 @@ public class Crane extends WorldObject {
         if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
         {
             this.grabber.attachContainer(this.targetContainer);
-            System.err.println("grabbed");
+            System.out.println("grabbed");
             this.cmd = Cmd.GRABBER;
             this.grabber.resetPosition(this);
         } else if (this.cmd == Cmd.GRABBER) 
@@ -193,20 +191,18 @@ public class Crane extends WorldObject {
             //this.targetContainer = null;
             this.grabber.resetPosition(this);
             this.cmd = Cmd.RESET;
+            this.targetContainer = null;
         } else if (this.cmd == Cmd.RESET) 
         {
             System.err.println("reset");
             this.cmd = Cmd.Nothing;
-            this.motionPath = null;
             this.grabber.motionPath = null;
         }
     }
     
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        if (this.targetContainer != null) {
-            System.out.println("waypoint");
-            
+        if (this.targetContainer != null) {            
             if (motionControl == this.craneMotion && 
                     this.motionPath.getNbWayPoints() == wayPointIndex + 1) 
             { // handlers for crane

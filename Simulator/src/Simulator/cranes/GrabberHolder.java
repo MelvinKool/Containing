@@ -50,15 +50,12 @@ public Vector3f motionTarget;
         this.motionPath = new MotionPath();
         float distance = FastMath.abs(target.x - this.getPosition().x);
         
-        System.out.println("holderdist: " + distance + " tx: " + target.x + " hx: " + this.getPosition().x);
-        
         this.motionPath.addWayPoint(this.getPosition());
         this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
         
         grabberHolderMotion = new MotionEvent(this.node, this.motionPath);
         grabberHolderMotion.setSpeed(1.0f);
         grabberHolderMotion.setInitialDuration(distance / this.speed);
-        System.out.println("hduration: " + distance / this.speed);
     }
     
 }
