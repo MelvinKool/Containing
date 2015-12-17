@@ -57,7 +57,10 @@ public class Main extends SimpleApplication
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.objectLoader.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.objectLoader.getContainerModel()));
         this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
+
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
@@ -159,6 +162,8 @@ public class Main extends SimpleApplication
     {
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
+
         inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
         inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
         inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
@@ -169,6 +174,8 @@ public class Main extends SimpleApplication
             public void onAction(String name, boolean keyPressed, float tpf)
             {
                 Container cont = containers.get(0);
+                Container cont2 = containers.get(1);
+                Container cont3 = containers.get(2);
                 if(name.equals("play_stop") && keyPressed)
                 {
                     if (playing) {
@@ -181,7 +188,11 @@ public class Main extends SimpleApplication
                     switch (name) {
                     case "target":
                         Crane crane = getNearestCrane(cont.node);
-                        crane.moveContainer(cont, new Vector3f(30,0,30));
+                        crane.moveContainer(cont, new Vector3f(55,0,-10));
+                        break;
+                    case "target2":
+                        Crane crane2 = getNearestCrane(cont2.node);
+                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
                         break;
                     case "xp":
                         cont.node.move(5,0,0);
@@ -213,6 +224,7 @@ public class Main extends SimpleApplication
                         break;
                     }
                 }
+                System.out.println(cont.getPosition());
 
             }
         };
@@ -223,6 +235,7 @@ public class Main extends SimpleApplication
         inputManager.addListener(acl, "xm");
         inputManager.addListener(acl, "zm");
         inputManager.addListener(acl, "target");
+        inputManager.addListener(acl, "target2");
     }
     
     private Thread initReadThread()

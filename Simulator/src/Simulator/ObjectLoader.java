@@ -57,6 +57,11 @@ public class ObjectLoader {
         this.initObjects();
     }
     
+    /**
+     * Load json from filePath
+     * @param filePath path to json file
+     * @return JSONObject
+     */
     private JSONObject loadJson(String filePath) {
         BufferedReader reader;
         String content = "";
@@ -78,30 +83,51 @@ public class ObjectLoader {
         return new JSONObject(content);
     }
     
+    /**
+     * @return clone of dockcrane model
+     */
     public Spatial getDockCraneModel() {
        return this.dockCrane.clone();
     }
     
+    /**
+     * @return clone of container model
+     */
     public Spatial getContainerModel() {
        return this.container.clone();
     }
     
+    /**
+     * @return clone of sort crane model
+     */
     public Spatial getSortCraneModel() {
        return this.sortCrane.clone();
     }
     
+    /**
+     * @return clone of truck crane model
+     */
     public Spatial getTruckCraneModel() {
        return this.truckCrane.clone();
     }
     
+    /**
+     * @return clone of train crane model
+     */
     public Spatial getTrainCraneModel() {
        return this.trainCrane.clone();
     }
     
+    /**
+     * @return clone of agv model
+     */
     public Spatial getAgvModel() {
         return this.agv.clone();
     }
     
+    /**
+     * get spawn information from file and spawn objects
+     */
     private void initObjects()
     {
         JSONObject spawnData = this.loadJson("assets/data/ObjectLocations.json");
@@ -117,14 +143,20 @@ public class ObjectLoader {
         this.rootNode.attachChild(this.craneNode);
     }
 
-    private void spawnObjects(JSONObject craneObject, String type)
+    /**
+     * spawn cranes and agvs from json information
+     * @param object
+     * @param type 
+     */
+    private void spawnObjects(JSONObject object, String type)
     {
         float speed = 5.0f; // TODO: get speed from file
         float holderSpeed = 5.0f; // TODO: get speed from file
+        float grabberYOffset = 0.0f;
         
-        float rotX = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(0));
-        float rotY = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(1));
-        float rotZ = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(2));
+        float rotX = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(0));
+        float rotY = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(1));
+        float rotZ = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(2));
         
         float posX;
         float posY;
@@ -138,9 +170,10 @@ public class ObjectLoader {
         AGV agvObj;
         
         if (!type.equals("AGV")) {        
-            JSONObject grabberInfo = craneObject.getJSONObject("grabber");
+            JSONObject grabberInfo = object.getJSONObject("grabber");
             JSONArray grabberPosition = grabberInfo.getJSONArray("position");
             boolean hasHolder = grabberInfo.getBoolean("has_holder");
+            grabberYOffset = (float) grabberInfo.getDouble("y_offset");
             
              holderPosition = new Vector3f(
                     (float) grabberPosition.getDouble(0),
@@ -149,7 +182,7 @@ public class ObjectLoader {
             );
         }
         
-        for(Object positionObj : craneObject.getJSONArray("positions"))
+        for(Object positionObj : object.getJSONArray("positions"))
         {
             agvObj = null;
             craneObj = null;
@@ -183,7 +216,7 @@ public class ObjectLoader {
             if (craneObj != null)
             {
                 craneObj.node.rotate(rotX, rotY, rotZ);
-                craneObj.initGrabber(holderPosition, holderSpeed);
+                craneObj.initGrabber(holderPosition, holderSpeed, grabberYOffset);
                 this.cranes.add(craneObj);
             }
             else if (agvObj != null)

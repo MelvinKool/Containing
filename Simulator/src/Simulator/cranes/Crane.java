@@ -53,12 +53,21 @@ public class Crane extends WorldObject {
         this.speed = speed;
     }
     
-    public final void initGrabber(Vector3f position, float holderSpeed) {
+    /**
+     * initialize grabber and grabberholder for this crane
+     * @param position
+     * @param holderSpeed
+     * @param yOffset 
+     */
+    public final void initGrabber(Vector3f position, float holderSpeed, float yOffset) {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType, holderSpeed);
-        this.grabber = this.grabberHolder.initGrabber(craneType);
+        this.grabber = this.grabberHolder.initGrabber(craneType, yOffset);
     }
     
-    // motionPaths are not as accurate as we like
+     /**
+     * motionPaths are not as accurate as we like so when done, this method is
+     * called to fix the model's position to the actual target position
+     */
     private void fixPositionToTarget() {
         if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) 
         {
@@ -69,6 +78,10 @@ public class Crane extends WorldObject {
         }
     }
     
+    /**
+     * Set a location to move to
+     * @param target 
+     */
     public void setTarget(Vector3f target) {
         this.motionTarget = target;
         this.motionPath = new MotionPath();
@@ -90,23 +103,35 @@ public class Crane extends WorldObject {
         }
         
         craneMotion = new MotionEvent(this.node, this.motionPath);
-        craneMotion.setSpeed(1.0f);
+        craneMotion.setSpeed(4.0f); // TODO: remove this line
         craneMotion.setInitialDuration(distance / this.speed);
         
         craneMotion.play();
     }
     
+    /**
+     * move to default position
+     */
     public void resetPosition() 
     {
         this.setTarget(this.defaultPos);
     }
     
+    /**
+     * Move a non-attached container to a target
+     * @param container
+     * @param target 
+     */
     public void moveContainer(Container container, Vector3f target) 
     {
         this.containerTarget = target;
         this.grabContainer(container);        
     }
     
+    /**
+     * set container as target and pick it up
+     * @param container 
+     */
     public void grabContainer(Container container)
     {
         Vector3f targetPos = container.node.getWorldTranslation();
@@ -115,6 +140,8 @@ public class Crane extends WorldObject {
         this.targetContainer = container;
         this.cmd = Cmd.GRABBING;
         this.setTarget(targetPos);
+
+        this.grabber.setTarget(this.grabber.toRealPos(grabberTarget));
         
         if (!this.craneType.equals("truckcrane")) { 
             this.grabberHolder.setTarget(holderTarget);        
@@ -122,15 +149,25 @@ public class Crane extends WorldObject {
             this.grabberHolder.grabberHolderMotion.play();
         }
         
-        this.grabber.setTarget(this.grabber.toRealPos(grabberTarget));
         this.grabber.motionPath.addListener(this);
         this.motionPath.addListener(this);
     }
     
+    /**
+     * move currently attached container to a target and detach it
+     * @param target 
+     */
     public void putContainer(Vector3f target) 
     {
         Vector3f holderTarget = this.node.worldToLocal(target, null);
         Vector3f grabberTarget = this.node.worldToLocal(target, null);
+        
+        // Dockingcrane grabberposition has extra offset on the y axis
+        // due to the fact that the holder is in the wrong position (toot low)
+        // this "fixes" it
+        if (this.craneType.equals("dockingcrane")) {
+            grabberTarget.setY(grabberTarget.y - this.grabberHolder.getPosition().y);
+        }
         
         this.setTarget(target);
         this.grabberHolder.setTarget(holderTarget);
@@ -141,6 +178,10 @@ public class Crane extends WorldObject {
         this.motionPath.addListener(this);
     }
     
+    /**
+     * check if crane and grabber are position
+     * if that's the case, then move grabber to target
+     */
     private void moveGrabberIfReady() 
     {            
         System.err.println("trymove");
@@ -153,7 +194,10 @@ public class Crane extends WorldObject {
             }
         }
     }
-        
+    
+    /**
+     * called when crane reaches the end of its motionPath
+     */
     private void craneMotionDone() 
     {
         if (this.cmd == Cmd.GRABBING)
@@ -168,6 +212,9 @@ public class Crane extends WorldObject {
         this.motionPath = null;
     }
     
+    /**
+     * called when grabberHolder reaches the end of its motionPath
+     */    
     private void holderMotionDone() 
     {
         if (this.cmd == Cmd.GRABBING) 
@@ -184,6 +231,9 @@ public class Crane extends WorldObject {
         this.grabberHolder.fixPositionToTarget();
     }
     
+    /**
+     * called when grabber reaches the end of its motionPath
+     */
     private void grabbermotionDone() 
     {
         if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 

@@ -36,15 +36,28 @@ public Vector3f motionTarget;
         this.speed = speed;
     }
     
-    public Grabber initGrabber(String craneType) {
-        return new Grabber(this.node, this.assetManager, craneType);
+    /**
+     * initialize grabber
+     * @param craneType
+     * @param yOffset
+     * @return new grabber instance
+     */
+    public Grabber initGrabber(String craneType, float yOffset) {
+        return new Grabber(this.node, this.assetManager, craneType, yOffset);
     }
     
-    // motionPaths are not as accurate as we like
+    /**
+     * motionPaths are not as accurate as we like so when done, this method is
+     * called to fix the model's position to the actual target position
+     */
     public void fixPositionToTarget() {
         this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
     }
     
+    /**
+     * set target to move to
+     * @param target 
+     */
     public void setTarget(Vector3f target) {        
         this.motionTarget = target;
         this.motionPath = new MotionPath();
@@ -54,7 +67,7 @@ public Vector3f motionTarget;
         this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
         
         grabberHolderMotion = new MotionEvent(this.node, this.motionPath);
-        grabberHolderMotion.setSpeed(1.0f);
+        grabberHolderMotion.setSpeed(1.0f); // TODO: remove this line
         grabberHolderMotion.setInitialDuration(distance / this.speed);
     }
     
