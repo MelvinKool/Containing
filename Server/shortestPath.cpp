@@ -1,5 +1,4 @@
 #include "shortestPath.h"
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -22,7 +21,34 @@ ShortestPath::~ShortestPath(){
     }
 }
 
-void ShortestPath::initRoutes(Database db){
+void ShortestPath::initRoutes(){
+    //add routes to the list
+    vector3f from,to;
+    Plaats * fromplace, toPlace;
+    //for each place
+        //from =
+        //to =
+        Plaats * fromPlace = new Plaats(from);
+        Plaats * toPlace = new Plaats(to);
+        auto insertedFrom = plaatsen.insert(pair<vector3f,Plaats*>(from,fromPlace));
+        auto insertedTo = plaatsen.insert(pair<vector3f,Plaats*>(to,toPlace));
+        //delete from or to if they are not inserted
+        if(!insertedFrom.second){
+            //fromPlace already exists
+            delete fromPlace;
+            fromPlace = nullptr;
+        }
+        if(!insertedTo.second){
+            //toPlace already exists
+            delete toPlace;
+            toPlace = nullptr;
+        }
+        fromPlace = getPlaats(from);
+        toPlace = getPlaats(to);
+        if(!roadExists(fromPlace,toPlace,distance)){
+            add(fromPlace,toPlace,distance);
+        }
+        //both from and to??????
     //load routes from db
     /*ifstream loadRoutes(fPath.c_str());
     if(loadRoutes.is_open()){
@@ -78,7 +104,7 @@ pair<int, vector<vector3f>> ShortestPath::route(vector3f location1, vector3f loc
                 road.first->previous = current;
             }
         }
-        for(pair<const string, Place*> nameAndPlace : places){
+        for(pair<const vector3f, Place*> nameAndPlace : places){
             Place* p = nameAndPlace.second;
             if(!p->done && p->distance <= shortestDistance){
                 shortestDistance = p->distance;
@@ -112,7 +138,7 @@ void ShortestPath::add(Place* fromPlace, Place* toPlace, int distance){
 }
 
 void ShortestPath::reset(){
-    for(pair<const string, Place*> &nameAndPlace : places){
+    for(pair<const vector3f, Place*> &nameAndPlace : places){
         nameAndPlace.second->done = false;
         nameAndPlace.second->distance = faraway;
         nameAndPlace.second->previous = nullptr;

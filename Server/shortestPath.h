@@ -11,8 +11,8 @@ using namespace std;
 class ShortestPath
 {
 public:
-    ShortestPath(Database &db);
-    void initRoutes(Database &db);
+    ShortestPath();
+    void initRoutes();
     ~ShortestPath();
     pair<int, vector<vector3f>> route(vector3f location1, vector3f location2);
     void reset();
