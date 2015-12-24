@@ -29,35 +29,67 @@ int main(int argc, char* argv[])
         //TODO maybe per 5 containers? just like a buffer?
         while(leavingContainers.hasNext())
         {
+            agv = getFreeAGV();
             crane.goto(positionX,positionY,positionZ); //crane at container dump
             agv.goto(positionX,positionY,positionZ); // send agv to dump row
-            crane.transfer(container, agv); //transfer container from dump to agv
+            crane.transfer(container,dump,agv); //transfer container from dump to agv
 
             if(vehicle=="train")
             {
                 agv.goto(positionX,positionY,positionZ); //send agv with current container to unloading position
                 crane.goto(positionX,positionY,positionZ); //move crane to load location
-                crane.transfer(container,train); //transfer container from agv to train
+                crane.transfer(container,agv,train); //transfer container from agv to train
             }
 
-            if(vehicle=="lorry") //TRUCK YEAH!!
+            if(vehicle=="truck") //TRUCK YEAH!!
             {
                 agv.goto(positionX,positionY,positionZ); //send agv with current container to unloading position
                 crane.goto(positionX,positionY,positionZ); //move crane to load location
-                crane.transfer(container,lorry); //transfer container from agv to truck
+                crane.transfer(container,agv,truck); //transfer container from agv to truck
             }
 
             if(vehicle=="ship")
             {
                 crane.goto(positionX,positionY,positionZ); //move crane to load location
                 agv.goto(positionX,positionY,positionZ); //send agv with current container to unloading position
-                crane.transfer(container,ship); //transfer container from agv to ship
+                crane.transfer(container,agv,ship); //transfer container from agv to ship
             }
         }
 
         while(newContainers.hasNext())
         {
-            if(vehicle=="")
+            agv = getFreeAGV();
+            if(vehicle=="truck")
+            {
+                crane.goto(positionX,positionY,positionZ); //move crane to unloading location
+                crane.transfer(container,lorry,agv); //get container from truck to agv
+            }
+
+            if(vehicle=="train")
+            {
+                crane.goto(positionX,positionY,positionZ);
+                agv.goto(positionX,positionY,positionZ);
+                crane.transfer(container,train,agv);
+            }
+
+            if(vehicle=="ship")
+            {
+                crane.goto(positionX,positionY,positionZ);
+                agv.goto(positionX,positionY,positionZ);
+                crane.transfer(container,ship,agv);
+
+                if(crane.currentRowContainerCount()==0)
+                {
+                    //crane to new row?
+                    //or do this at first line of code
+                }
+            }
+
+            agv.goto(positionX,positionY,positionZ); //move to dump row
+            crane.goto(positionX,positionY,positionZ); //move crane to agv parking
+            crane.getBestDumpPosition(); //get best spot to place container in dumping row
+            crane.transfer(container,agv,dump);
+            crane.goto(positionX,positionY,positionZ);
         }
 
 
