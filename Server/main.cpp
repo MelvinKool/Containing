@@ -17,9 +17,40 @@ int main(int argc, char* argv[])
     while(true)
     {
         string input;
-        cin >> input;
+        getline(cin, input);
         if(input == "exit") break;
         server.writeToSim(input);
+        /*
+        Logics outline and stuffs to send let everything move
+
+        resultSet newContainers = Database.select("current arrival time");
+        resultSet leavingContainers = Database.selsect("current departure time");
+        while(leavingContainers.hasNext())
+        {
+            crane.goto(positionX,positionY,positionZ); //crane at container dump
+            agv.goto(positionX,positionY,positionZ); // send agv to dump row
+            crane.transfer(container, agv); //transfer container from dump to agv
+
+            if(vehicle=="train")
+            {
+                agv.goto(positionX,positionY,positionZ); //send agv with current container to unloading position
+                crane.goto(positionX,positionY,positionZ); //move crane to load location
+                crane.transfer(container,train); //transfer container from agv to train
+            }
+
+            if(vehicle=="lorry") //TRUCK YEAH!!
+            {
+                agv.goto(positionX,positionY,positionZ); //send agv with current container to unloading position
+                crane.goto(positionX,positionY,positionZ); //move crane to load location
+                crane.transfer(container,train); //transfer container from agv to train
+            }
+        }
+
+
+
+
+
+        */
     }
     cout << "Closing..." << endl;
     return 0;
