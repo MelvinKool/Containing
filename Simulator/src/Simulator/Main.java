@@ -1,7 +1,6 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import Simulator.vehicles.AGV;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
@@ -14,7 +13,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Main extends SimpleApplication
@@ -28,7 +26,7 @@ public class Main extends SimpleApplication
     private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private List<Vector3f> locations = new ArrayList<>();
-    private ObjectLoader objectLoader;
+    private ObjectLoader worldObjects;
     
     
     boolean playing;
@@ -43,7 +41,7 @@ public class Main extends SimpleApplication
     public void simpleInitApp()
     {
         long start = System.currentTimeMillis();
-        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
@@ -57,15 +55,16 @@ public class Main extends SimpleApplication
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.objectLoader.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.objectLoader.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
 
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
         Thread t = new Thread(new Runnable()
         {
+            @Override
             public void run()
             {
                 while (true)
@@ -102,7 +101,7 @@ public class Main extends SimpleApplication
     {
 //        if (this.test == false) {
 //            this.test = true;
-//            AGV tagv = this.objectLoader.agvs.get(0);
+//            AGV tagv = this.worldObjects.agvs.get(0);
 //            List<float[]> path = new ArrayList<>();
 //            path.add(new float[] {0.0f, 0.0f, 0.0f});
 //            tagv.setPath(path);
@@ -146,7 +145,7 @@ public class Main extends SimpleApplication
         float dist;
         float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.objectLoader.cranes)
+        for (Crane crane : this.worldObjects.cranes)
         {
             dist = obj.getLocalTranslation().distance(crane.getPosition());
             if (dist < minDist || minDist == -1)
@@ -205,22 +204,22 @@ public class Main extends SimpleApplication
                         break;
                     case "zm":
                         cont.node.move(0,0,-5);
-//                        objectLoader.agvs.get(0).setPath(locations);
-//                        objectLoader.agvs.get(1).setPath(locations);
-//                        objectLoader.agvs.get(2).setPath(locations);
-//                        objectLoader.agvs.get(3).setPath(locations);
-//                        objectLoader.agvs.get(4).setPath(locations);
-//                        objectLoader.agvs.get(5).setPath(locations);
-//                        objectLoader.agvs.get(6).setPath(locations);
-//                        objectLoader.agvs.get(7).setPath(locations);
-//                        objectLoader.agvs.get(8).setPath(locations);
-//                        objectLoader.agvs.get(9).setPath(locations);
-//                        objectLoader.agvs.get(10).setPath(locations);
-//                        objectLoader.agvs.get(11).setPath(locations);
-//                        objectLoader.agvs.get(12).setPath(locations);
-//                        objectLoader.agvs.get(13).setPath(locations);
-//                        objectLoader.agvs.get(14).setPath(locations);
-//                        objectLoader.agvs.get(15).setPath(locations);
+//                        worldObjects.agvs.get(0).setPath(locations);
+//                        worldObjects.agvs.get(1).setPath(locations);
+//                        worldObjects.agvs.get(2).setPath(locations);
+//                        worldObjects.agvs.get(3).setPath(locations);
+//                        worldObjects.agvs.get(4).setPath(locations);
+//                        worldObjects.agvs.get(5).setPath(locations);
+//                        worldObjects.agvs.get(6).setPath(locations);
+//                        worldObjects.agvs.get(7).setPath(locations);
+//                        worldObjects.agvs.get(8).setPath(locations);
+//                        worldObjects.agvs.get(9).setPath(locations);
+//                        worldObjects.agvs.get(10).setPath(locations);
+//                        worldObjects.agvs.get(11).setPath(locations);
+//                        worldObjects.agvs.get(12).setPath(locations);
+//                        worldObjects.agvs.get(13).setPath(locations);
+//                        worldObjects.agvs.get(14).setPath(locations);
+//                        worldObjects.agvs.get(15).setPath(locations);
                         break;
                     }
                 }
@@ -261,7 +260,7 @@ public class Main extends SimpleApplication
                     //    }
                     //}
                     connection = new Connection();
-                    CommandHandler commandHandler = new CommandHandler(objectLoader);
+                    CommandHandler commandHandler = new CommandHandler(worldObjects);
                     while(true)
                     {
                         //What to do with the input?

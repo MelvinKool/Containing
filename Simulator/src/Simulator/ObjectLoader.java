@@ -150,8 +150,9 @@ public class ObjectLoader {
      */
     private void spawnObjects(JSONObject object, String type)
     {
-        float speed = 5.0f; // TODO: get speed from file
-        float holderSpeed = 5.0f; // TODO: get speed from file
+        float speed = (float) object.getDouble("speed");
+        float holderSpeed = 0.0f;
+        float grabberSpeed = 0.0f;
         float grabberYOffset = 0.0f;
         
         float rotX = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(0));
@@ -174,6 +175,8 @@ public class ObjectLoader {
             JSONArray grabberPosition = grabberInfo.getJSONArray("position");
             boolean hasHolder = grabberInfo.getBoolean("has_holder");
             grabberYOffset = (float) grabberInfo.getDouble("y_offset");
+            grabberSpeed = (float) grabberInfo.getDouble("speed");
+            holderSpeed = (float) grabberInfo.getDouble("holderSpeed");
             
              holderPosition = new Vector3f(
                     (float) grabberPosition.getDouble(0),
@@ -216,7 +219,7 @@ public class ObjectLoader {
             if (craneObj != null)
             {
                 craneObj.node.rotate(rotX, rotY, rotZ);
-                craneObj.initGrabber(holderPosition, holderSpeed, grabberYOffset);
+                craneObj.initGrabber(holderPosition, grabberSpeed, holderSpeed, grabberYOffset);
                 this.cranes.add(craneObj);
             }
             else if (agvObj != null)

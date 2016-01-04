@@ -8,6 +8,7 @@ import Simulator.*;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -27,13 +28,15 @@ public class Grabber extends WorldObject {
     
     private Hook hookLeft;
     private Hook hookRight;
+    private float speed;
     private float yOffset;
     
-    public Grabber(Node rootNode, AssetManager assetManager, String craneType, float yOffset) {
+    public Grabber(Node rootNode, AssetManager assetManager, String craneType, float yOffset, float grabberSpeed) {
         super(rootNode, assetManager, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
         this.defaultPos = Vector3f.ZERO;
         this.container = null;
         this.yOffset = yOffset;
+        this.speed = grabberSpeed;
         
         this.hookLeft = new Hook(
                 this.node, this.assetManager,
@@ -59,6 +62,7 @@ public class Grabber extends WorldObject {
      * @param target
      */
     public void setTarget(Vector3f target) {
+        float distance = FastMath.abs(target.y - this.getPosition().y);
         this.motionTarget = target;
         this.motionPath = new MotionPath();
         
@@ -67,7 +71,7 @@ public class Grabber extends WorldObject {
         this.motionPath.addWayPoint(new Vector3f(this.getPosition().x, target.y, this.getPosition().z));
         
         grabberMotion = new MotionEvent(this.node, this.motionPath);
-        grabberMotion.setSpeed(5.0f); // TODO: remove this line
+        grabberMotion.setInitialDuration(distance / this.speed);
     }
     
     /**

@@ -42,8 +42,8 @@ public Vector3f motionTarget;
      * @param yOffset
      * @return new grabber instance
      */
-    public Grabber initGrabber(String craneType, float yOffset) {
-        return new Grabber(this.node, this.assetManager, craneType, yOffset);
+    public Grabber initGrabber(String craneType, float yOffset, float grabberSpeed) {
+        return new Grabber(this.node, this.assetManager, craneType, yOffset, grabberSpeed);
     }
     
     /**

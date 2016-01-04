@@ -27,7 +27,7 @@ class Hook extends WorldObject {
     
     public Hook(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile, int hookType) {
         super(rootNode, assetManager, position, modelFile);
-        this.initRotations(hookType);
+        //this.initRotations(hookType);
     }
     
     public void open() {

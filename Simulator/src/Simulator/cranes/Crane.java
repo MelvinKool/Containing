@@ -8,20 +8,14 @@ import Simulator.Container;
 import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.events.CinematicEvent;
-import com.jme3.cinematic.events.CinematicEventListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author erwin
@@ -59,9 +53,9 @@ public class Crane extends WorldObject {
      * @param holderSpeed
      * @param yOffset 
      */
-    public final void initGrabber(Vector3f position, float holderSpeed, float yOffset) {
+    public final void initGrabber(Vector3f position, float grabberSpeed, float holderSpeed, float yOffset) {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType, holderSpeed);
-        this.grabber = this.grabberHolder.initGrabber(craneType, yOffset);
+        this.grabber = this.grabberHolder.initGrabber(craneType, yOffset, grabberSpeed);
     }
     
      /**
@@ -69,7 +63,7 @@ public class Crane extends WorldObject {
      * called to fix the model's position to the actual target position
      */
     private void fixPositionToTarget() {
-        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) 
+        if ((this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) || this.craneType.equals("traincrane")) 
         {
             this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
         } else 
@@ -93,7 +87,7 @@ public class Crane extends WorldObject {
         // apparantly you need at least two waypoints
         this.motionPath.addWayPoint(this.getPosition());
         
-        if (this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) 
+        if ((this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) || this.craneType.equals("traincrane")) 
         {
             distance = FastMath.abs(target.x - this.getPosition().x);
             this.motionPath.addWayPoint(new Vector3f(target.x, this.getPosition().y, this.getPosition().z));
@@ -103,7 +97,7 @@ public class Crane extends WorldObject {
         }
         
         craneMotion = new MotionEvent(this.node, this.motionPath);
-        craneMotion.setSpeed(4.0f); // TODO: remove this line
+        //craneMotion.setSpeed(4.0f); // TODO: remove this line
         craneMotion.setInitialDuration(distance / this.speed);
         
         craneMotion.play();
@@ -231,6 +225,19 @@ public class Crane extends WorldObject {
         this.grabberHolder.fixPositionToTarget();
     }
     
+    private void delayAttachContainer() 
+    {
+        System.out.println("grabbed");
+        this.cmd = Cmd.GRABBER;
+        this.grabber.resetPosition(this);
+    }
+    
+    private void delayDetachContainer() 
+    {        
+        this.cmd = Cmd.RESET;
+        this.grabber.resetPosition(this);
+    }
+    
     /**
      * called when grabber reaches the end of its motionPath
      */
@@ -238,10 +245,22 @@ public class Crane extends WorldObject {
     {
         if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
         {
+            
             this.grabber.attachContainer(this.targetContainer);
-            System.out.println("grabbed");
-            this.cmd = Cmd.GRABBER;
-            this.grabber.resetPosition(this);
+            // Asynchronously wait before attaching container so that we don't block execution
+            new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        try
+                        {
+                            Thread.sleep(3000); // TODO: change to 30 seconds
+                        } catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        delayAttachContainer();
+                    }
+            }).start();
         } else if (this.cmd == Cmd.GRABBER) 
         {
             this.putContainer(this.containerTarget);
@@ -255,9 +274,19 @@ public class Crane extends WorldObject {
             this.rootNode.attachChild(this.targetContainer.node);
             targetContainer.node.setLocalTranslation(pos);
             targetContainer.node.setLocalRotation(rot);
-
-            this.cmd = Cmd.RESET;
-            this.grabber.resetPosition(this);
+            new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        try
+                        {
+                            Thread.sleep(3000); // TODO: change to 30 seconds
+                        } catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        delayDetachContainer();
+                    }
+            }).start();
         } else if (this.cmd == Cmd.RESET) 
         {
             System.err.println("reset");
@@ -266,6 +295,7 @@ public class Crane extends WorldObject {
             this.targetContainer = null;
         }
     }
+    
     
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
