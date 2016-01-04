@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include <string>
+#include <mysql.h>
 
 #include "connections.h"
 #include "xmlparser.h"
@@ -19,6 +20,9 @@ private:
     XmlParser xmlParser;
     Connections connections;
     HttpServer httpserver;
+    bool stop;
+    void checkContainers();
+    void stopRunning();
 };
 
 #endif //SERVER_H
