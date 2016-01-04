@@ -150,6 +150,46 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
             string content_Danger =  content->first_node("gevaar")->value();
         /////////////////////////////////////////////////////////////////////
 
+        if (atoi(year_Arrival.c_str())>atoi(year_Departure.c_str()))
+        {
+            continue;
+        }
+        else if (atoi(year_Arrival.c_str())==atoi(year_Departure.c_str()))
+        {
+            if (atoi(month_Arrival.c_str())>atoi(month_Departure.c_str()))
+            {
+                continue;
+            }
+            else if (atoi(month_Arrival.c_str())==atoi(month_Departure.c_str()))
+            {
+                if (atoi(day_Arrival.c_str())>atoi(day_Departure.c_str()))
+                {
+                    continue;
+                }
+                else if (atoi(day_Arrival.c_str())==atoi(day_Departure.c_str()))
+                {
+                    if (atoi(from_Arrival.substr(0,2).c_str())>atoi(from_Departure.substr(0,2).c_str()))//substring is hours
+                    {
+                        continue;
+                    }
+                    else if (atoi(from_Arrival.substr(0,2).c_str())==atoi(from_Departure.substr(0,2).c_str()))
+                    {
+                        if (atoi(from_Arrival.substr(3,2).c_str())>atoi(from_Departure.substr(3,2).c_str()))//substring is minutes
+                        {
+                            continue;
+                        }
+                        else if (atoi(from_Arrival.substr(3,2).c_str())==atoi(from_Departure.substr(3,2).c_str()))
+                        {
+                            continue;//since a container can't be at 2 places at once skip container
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
         int ownerID                 = -1;
         int sizeID                  = -1;
         int contentID               = -1;
