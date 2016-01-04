@@ -1,36 +1,39 @@
-#ifndef SHORTESTPATH_H
-#define SHORTESTPATH_H
-
+#ifndef KORTSTEPAD_H_
+#define KORTSTEPAD_H_
 #include <string>
 #include <vector>
 #include <map>
-#include "vector3f.h"
 
 using namespace std;
 
-class ShortestPath
+class KortstePad
 {
 public:
-    ShortestPath();
-    void initRoutes();
-    ~ShortestPath();
-    pair<int, vector<vector3f>> route(vector3f location1, vector3f location2);
-    void reset();
+	KortstePad(string fPath);
+	void initRoutes(string fPath);
+	~KortstePad();
+	pair<double, string> route(string naam1, std::string naam2);
+	void reset();
+	double distance(string coordinate1, string coordinate2);
 private:
-    struct Place
-    {
-        Place(vector3f location) : location(location) {}
-        vector3f location;
-        vector<pair<Place*, int> > roads;
-        bool done;
-        int distance = faraway;
-        Place* previous;
-    };
-    static const int faraway = 1000000;
-    map<vector3f, Place*> places;
-    Place* getPlace(vector3f location);
-    void add(Place* fromPlace, Place* toPlace, int distance);
-    bool roadExists(Place* fromPlace, Place* toPlace, int distance);
+	struct Plaats
+	{
+		Plaats(string naam) : naam(naam) {}
+		string naam;
+		vector<pair<Plaats*, double> > wegen;
+		bool klaar;
+		double shortestDistance = verweg;
+		Plaats* voorganger;
+	};
+	//31.25,0,-681.50
+	//1600.25,0,-675.25
+	static const int verweg = 10000;
+	map<string, Plaats*> plaatsen;
+	Plaats* getPlaats(string naam);
+	void add(Plaats* fromPlace, Plaats* toPlace, double distance);
+	bool roadExists(Plaats* fromPlace, Plaats* toPlace, double distance);
+	//double distance(string coordinate1, string coordinate2);
+	std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
+	std::vector<std::string> split(const std::string &s, char delim);
 };
-
-#endif //SHORTESTPATH_H
+#endif
