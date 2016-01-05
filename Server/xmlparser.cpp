@@ -360,21 +360,15 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
     regex regEndNode("</record>");
     regex regStart("<recordset>");
     regex regStop("</recordset>");
-    bool started, result, lastSetStanding;
+    bool started;
     string line, node;
-    lastSetStanding = false;
-    result=true;
 
 
-    for(int i = 0; i<xmlPaths.size(); i++)
+    for(uint i = 0; i<xmlPaths.size(); i++)
     {
         string path = xmlPaths[i];
         ifstream input(path);
         started = false;
-        if (i == (xmlPaths.size()-1))
-        {
-            lastSetStanding = true;
-        }
 
         if (input)
         {
