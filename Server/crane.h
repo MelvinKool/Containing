@@ -5,9 +5,9 @@
 
 class Crane : Transport
 {
+    public:
     private:
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
-    public:
 };
 
 #endif //CRANE_H

@@ -7,7 +7,6 @@
 #include "vector3f.h"
 class JSONGenerator
 {
-  private:
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates);
     std::string transferContainer(int containerId, int sourceId, int targetId);

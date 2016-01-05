@@ -5,8 +5,8 @@
 
 class AGV : Transport
 {
-private:
-public:
+    public:
+    private:
 };
 
 #endif //AGV_H

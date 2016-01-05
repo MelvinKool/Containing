@@ -6,9 +6,9 @@
 */
 class Transport
 {
+    public:
     private:
         int loaded_Speed, unloaded_Speed;
-    public:
 };
 
 #endif //TRANSPORT_H

@@ -1,6 +1,8 @@
 #ifndef VECTOR3F_H
 #define VECTOR3F_H
-class vector3f {
+
+class vector3f
+{
     public:
         vector3f(int x,int y, int z);
         int getX();

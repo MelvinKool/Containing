@@ -4,12 +4,12 @@
 
 Server::Server()
 {
-    if(db.isConnected()){
+    if(db.isConnected())
+    {
         xmlParser.readXML(db);
     }
     connections.acceptClients();
     httpserver.init("4000");
-    stop = false;
 }
 
 void Server::writeToSim(string message)

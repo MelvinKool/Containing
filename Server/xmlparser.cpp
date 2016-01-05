@@ -346,7 +346,6 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
     theFile.close();
     cout << "....XML file done > " << xmlDocPath << endl;
 
-
     return true;
 }
 
