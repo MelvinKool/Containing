@@ -253,7 +253,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(3000); // TODO: change to 30 seconds
+                            Thread.sleep(30000);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,7 +279,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(3000); // TODO: change to 30 seconds
+                            Thread.sleep(30000);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
