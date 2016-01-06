@@ -57,6 +57,11 @@ public class ObjectLoader {
         this.initObjects();
     }
     
+    /**
+     * Load json from filePath
+     * @param filePath path to json file
+     * @return JSONObject
+     */
     private JSONObject loadJson(String filePath) {
         BufferedReader reader;
         String content = "";
@@ -78,30 +83,51 @@ public class ObjectLoader {
         return new JSONObject(content);
     }
     
+    /**
+     * @return clone of dockcrane model
+     */
     public Spatial getDockCraneModel() {
        return this.dockCrane.clone();
     }
     
+    /**
+     * @return clone of container model
+     */
     public Spatial getContainerModel() {
        return this.container.clone();
     }
     
+    /**
+     * @return clone of sort crane model
+     */
     public Spatial getSortCraneModel() {
        return this.sortCrane.clone();
     }
     
+    /**
+     * @return clone of truck crane model
+     */
     public Spatial getTruckCraneModel() {
        return this.truckCrane.clone();
     }
     
+    /**
+     * @return clone of train crane model
+     */
     public Spatial getTrainCraneModel() {
        return this.trainCrane.clone();
     }
     
+    /**
+     * @return clone of agv model
+     */
     public Spatial getAgvModel() {
         return this.agv.clone();
     }
     
+    /**
+     * get spawn information from file and spawn objects
+     */
     private void initObjects()
     {
         JSONObject spawnData = this.loadJson("assets/data/ObjectLocations.json");
@@ -117,23 +143,49 @@ public class ObjectLoader {
         this.rootNode.attachChild(this.craneNode);
     }
 
-    private void spawnObjects(JSONObject craneObject, String type)
+    /**
+     * spawn cranes and agvs from json information
+     * @param object
+     * @param type 
+     */
+    private void spawnObjects(JSONObject object, String type)
     {
-        float rotX = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(0));
-        float rotY = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(1));
-        float rotZ = (float) Math.toRadians(craneObject.getJSONArray("rotation").getDouble(2));
+        float speed = (float) object.getDouble("speed");
+        float holderSpeed = 0.0f;
+        float grabberSpeed = 0.0f;
+        float grabberYOffset = 0.0f;
+        
+        float rotX = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(0));
+        float rotY = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(1));
+        float rotZ = (float) Math.toRadians(object.getJSONArray("rotation").getDouble(2));
         
         float posX;
         float posY;
         float posZ;
         
         Vector3f positionVec;
+        Vector3f holderPosition = null;
         
         JSONArray position;
         Crane craneObj;
         AGV agvObj;
         
-        for(Object positionObj : craneObject.getJSONArray("positions"))
+        if (!type.equals("AGV")) {        
+            JSONObject grabberInfo = object.getJSONObject("grabber");
+            JSONArray grabberPosition = grabberInfo.getJSONArray("position");
+            boolean hasHolder = grabberInfo.getBoolean("has_holder");
+            grabberYOffset = (float) grabberInfo.getDouble("y_offset");
+            grabberSpeed = (float) grabberInfo.getDouble("speed");
+            holderSpeed = (float) grabberInfo.getDouble("holderSpeed");
+            
+             holderPosition = new Vector3f(
+                    (float) grabberPosition.getDouble(0),
+                    (float) grabberPosition.getDouble(1),
+                    (float) grabberPosition.getDouble(2)
+            );
+        }
+        
+        for(Object positionObj : object.getJSONArray("positions"))
         {
             agvObj = null;
             craneObj = null;
@@ -147,35 +199,32 @@ public class ObjectLoader {
             switch (type)
             {
                 case "Storage":
-                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new SortCrane(this.rootNode, this.assetManager, positionVec, this.getSortCraneModel(), "storagecrane", speed);
                     break;
                 case "Train": 
-                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new TrainCrane(this.rootNode, this.assetManager, positionVec, this.getTrainCraneModel(), "traincrane", speed);
                     break;
                 case "SeaShip":
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                     break;
                 case "TruckCrane": 
-                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new TruckCrane(this.rootNode, this.assetManager, positionVec, this.getTruckCraneModel(), "truckcrane", speed);
                     break;
                 case "FreightShip": 
-                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane");
-                    craneObj.node.rotate(rotX, rotY, rotZ);
+                    craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                     break;
                 case "AGV":
                     agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel());
-                    agvObj.node.rotate(rotX, rotY, rotZ);
             }
             if (craneObj != null)
             {
+                craneObj.node.rotate(rotX, rotY, rotZ);
+                craneObj.initGrabber(holderPosition, grabberSpeed, holderSpeed, grabberYOffset);
                 this.cranes.add(craneObj);
             }
             else if (agvObj != null)
             {
+                agvObj.node.rotate(rotX, rotY, rotZ);
                 this.agvs.add(agvObj);
             }
         }
