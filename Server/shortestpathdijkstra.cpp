@@ -8,9 +8,11 @@
 
 using namespace std;
 
-ShortestPathDijkstra::ShortestPathDijkstra(string fPath)
+ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
+	cout << "initialyzing began" << endl;
 	initRoutes(fPath);
+	cout << "initialyzing done " << endl;
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
@@ -25,9 +27,9 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 }
 
 
-void ShortestPathDijkstra::initRoutes(string fPath)
+void ShortestPathDijkstra::initRoutes(char* fPath)
 {
-	ifstream loadRoutes(fPath.c_str());
+	ifstream loadRoutes(fPath);
 	if(loadRoutes.is_open()){
 		//init the routes
 		string from, to, laden, teleport;
@@ -69,7 +71,7 @@ void ShortestPathDijkstra::initRoutes(string fPath)
 }
 
 //gives the shortest route
-pair<double, vector<string>> ShortestPathDijkstra::route(string name1, string name2)
+pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string name2)
 {
 	//make sure the paths are empty
 	reset();
@@ -115,7 +117,21 @@ pair<double, vector<string>> ShortestPathDijkstra::route(string name1, string na
 		//route = current->name + ", " + route;
 	}
 	//route += place2->name;
-	return pair<double,vector<string>>(shortestDistance,route);
+	vector<vector3f> vector3fRoute = vectorStringToVectorVector3f(route);
+	return pair<double,vector<vector3f>>(shortestDistance,vector3fRoute);
+}
+
+vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector){
+	vector<vector3f> vector3fVector;
+	for(string s : stringVector){
+		vector<string> subStringVector = split(s, ',');
+		float x = atof(subStringVector.at(0).c_str());
+		float y = atof(subStringVector.at(1).c_str());
+	 	float z = atof(subStringVector.at(2).c_str());
+		vector3f tempVector3f = vector3f(x,y,z);
+		vector3fVector.push_back(tempVector3f);
+	}
+	return vector3fVector;
 }
 
 //checks whether a road exists

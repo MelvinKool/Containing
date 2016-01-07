@@ -4,16 +4,17 @@
 #include <vector>
 #include <map>
 #include <limits>
+#include "vector3f.h"
 using namespace std;
 
 class ShortestPathDijkstra
 {
 public:
-	ShortestPathDijkstra(string fPath);
-	void initRoutes(string fPath);
+	ShortestPathDijkstra(char* fPath);
+	void initRoutes(char* fPath);
 	~ShortestPathDijkstra();
 	//pair<double, string> route(string name1, std::string name2);
-	pair<double, vector<string> > route(string name1, string name2);
+	pair<double,vector<vector3f>> route(string name1, string name2);
 	void reset();
 private:
 	struct Place
@@ -35,5 +36,6 @@ private:
 	double distance(string coordinate1, string coordinate2);
 	vector<string> &split(const string &s, char delim, vector<string> &elems);
 	vector<string> split(const string &s, char delim);
+	vector<vector3f> vectorStringToVectorVector3f(vector<string> stringVector);
 };
 #endif
