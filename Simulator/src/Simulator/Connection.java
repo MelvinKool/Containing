@@ -1,5 +1,4 @@
 package Simulator;
-
 import java.net.*;
 import java.io.*;
 
@@ -12,7 +11,7 @@ public class Connection
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        SocketAddress socket = new InetSocketAddress("141.252.236.91", 1337);
+        SocketAddress socket = new InetSocketAddress("192.168.56.56", 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -40,7 +39,7 @@ public class Connection
     {
         //try
         //{
-            simSocket = new Connection.SimSocket(InetAddress.getByName("141.252.236.91"), 1337);
+            simSocket = new Connection.SimSocket(InetAddress.getByName("192.168.56.56"), 1337);
             System.out.println(simSocket.socket.toString());
             if(simSocket != null)
                 write("Simulator");
@@ -127,7 +126,7 @@ public class Connection
             {
                 try
                 {
-                    simSocket = new Connection.SimSocket(InetAddress.getByName("141.252.236.91"), 1337);
+                    simSocket = new Connection.SimSocket(InetAddress.getByName("192.168.56.56"), 1337);
                 } 
                 catch (Exception e)
                 {
