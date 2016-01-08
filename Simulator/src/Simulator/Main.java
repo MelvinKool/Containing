@@ -17,17 +17,12 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
-    boolean connected = false;
-        
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
-    private Thread readThread;
-    private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private ObjectLoader objectLoader;
-    
-    boolean playing;
+    private boolean playing;
 
     public static void main(String[] args)
     {
@@ -38,46 +33,19 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
-        long end = System.currentTimeMillis();
-
-        System.out.println(end - start);
-        
         this.dockCraneNode = new Node();
         this.playing = false;
-        //flyCam.setEnabled(false);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
         this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
-        readThread = initReadThread();
-        readThread.start();
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
-                while (true)
-                {            
-                    try
-                    {
-                        if(connected)
-                        {
-                            connectionAlive = connection.connectionThread();
-                            connectionAlive.start();
-                            break;
-                        }
-                        Thread.sleep(1000);
-                    } 
-                    catch (Exception e)
-                    {
-                    }
-                }
-            }
-        });
-        t.start();
+        
+        try { connection = new Connection(objectLoader); }
+        catch (Exception e) { System.out.println(e); }
         
         initLight();
         initInputs();
@@ -86,7 +54,6 @@ public class Main extends SimpleApplication
         rootNode.attachChild(SimWorld);
     }
     
-    boolean test = false;
     @Override
     public void simpleUpdate(float tpf)
     {
@@ -99,23 +66,16 @@ public class Main extends SimpleApplication
         
     }
     
-    //This is important to properly close
-    //the connection with the server.
+    //This is important to properly close the connection with the server.
     @Override
     public void destroy()
     {
         super.destroy();
-        if(connectionAlive!= null)
-        {
-            connectionAlive.stop();    
-        }
-        readThread.stop();
         if(connection != null)
         {
             connection.stop();
         }
-        //Dirty as fuck, fix it later...
-        Runtime.getRuntime().exit(1);
+        //Runtime.getRuntime().exit(1);
     }
 
     public Crane getNearestCrane(Node obj)
@@ -189,47 +149,6 @@ public class Main extends SimpleApplication
         inputManager.addListener(acl, "xm");
         inputManager.addListener(acl, "zm");
         inputManager.addListener(acl, "target");
-    }
-    
-    private Thread initReadThread()
-    {
-        return new Thread(new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    //while (true)
-                    //{                        
-                    //    try 
-                    //    {
-                    //        Thread.sleep(5000);
-                    //        connection = new Connection();
-                    //        connected = true;
-                    //        break;
-                    //    } 
-                    //    catch (Exception e) 
-                    //    {
-                    //        System.out.println("Creating connection");
-                    //    }
-                    //}
-                    connection = new Connection();
-                    CommandHandler commandHandler = new CommandHandler(objectLoader);
-                    while(true)
-                    {
-                        //What to do with the input?
-                        String input = connection.read();
-                        System.out.println(input);
-                        commandHandler.ParseJSON(input);
-                    }
-                }
-                catch(Exception e)
-                {
-                    //Always throws a exception after the socket is closed.
-                    //System.out.println(e);
-                }
-            }
-        });
     }
     
     private void initLight()

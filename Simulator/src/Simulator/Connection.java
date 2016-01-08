@@ -5,14 +5,12 @@ import java.io.*;
 
 public class Connection
 {
-    private boolean stop = false;
-    
     private class SimSocket extends Socket
     {
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        SocketAddress socket = new InetSocketAddress("localhost", 1337);
+        //SocketAddress socket = new InetSocketAddress("localhost", 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -34,62 +32,50 @@ public class Connection
         }
     }
     
-    private Connection.SimSocket simSocket;
     
-    public Connection() throws Exception
+    private boolean shouldStop = false;
+    private SimSocket simSocket;
+    private ObjectLoader objectLoader;
+    
+    private Thread tConnection;
+    private Thread tRead;
+    private Thread tCheck;
+    
+    
+    public Connection(ObjectLoader objectLoader) throws Exception
     {
-        //try
-        //{
-            simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337);
-            System.out.println(simSocket.socket.toString());
-            if(simSocket != null)
-                write("Simulator");
-        //}
-        //catch(Exception e)
-        //{
-        //    System.out.println("Connection.Connection() - Cannot initialize or write to socket. - " + e);
-        //    stop();
-        //}
+        this.objectLoader = objectLoader;
+        tConnection = initTConnection();
+        tConnection.start();
     }
     
     public void stop()
     {
         try
         {
-            stop = true;
+            shouldStop = true;
             if(simSocket != null)
             {
                 simSocket.write("disconnect");
                 simSocket.close();
-                simSocket = null;
             }
         }
         catch(Exception e)
         {
             System.out.println("Connection.stop() - Cannot close connection.");
         }
+        finally
+        {
+            simSocket = null;
+        }
     }
     
-    public String read() throws Exception
+    private String read() throws Exception
     {
-        if(simSocket != null)
-        {
-            String input = simSocket.read();
-            
-            if(input.contentEquals("disconnect"))
-            {
-                stop();
-                return "Disconnected from server.";
-            }
-            return input;
-        }
-        else
-        {
-            throw new Exception("Connection.read() - simSocket = null");
-        }
+        return simSocket.read();
     }
     
-    public void write(String message) throws Exception
+    private void write(String message) throws Exception
     {
         if(simSocket != null)
             simSocket.write(message);
@@ -97,33 +83,11 @@ public class Connection
             throw new Exception("Connection.write() - simSocket = null");
     }
     
-    public Thread connectionThread()
-    {
-        return new Thread(new Runnable() 
-        {
-            public void run() 
-            {
-                while (true && !stop) 
-                {   
-                    try 
-                    {
-                        Thread.sleep(5000);
-                        write("connection_check");
-                    } 
-                    catch (Exception e) 
-                    {
-                        reconnect();
-                    }
-                }
-            }
-        });
-    }
-    
-    public void reconnect()
+    private void reconnect()
     {
         try 
         {
-            if (simSocket==null && !stop)
+            if (simSocket==null && !shouldStop)
             {
                 try
                 {
@@ -142,7 +106,91 @@ public class Connection
         } 
         catch (IOException ioe) 
         {
-            System.out.println("Could not reconnect, trying again in 5.");
+            System.out.println("Could not reconnect, trying again in 5s.");
         }
+    }
+    
+    
+    
+    
+    private Thread initTConnection()
+    {
+        return new Thread(new Runnable() { @Override public void run()
+        {
+            while(!shouldStop)
+            {
+                initSocket();
+                if(simSocket != null)
+                {
+                    try { write("Simulator"); }
+                    catch(Exception e)
+                    {
+                        try                 { simSocket.close(); }
+                        catch(Exception ex) {}
+                        finally             { simSocket = null; continue; }
+                    }
+                    
+                    //Connection is good
+                    tRead = initTRead();
+                    tCheck = initTCheck();
+                }
+                else
+                {
+                    System.out.println("Cannot get connection, trying again in 5s");
+                    try { Thread.sleep(5000); }
+                    catch(Exception e) {}
+                }
+                simSocket = null;
+            }
+        }});
+    }
+    
+    private Thread initTRead()
+    {
+        return new Thread(new Runnable() { @Override public void run()
+        {
+            try
+            {
+                CommandHandler commandHandler = new CommandHandler(objectLoader);
+                while(!shouldStop)
+                {
+                    String input = read();
+                    if(input.contentEquals("disconnect"))
+                    {
+                        System.out.println("Disconnected from server.");
+                        break;
+                    }
+                    System.out.println(input);
+                    commandHandler.ParseJSON(input);
+                }
+                stop();
+            }
+            catch(Exception e){}
+        }});
+    }
+    
+    private Thread initTCheck()
+    {
+        return new Thread(new Runnable() { @Override public void run() 
+        {
+            while (!shouldStop) 
+            {   
+                try 
+                {
+                    Thread.sleep(5000);
+                    write("connection_check");
+                } 
+                catch (Exception e) 
+                {
+                    reconnect();
+                }
+            }
+        }});
+    }
+    
+    private void initSocket()
+    {
+        try                { simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337); }
+        catch(Exception e) { simSocket = null; }
     }
 }

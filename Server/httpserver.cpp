@@ -19,7 +19,7 @@ void HttpServer::init(char* port)
 {
     if(initSocket(port))
     {
-        std::cout << "HTTP Server is up, waiting for connoctions..." << std::endl;
+        std::cout << "HTTP Server is up, waiting for connections..." << std::endl;
         handleConnections();
     }
 }
@@ -30,12 +30,12 @@ bool HttpServer::initSocket(char* port)
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags    = AI_PASSIVE; //use current ip
-    
+
     if((rv = getaddrinfo(nullptr, port, &hints, &serverinfo)) != 0)
     {
         std::cout << stderr << "getaddrinfo: " << gai_strerror(rv) << std::endl;
     }
-    
+
     //loop through all the results and bind to the first wee can
     for(struct addrinfo *p = serverinfo; p != nullptr; p = p->ai_next)
     {
@@ -58,15 +58,15 @@ bool HttpServer::initSocket(char* port)
         }
         break;
     }
-    
+
     freeaddrinfo(serverinfo);
-    
+
     if(listen(sockfd, BACKLOG) == -1)
     {
         perror("httpserver: listen");
         return false;
     }
-    
+
     return true;
 }
 
@@ -77,24 +77,24 @@ void HttpServer::handleConnections()
         while(!stop)
         {
             int connection = acceptClient();
-    
+
             if(connection != -1)
             {
                 char buf [1024];
                 int bytes = read(connection, buf, sizeof(buf));
                 buf[bytes]=0;
                 std::string msg(buf);
-        
+
                 std::ostringstream oss;
                 oss << " HTTP/1.1 200 OK\r\n \r\nContent-Type: text/html\r\nContent-Length: ";
-        
+
                 std::smatch m;
                 std::regex e ("([^ ]*)(.css|.js|.html|.json)");
                 if(std::regex_search (msg,m,e))
                 {
                     std::ostringstream location;
-                    location << "./Files/MobileApp/" << m[0];
-        
+                    location << "./Files/MobileApp" << m[0];
+
                     std::ifstream str (location.str());
                     std::string result = "";
                     if(str.good())
