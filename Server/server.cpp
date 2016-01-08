@@ -58,28 +58,39 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     string vehicle = row[1];
 
     agvID = getFreeAGV(); //TODO
-    crane.goto(positionX,positionY,positionZ); //crane at container dump //TODO
-    agvs[agvID].goto(positionX,positionY,positionZ); // send agv to dump row //TODO
+    crane.goTo(positionX,positionY,positionZ); //crane at container dump //TODO
+    agvs[agvID].goTo(vector3f(x,y,z)); // send agv to dump row //TODO
     crane.transfer(container,dump,agv); //transfer container from dump to agv //TODO
 
     if(vehicle=="trein") //TODO
     {
-        agvs[agvID].goto(positionX,positionY,positionZ); //send agv with current container to unloading position
-        crane.goto(positionX,positionY,positionZ); //move crane to load location
+        //TODO spawn train
+        agvs[agvID].goTo(vector3f(x,y,z)); //send agv with current container to unloading position
+        crane.goTo(positionX,positionY,positionZ); //move crane to load location
         crane.transfer(container,agv,train); //transfer container from agv to train
     }
 
     if(vehicle=="vrachtauto") //TRUCK YEAH!! //TODO
     {
-        agvs[agvID].goto(positionX,positionY,positionZ); //send agv with current container to unloading position
-        crane.goto(positionX,positionY,positionZ); //move crane to load location
+        //TODO spawn truck
+        agvs[agvID].goTo(vector3f(x,y,z)); //send agv with current container to unloading position
+        crane.goTo(positionX,positionY,positionZ); //move crane to load location
         crane.transfer(container,agv,truck); //transfer container from agv to truck
     }
 
     if(vehicle=="zeeschip") //TODO
     {
-        crane.goto(positionX,positionY,positionZ); //move crane to load location
-        agvs[agvID].goto(positionX,positionY,positionZ); //send agv with current container to unloading position
+        //TODO spawn seaship
+        crane.goTo(positionX,positionY,positionZ); //move crane to load location
+        agvs[agvID].goTo(vector3f(x,y,z)); //send agv with current container to unloading position
+        crane.transfer(container,agv,ship); //transfer container from agv to ship
+    }
+
+    if vehicle=="binnenschip") //TODO
+    {
+        //TODO spawn ship
+        crane.goTo(positionX,positionY,positionZ); //move crane to load location
+        agvs[agvID].goTo(vector3f(x,y,z)); //send agv with current container to unloading position
         crane.transfer(container,agv,ship); //transfer container from agv to ship
     }
     */
@@ -93,22 +104,25 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     agvID = getFreeAGV(); //TODO
     if(vehicle=="vrachtauto") //TODO
     {
-        crane.goto(positionX,positionY,positionZ); //move crane to unloading location
-        agvs[agvID].goto(positionX,positionY,positionZ);
+        //TODO spawn truck
+        crane.goTo(positionX,positionY,positionZ); //move crane to unloading location
+        agvs[agvID].goTo(vector3f(x,y,z));
         crane.transfer(container,lorry,agv); //get container from truck to agv
     }
 
     if(vehicle=="trein") //TODO
     {
-        crane.goto(positionX,positionY,positionZ);
-        agvs[agvID].goto(positionX,positionY,positionZ);
+        //TODO spawn train
+        crane.goTo(positionX,positionY,positionZ);
+        agvs[agvID].goTo(vector3f(x,y,z));
         crane.transfer(container,train,agv);
     }
 
     if(vehicle=="zeeschip") //TODO
     {
-        crane.goto(positionX,positionY,positionZ);
-        agvs[agvID].goto(positionX,positionY,positionZ);
+        //TODO spawn seaship
+        crane.goTo(positionX,positionY,positionZ);
+        agvs[agvID].goTo(vector3f(x,y,z));
         crane.transfer(container,ship,agv);
 
         if(crane.currentRowContainerCount()==0)
@@ -118,11 +132,25 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
     }
 
-    agvs[agvID].goto(positionX,positionY,positionZ); //move to dump row //TODO
-    crane.goto(positionX,positionY,positionZ); //move crane to agv parking //TODO
+    if(vehicle=="binnenschip") //TODO
+    {
+        //TODO spawn ship
+        crane.goTo(positionX,positionY,positionZ);
+        agvs[agvID].goTo(vector3f(x,y,z));
+        crane.transfer(container,ship,agv);
+
+        if(crane.currentRowContainerCount()==0)
+        {
+            //crane to new row?
+            //or do this at first line of code
+        }
+    }
+
+    agvs[agvID].goTo(vector3f(x,y,z)); //move to dump row //TODO
+    crane.goTo(positionX,positionY,positionZ); //move crane to agv parking //TODO
     crane.getBestDumpPosition(); //get best spot to place container in dumping row //TODO
     crane.transfer(container,agv,dump); //TODO
-    crane.goto(positionX,positionY,positionZ); //TODO
+    crane.goTo(positionX,positionY,positionZ); //TODO
     */
 }
 

@@ -9,8 +9,8 @@ using namespace std;
 class ShortestPathDijkstra
 {
     public:
-    	ShortestPathDijkstra(string fPath);
-    	void initRoutes(string fPath);
+    	ShortestPathDijkstra(char* fPath);
+    	void initRoutes(char* fPath);
     	~ShortestPathDijkstra();
     	//pair<double, string> route(string name1, std::string name2);
     	pair<double, vector<string> > route(string name1, string name2);

@@ -4,11 +4,11 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "shortestpathdijkstra.h"
+#include "shortestPathDijkstra.h"
 
 using namespace std;
 
-ShortestPathDijkstra::ShortestPathDijkstra(string fPath)
+ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
 	initRoutes(fPath);
 }
@@ -25,9 +25,9 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 }
 
 
-void ShortestPathDijkstra::initRoutes(string fPath)
+void ShortestPathDijkstra::initRoutes(char* fPath)
 {
-	ifstream loadRoutes(fPath.c_str());
+	ifstream loadRoutes(fPath);
 	if(loadRoutes.is_open())
     {
 		//init the routes
