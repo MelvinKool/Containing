@@ -5,6 +5,7 @@
 #include "Files/rapidjson/stringbuffer.h"
 #include "Files/rapidjson/writer.h"
 #include "vector3f.h"
+
 class JSONGenerator
 {
   public:
@@ -16,4 +17,4 @@ class JSONGenerator
     std::string toString(rapidjson::Document *document);
 };
 
-#endif //JSONGENERATOR_H
+#endif

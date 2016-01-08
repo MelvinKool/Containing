@@ -5,17 +5,24 @@
 #include "shortestPathDijkstra.h"
 #include "JSONGenerator.h"
 #include "vector3f.h"
-using namespace std;
+//typedef class Server Server;
+
+//#include "server.h"
+class Server;
 
 class AGV : Transport
 {
     public:
-        AGV(int id,int x,int y,int z);
+        AGV(){};
+
         void goTo(vector3f destination);
     private:
-        ShortestPathDijkstra pathFinder("path to file");
+        ShortestPathDijkstra pathFinder;
         JSONGenerator JGen;
+        Server* server;
         int ID;
+    public:
+        AGV(int id,int x,int y,int z,Server* ser);
 };
 
 #endif

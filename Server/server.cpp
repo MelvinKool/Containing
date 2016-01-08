@@ -9,7 +9,7 @@ Server::Server()
         xmlParser.readXML(db);
     }
     connections.acceptClients();
-    httpserver.init("4000");
+    httpserver.init();
 }
 
 void Server::writeToSim(string message)
@@ -59,7 +59,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
 
     agvID = getFreeAGV(); //TODO
     crane.goTo(positionX,positionY,positionZ); //crane at container dump //TODO
-    agvs[agvID].goTo(vector3f(x,y,z)); // send agv to dump row //TODO
+    agvs[agvID].goTo(vector3f(x,y,z)); // send agv to dump row
     crane.transfer(container,dump,agv); //transfer container from dump to agv //TODO
 
     if(vehicle=="trein") //TODO
@@ -101,7 +101,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     /*
     string vehicle = row[1];
 
-    agvID = getFreeAGV(); //TODO
+    agvID = getFreeAGV();
     if(vehicle=="vrachtauto") //TODO
     {
         //TODO spawn truck
@@ -146,7 +146,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
     }
 
-    agvs[agvID].goTo(vector3f(x,y,z)); //move to dump row //TODO
+    agvs[agvID].goTo(vector3f(x,y,z)); //move to dump row
     crane.goTo(positionX,positionY,positionZ); //move crane to agv parking //TODO
     crane.getBestDumpPosition(); //get best spot to place container in dumping row //TODO
     crane.transfer(container,agv,dump); //TODO
@@ -157,4 +157,9 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 void Server::stopRunning()
 {
     stop = true;
+}
+
+int Server::getFreeAGV()
+{
+    return 0;
 }

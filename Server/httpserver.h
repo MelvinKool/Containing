@@ -12,7 +12,7 @@ class HttpServer
         // Do not remove this default constructor.
         HttpServer(){}
         ~HttpServer();
-        void init(char* port);
+        void init();
     private:
         int sockfd; //listen on sock_fd
         struct addrinfo hints, *serverinfo;//, *p;
@@ -23,7 +23,7 @@ class HttpServer
         bool stop = false;
         std::thread *handleConnectionsThread;
 
-        bool initSocket(char* port);
+        bool initSocket();
         void handleConnections();
         int acceptClient();
 };

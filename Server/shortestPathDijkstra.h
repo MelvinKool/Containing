@@ -10,6 +10,7 @@ using namespace std;
 class ShortestPathDijkstra
 {
 public:
+    ShortestPathDijkstra(){};
 	ShortestPathDijkstra(char* fPath);
 	void initRoutes(char* fPath);
 	~ShortestPathDijkstra();

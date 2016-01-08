@@ -13,4 +13,4 @@ class Crane : Transport
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
 };
 
-#endif //CRANE_H
+#endif

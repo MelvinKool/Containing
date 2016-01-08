@@ -30,12 +30,9 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
-<<<<<<< HEAD:Server/shortestPathDijkstra.cpp
+
 	if(loadRoutes.is_open())
     {
-=======
-	if(loadRoutes.is_open()){
->>>>>>> origin/develop:Server/shortestpathdijkstra.cpp
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;

@@ -1,6 +1,6 @@
 SOURCES=main.cpp server.cpp connections.cpp socket.cpp xmlparser.cpp \
 database.cpp JSONGenerator.cpp httpserver.cpp vector3f.cpp shortestPathDijkstra.cpp \
-transport.cpp agv.cpp crane.cpp
+#transport.cpp agv.cpp crane.cpp
 # container.cpp  transfer.cpp
 
 #============================================

@@ -1,6 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
-
+#pragma once
 #include <string>
 #include <mysql.h>
 
@@ -9,6 +9,7 @@
 #include "JSONGenerator.h"
 #include "database.h"
 #include "httpserver.h"
+//#include "agv.h"
 
 class Server
 {
@@ -17,6 +18,7 @@ class Server
         void writeToSim(std::string message);
         void checkContainers();
         void stopRunning();
+        //AGV agvs[5];
     private:
         Database db;
         XmlParser xmlParser;
@@ -25,6 +27,7 @@ class Server
         bool stop = false;
         void processLeavingContainer(MYSQL_ROW &row);
         void processArrivingContainer(MYSQL_ROW &row);
+        int getFreeAGV();
 };
 
 #endif //SERVER_H
