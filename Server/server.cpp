@@ -1,7 +1,6 @@
 #include "server.h"
 
 #include <iostream>
-
 Server::Server()
 {
     if(db.isConnected()){

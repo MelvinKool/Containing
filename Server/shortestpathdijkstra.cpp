@@ -34,7 +34,7 @@ void ShortestPathDijkstra::initRoutes(char* fPath)
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;
-		while(loadRoutes >> from >> to >> laden >> teleport)
+		while(loadRoutes >> from >> to >> laden)
 		{
 			//cout << "from: " << from << " to: " << to << " distance: " << distance << endl;
 			distanceBetween = distance(from,to);
