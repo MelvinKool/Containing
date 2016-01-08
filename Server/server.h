@@ -9,7 +9,8 @@
 #include "JSONGenerator.h"
 #include "database.h"
 #include "httpserver.h"
-//#include "agv.h"
+#include "agv.h"
+#include "crane.h"
 
 class Server
 {
@@ -18,7 +19,13 @@ class Server
         void writeToSim(std::string message);
         void checkContainers();
         void stopRunning();
-        //AGV agvs[5];
+        AGV agvs[5];
+        Crane crane;
+        JSONGenerator JGen;
+        ShortestPathDijkstra pathFinderLoaded;
+        ShortestPathDijkstra pathFinderUnloaded;
+        float x = 0,y = 0,z = 0;
+        int container = 3,dump = 2,train = 6,truck = 7,ship = 8;
     private:
         Database db;
         XmlParser xmlParser;
@@ -30,4 +37,4 @@ class Server
         int getFreeAGV();
 };
 
-#endif //SERVER_H
+#endif

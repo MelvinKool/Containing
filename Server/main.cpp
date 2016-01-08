@@ -20,12 +20,13 @@ int main(int argc, char* argv[])
     cout << "Type 'exit' to close the application." << endl << endl;
 
     Server* server = new Server();
-    /*
+
     for (uint i = 0; i < 5; i++)
     {
-        server->agvs[i] = AGV(i+1,0,0,0,server);
-    }*/
-    thread t1(containers,ref(server));
+        server->agvs[i] = AGV(i+1,0.0,0.0,0.0,server);
+    }
+    server->crane = Crane(12,0.0,0.0,0.0,server);
+    thread t1(containers,server);
 
     while(true)
     {
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
 
     cout << "Closing..." << endl;
     server->stopRunning();
-    delete server;
     t1.join();
+    delete server;
     return 0;
 }
