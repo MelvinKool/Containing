@@ -10,7 +10,9 @@ using namespace std;
 
 ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
+	cout << "initialyzing began" << endl;
 	initRoutes(fPath);
+	cout << "initialyzing done " << endl;
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
@@ -28,8 +30,12 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
+<<<<<<< HEAD:Server/shortestPathDijkstra.cpp
 	if(loadRoutes.is_open())
     {
+=======
+	if(loadRoutes.is_open()){
+>>>>>>> origin/develop:Server/shortestpathdijkstra.cpp
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;
@@ -70,7 +76,7 @@ void ShortestPathDijkstra::initRoutes(char* fPath)
 }
 
 //gives the shortest route
-pair<double, vector<string>> ShortestPathDijkstra::route(string name1, string name2)
+pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string name2)
 {
 	//make sure the paths are empty
 	reset();
@@ -116,7 +122,21 @@ pair<double, vector<string>> ShortestPathDijkstra::route(string name1, string na
 		//route = current->name + ", " + route;
 	}
 	//route += place2->name;
-	return pair<double,vector<string>>(shortestDistance,route);
+	vector<vector3f> vector3fRoute = vectorStringToVectorVector3f(route);
+	return pair<double,vector<vector3f>>(shortestDistance,vector3fRoute);
+}
+
+vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector){
+	vector<vector3f> vector3fVector;
+	for(string s : stringVector){
+		vector<string> subStringVector = split(s, ',');
+		float x = atof(subStringVector.at(0).c_str());
+		float y = atof(subStringVector.at(1).c_str());
+	 	float z = atof(subStringVector.at(2).c_str());
+		vector3f tempVector3f = vector3f(x,y,z);
+		vector3fVector.push_back(tempVector3f);
+	}
+	return vector3fVector;
 }
 
 //checks whether a road exists
@@ -153,7 +173,8 @@ double ShortestPathDijkstra::distance(string coordinate1, string coordinate2)
 {
 	vector<string> coordVect1 = split(coordinate1,',');
 	vector<string> coordVect2 = split(coordinate2,',');
-	double x1,y1,z1,x2,y2,z2;
+	double x1,z1,x2,z2;
+	//y1,y2
 	x1 = atof(coordVect1.at(0).c_str());
 	x2 = atof(coordVect2.at(0).c_str());
 	z1 = atof(coordVect1.at(2).c_str());
