@@ -145,7 +145,7 @@ public class Main extends SimpleApplication
         float dist;
         float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.worldObjects.cranes)
+        for (Crane crane : this.worldObjects.cranes.values())
         {
             dist = obj.getLocalTranslation().distance(crane.getPosition());
             if (dist < minDist || minDist == -1)
