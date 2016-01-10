@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
     ShortestPathDijkstra shortestPath("Files/ObjectsJSON/test.txt");
-    string goal = "100,0.0,-49.50";
+    string goal = "12.5,0,234.50";
     string loc1 = "54.75,0.0,-73.5";//, loc2 = "79.75,0.0,-73.5", loc3 = "113.75,0.0,-73.5";
     cout << "test" << endl;
     pair<double,vector<vector3f>> route = shortestPath.route(loc1, goal);

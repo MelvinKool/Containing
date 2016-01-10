@@ -49,7 +49,7 @@ string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
 }
 
 //generates JSON for moving a vehicle
-string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates)
+string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -60,6 +60,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates)
 	document.AddMember("vehicleId", vehicleId, allocator);
 	// create a rapidjson array type with similar syntax to std::vector
 	// chain methods as rapidjson provides a fluent interface when modifying its objects
+	document.AddMember("totalDistance", totalDistance, allocator);
 	rapidjson::Value route(rapidjson::kArrayType);
 	for(vector3f coord: coordinates)
 	{

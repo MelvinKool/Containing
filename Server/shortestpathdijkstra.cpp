@@ -87,6 +87,7 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	while(!place2->done)
 	{
 		shortestDistance = faraway;
+		//update distances
 		for(pair<Place*, double> &road : current->roads)
 		{
 			if(!road.first->done && road.first->distance > road.second + current->distance)
@@ -95,6 +96,7 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 				road.first->previous = current;
 			}
 		}
+		//search the node with the smallest distance
 		for(pair<const string, Place*> nameAndPlace : places)
 		{
 			Place* p = nameAndPlace.second;

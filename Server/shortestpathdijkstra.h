@@ -24,7 +24,7 @@ private:
 		vector<pair<Place*, double> > roads;
 		bool done = false;
 		double distance = faraway;
-		Place* previous;
+		Place* previous = nullptr;
 	};
 	//31.25,0,-681.50
 	//1600.25,0,-675.25

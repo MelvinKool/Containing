@@ -9,7 +9,7 @@ class JSONGenerator
 {
   private:
   public:
-    std::string moveTo(int vehicleId, std::vector<vector3f> coordinates);
+    std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
     std::string transferContainer(int containerId, int sourceId, int targetId);
     std::string spawnObject(int objectId, vector3f coordinates);
   private:
