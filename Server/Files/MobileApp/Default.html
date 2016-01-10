@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <p>Containing Mobile App</p>
-        <button onclick="showAlert()">boo!</button>
-        <script>
-            function showAlert() {
-                alert("I am an alert box!");
+    <head>
+        <title>Containing</title>
+        <script src="ChartJS/Chart.js"></script>
+        <script src="Main.js"></script>
+        <style>
+            body{
+                background-color: #505050;
+                height: 100%;
             }
-        </script>
+
+            #chartCanvas{
+                border: 2px solid #000000;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+
+    <body onLoad="main()">
+        <canvas id="chartCanvas" width="400" height="300">
+            Your current webbrowser does not support HTML5. Update or change your webbrowser.
+        </canvas>
     </body>
 </html>
