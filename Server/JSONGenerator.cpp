@@ -28,7 +28,7 @@ string JSONGenerator::transferContainer(int containerId, int sourceId, int targe
 	document.AddMember("containerId", containerId, allocator);
 	document.AddMember("sourceId", sourceId, allocator);
 	document.AddMember("targetId", targetId, allocator);
-	return toString(&document);
+	return toString(document);
 }
 
 //generates JSON for spawning an object
@@ -45,7 +45,7 @@ string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
 	coordinateObject.AddMember("Y",coordinate.getY(),allocator);
 	coordinateObject.AddMember("Z",coordinate.getZ(),allocator);
 	document.AddMember("spawnLocation",coordinateObject,allocator);
-	return toString(&document);
+	return toString(document);
 }
 
 //generates JSON for moving a vehicle
@@ -71,14 +71,30 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	//add the route to the document
 	document.AddMember("Route", route, allocator);
 	//	fromScratch["object"]["hello"] = "Yourname";
-	return toString(&document);
+	return toString(document);
+}
+
+template <class T>
+std::string JSONGenerator::toString(T &jsonValue){
+	StringBuffer strbuf;
+	Writer<StringBuffer> writer(strbuf);
+	jsonValue.Accept(writer);
+	return strbuf.GetString();
 }
 
 //converts json document to string
-string JSONGenerator::toString(rapidjson::Document *document)
+/*string JSONGenerator::toString(rapidjson::Document &document)
 {
 	StringBuffer strbuf;
 	Writer<StringBuffer> writer(strbuf);
-	document->Accept(writer);
+	document.Accept(writer);
 	return strbuf.GetString();
-}
+}*/
+
+/*
+std::string toString(rapidjson::Value *jsonValue){
+	StringBuffer strbuf;
+	Writer<StringBuffer> writer(strbuf);
+	jsonValue->Accept(writer);
+	return strbuf.GetString();
+}*/
