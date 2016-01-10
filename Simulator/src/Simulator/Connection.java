@@ -10,7 +10,6 @@ public class Connection
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        //SocketAddress socket = new InetSocketAddress("localhost", 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -57,6 +56,7 @@ public class Connection
             if(simSocket != null)
             {
                 simSocket.write("disconnect");
+                tConnection.join();
                 simSocket.close();
             }
         }
@@ -83,36 +83,6 @@ public class Connection
             throw new Exception("Connection.write() - simSocket = null");
     }
     
-    private void reconnect()
-    {
-        try 
-        {
-            if (simSocket==null && !shouldStop)
-            {
-                try
-                {
-                    simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337);
-                } 
-                catch (Exception e)
-                {
-                }
-                
-            }
-            else
-            {
-                simSocket.close();
-                simSocket = null;
-            }
-        } 
-        catch (IOException ioe) 
-        {
-            System.out.println("Could not reconnect, trying again in 5s.");
-        }
-    }
-    
-    
-    
-    
     private Thread initTConnection()
     {
         return new Thread(new Runnable() { @Override public void run()
@@ -130,9 +100,18 @@ public class Connection
                         finally             { simSocket = null; continue; }
                     }
                     
-                    //Connection is good
                     tRead = initTRead();
                     tCheck = initTCheck();
+                    
+                    tRead.start();
+                    tCheck.start();
+                    
+                    try
+                    {
+                        tCheck.join();
+                        tRead.stop();
+                    }
+                    catch(Exception e){}
                 }
                 else
                 {
@@ -140,7 +119,6 @@ public class Connection
                     try { Thread.sleep(5000); }
                     catch(Exception e) {}
                 }
-                simSocket = null;
             }
         }});
     }
@@ -158,12 +136,12 @@ public class Connection
                     if(input.contentEquals("disconnect"))
                     {
                         System.out.println("Disconnected from server.");
+                        shouldStop = true;
                         break;
                     }
                     System.out.println(input);
                     commandHandler.ParseJSON(input);
                 }
-                stop();
             }
             catch(Exception e){}
         }});
@@ -173,17 +151,17 @@ public class Connection
     {
         return new Thread(new Runnable() { @Override public void run() 
         {
-            while (!shouldStop) 
-            {   
-                try 
-                {
-                    Thread.sleep(5000);
+            try 
+            {
+                while (!shouldStop) 
+                {   
                     write("connection_check");
-                } 
-                catch (Exception e) 
-                {
-                    reconnect();
+                    Thread.sleep(5000);
                 }
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Connection lost");
             }
         }});
     }

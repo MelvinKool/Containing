@@ -36,7 +36,7 @@ public class Main extends SimpleApplication
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
         this.dockCraneNode = new Node();
         this.playing = false;
-        flyCam.setEnabled(false);
+        //flyCam.setEnabled(false);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
         
@@ -44,14 +44,14 @@ public class Main extends SimpleApplication
         this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         
-        try { connection = new Connection(objectLoader); }
-        catch (Exception e) { System.out.println(e); }
-        
         initLight();
         initInputs();
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
+        
+        try { connection = new Connection(objectLoader); }
+        catch (Exception e) { System.out.println(e); }
     }
     
     @Override
@@ -66,16 +66,13 @@ public class Main extends SimpleApplication
         
     }
     
-    //This is important to properly close the connection with the server.
+    //This is important to properly close the connection
+    //with the server when you try to close the simulator.
     @Override
     public void destroy()
     {
         super.destroy();
-        if(connection != null)
-        {
-            connection.stop();
-        }
-        //Runtime.getRuntime().exit(1);
+        if(connection != null) connection.stop();
     }
 
     public Crane getNearestCrane(Node obj)
