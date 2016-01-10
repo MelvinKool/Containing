@@ -2,12 +2,6 @@
 #include <iostream>
 
 #include "server.h"
-//testdata
-#include "vector3f.h"
-#include <vector>
-#include "JSONGenerator.h"
-#include "shortestpathdijkstra.h"
-//////////
 using namespace std;
 
 int main(int argc, char* argv[])
