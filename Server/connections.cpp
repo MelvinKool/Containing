@@ -76,7 +76,7 @@ thread* Connections::newClientThread(int number)
             this->simulator = &(this->clients[number]);
             isSim = true;
         }
-
+        //load vehicles
         while(!this->stop)
         {
             string input;
@@ -88,7 +88,7 @@ thread* Connections::newClientThread(int number)
             {
                 input = "disconnect";
             }
-            
+
             if(input == "disconnect")
             {
                 cout << clients[number].type + " disconneced." << endl;
@@ -103,7 +103,7 @@ thread* Connections::newClientThread(int number)
                 //what to do with the input?
                 cout << input << endl;
             }
-            
+
             if(this->stop)
             {
                 break;

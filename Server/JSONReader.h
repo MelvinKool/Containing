@@ -13,6 +13,7 @@ class JSONReader{
         void loadTransport(std::map<int,Transport>& transportMap);
     private:
         void initFreightShips(rapidjson::Value& freightJSON);
+        void loadVehicle(rapidjson::Value& freightJSON);
         /*template <class T>
         std::string toString(T &jsonValue);*/
         //std::string toString(rapidjson::Value &jsonValue);
