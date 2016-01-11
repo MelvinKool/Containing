@@ -15,7 +15,7 @@ class JSONGenerator
     std::string transferContainer(int containerId, int sourceId, int targetId);
     std::string spawnObject(int objectId, vector3f coordinates);
     template <class T>
-    std::string toString(T &jsonValue){
+    static std::string toString(T &jsonValue){
     	rapidjson::StringBuffer strbuf;
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     	jsonValue.Accept(writer);

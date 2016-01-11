@@ -12,6 +12,7 @@ class JSONReader{
         JSONReader(char* transportFPath);
         void loadTransport(std::map<int,Transport>& transportMap);
     private:
+        void initFreightShips(rapidjson::Value& freightJSON);
         /*template <class T>
         std::string toString(T &jsonValue);*/
         //std::string toString(rapidjson::Value &jsonValue);
