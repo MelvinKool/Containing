@@ -44,6 +44,7 @@ public class ObjectLoader {
     
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
+    public HashMap<Integer, Container> containers = new HashMap<>();
 
     public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
@@ -51,6 +52,8 @@ public class ObjectLoader {
         this.truckCrane = assetManager.loadModel("Models/crane/truckcrane/crane.j3o");
         this.trainCrane = assetManager.loadModel("Models/crane/traincrane/crane.j3o");
         this.container = assetManager.loadModel("Models/container/container.j3o");
+        this.locomotive = assetManager.loadModel("Models/train/train.j3o");
+        this.trainCart = assetManager.loadModel("Models/train/wagon.j3o");
         this.agv = assetManager.loadModel("Models/agv/agv.j3o");
         this.assetManager = assetManager;
         this.motionControls = motionControls;
@@ -119,6 +122,20 @@ public class ObjectLoader {
     }
     
     /**
+     * @return clone of trainCart model
+     */
+    public Spatial getTrainCartModel() {
+       return this.trainCart.clone();
+    }
+    
+    /**
+     * @return clone of train locomotive model
+     */
+    public Spatial getLocomotiveModel() {
+       return this.locomotive.clone();
+    }
+    
+    /**
      * @return clone of agv model
      */
     public Spatial getAgvModel() {
@@ -133,7 +150,7 @@ public class ObjectLoader {
         this.craneNode = new Node();
         this.dockCraneNode = new Node();
         
-        for(Object object : (Iterable) objects.iterator())
+        for(Object object : (Iterable) objects)
         {
             this.spawnObject((JSONObject) object);
         }

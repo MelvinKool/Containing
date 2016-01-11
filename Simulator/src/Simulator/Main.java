@@ -1,6 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
+import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
@@ -29,6 +30,8 @@ public class Main extends SimpleApplication
     private ObjectLoader worldObjects;
     
     boolean playing;
+    
+    private Train train; // TODO: this is test code
 
     public static void main(String[] args)
     {
@@ -50,6 +53,8 @@ public class Main extends SimpleApplication
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
+        
+        this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
         this.containers = new ArrayList<>();
         this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
@@ -112,18 +117,13 @@ public class Main extends SimpleApplication
         worldObjects.agvs.get(2).setWayPoints(locations);
     }
     
-    boolean test = false;
+    boolean test = false; //TODO: remove this line
     @Override
     public void simpleUpdate(float tpf)
     {
-//        if (this.test == false) {
-//            this.test = true;
-//            AGV tagv = this.worldObjects.agvs.get(0);
-//            List<float[]> path = new ArrayList<>();
-//            path.add(new float[] {0.0f, 0.0f, 0.0f});
-//            tagv.setPath(path);
-//            
-//        }
+        if (this.test == false) {
+            train.moveOut();
+        }
         
         //TODO Depending on wich way you're going (XYZ) 
         //float afstand = AGV.GetMaxSpeed()*tpf;
@@ -211,19 +211,19 @@ public class Main extends SimpleApplication
                         crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
                         break;
                     case "xp":
-                        //cont.node.move(5,0,0);
-                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
+                        cont.node.move(5,0,0);
+//                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
                         break;
                     case "xm":
-                        //cont.node.move(-5,0,0);
-                        MoveAgv();
+                        cont.node.move(-5,0,0);
+//                        MoveAgv();
                         break;
                     case "zp":
-                        //cont.node.move(0,0,5);
+                        cont.node.move(0,0,5);
                         break;
                     case "zm":
-                        //cont.node.move(0,0,-5);
-                        TeleAgv();
+                        cont.node.move(0,0,-5);
+//                        TeleAgv();
                         //cont.node.move(0,0,-5);
                         break;
                     }
