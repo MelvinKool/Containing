@@ -27,15 +27,16 @@ public class TrainControl extends AbstractControl implements Cloneable
     protected void controlUpdate(float tpf)
     {
         for (TrainCart trainCart : this.train.trainCarts) {
-            if (trainCart.node.getWorldTranslation().x > this.disappearX) {
-                trainCart.node.setCullHint(Spatial.CullHint.Never);
+            if (trainCart.node.getWorldTranslation().x > this.disappearX && trainCart.node.getCullHint() != Spatial.CullHint.Always) {
+                trainCart.node.setCullHint(Spatial.CullHint.Always);
             } else if (trainCart.node.getWorldTranslation().x < this.disappearX) {
                 trainCart.node.setCullHint(Spatial.CullHint.Inherit);
             }
         }
         
         if (this.train.locomotive.node.getWorldTranslation().x > this.disappearX) {
-            this.train.locomotive.node.setCullHint(Spatial.CullHint.Never);
+            this.train.locomotive.node.setCullHint(Spatial.CullHint.Always);
+            this.train.canDestroy = true;
         } else if (this.train.locomotive.node.getWorldTranslation().x < this.disappearX) {
             this.train.locomotive.node.setCullHint(Spatial.CullHint.Inherit);
         }

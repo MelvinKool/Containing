@@ -6,6 +6,7 @@ package Simulator.vehicles;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -18,13 +19,15 @@ import java.util.List;
  *
  * @author erwin
  */
-public class Train {
+public class Train 
+{
     private TrainControl trainControl;
     private float speed;
     
     public Node node;
     public Locomotive locomotive;
     public List<TrainCart> trainCarts;
+    public boolean canDestroy = false;
     
     public Train(int length, Node rootNode, AssetManager assetManager, Spatial locomotiveModel, Spatial trainCartModel) 
     {
@@ -39,7 +42,7 @@ public class Train {
         
         rootNode.attachChild(this.node);
         this.trainControl = new TrainControl(this);
-        this.node.setLocalTranslation(45.0f, 0.0f, -724.5f);
+        this.node.setLocalTranslation(1715.0f, 0.0f, -724.5f);
         this.node.rotate(0.0f, verticalRotation, 0.0f);
         this.node.addControl(this.trainControl);
     }

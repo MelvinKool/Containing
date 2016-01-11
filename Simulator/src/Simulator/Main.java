@@ -125,7 +125,13 @@ public class Main extends SimpleApplication
     public void simpleUpdate(float tpf)
     {
         if (this.test == false) {
-            train.moveOut();
+            train.moveIn();
+            this.test = true;
+        }
+        
+        // Destroy train when it says it can (when it's out of view)
+        if (this.train != null && this.train.canDestroy) {
+            this.train = null;
         }
         
         //TODO Depending on wich way you're going (XYZ) 
