@@ -20,7 +20,7 @@ void AGV::goTo(vector3f destination)
     {
         route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
     }
-    string jsonCommand = server->JGen.moveTo(ID,route.second);
+    string jsonCommand = server->JGen.moveTo(ID,route.second,route.first);
     server->writeToSim(jsonCommand);
     bizzy = true;
 }

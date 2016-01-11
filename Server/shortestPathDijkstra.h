@@ -17,6 +17,7 @@ public:
 	//pair<double, string> route(string name1, std::string name2);
 	pair<double,vector<vector3f>> route(string name1, string name2);
 	void reset();
+	double distance(string coordinate1, string coordinate2);
 private:
 	struct Place
 	{
@@ -34,7 +35,6 @@ private:
 	Place* getPlace(string name);
 	void add(Place* fromPlace, Place* toPlace, double distance);
 	bool roadExists(Place* fromPlace, Place* toPlace, double distance);
-	double distance(string coordinate1, string coordinate2);
 	vector<string> &split(const string &s, char delim, vector<string> &elems);
 	vector<string> split(const string &s, char delim);
 	vector<vector3f> vectorStringToVectorVector3f(vector<string> stringVector);

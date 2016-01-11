@@ -232,6 +232,5 @@ int Server::getFreeAGV(vector3f destination)
     }
 
     i = i + 2;
-    cout<<idClosestAGV<<endl; //DEBUGINFO
     return idClosestAGV;
 }
