@@ -26,15 +26,15 @@ void JSONReader::loadTransport(map<int,Transport>& transportMap){
     rapidjson::Value& AGVs = document["AGV"];
     rapidjson::Value& truckCranes = document["TruckCrane"];
     JSONGenerator generator;
-    string test = toString(freightShips);
+    string test = generator.toString(freightShips);
     cout << test << endl;
     //cout << toString(freightShips) << endl;
 }
 
-template <class T>
+/*template <class T>
 std::string JSONReader::toString(T &jsonValue){
 	StringBuffer strbuf;
 	Writer<StringBuffer> writer(strbuf);
 	jsonValue.Accept(writer);
 	return strbuf.GetString();
-}
+}*/

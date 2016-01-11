@@ -74,13 +74,13 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(document);
 }
 
-template <class T>
+/*template <class T>
 std::string JSONGenerator::toString(T &jsonValue){
 	StringBuffer strbuf;
 	Writer<StringBuffer> writer(strbuf);
 	jsonValue.Accept(writer);
 	return strbuf.GetString();
-}
+}*/
 
 //converts json document to string
 /*string JSONGenerator::toString(rapidjson::Document &document)
