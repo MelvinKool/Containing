@@ -10,7 +10,7 @@ JSONReader::JSONReader(char* transportFPath){
     this->transportFPath = transportFPath;
 }
 
-void JSONReader::loadTransport(map<int,Transport>& transportMap){
+void JSONReader::loadTransport(Connections* simulator){
     string temp, transportJSON;
     ifstream jsonLoader(transportFPath);
     while(getline(jsonLoader,temp)){
@@ -19,26 +19,18 @@ void JSONReader::loadTransport(map<int,Transport>& transportMap){
     }
     Document document;
     document.Parse(transportJSON.c_str());
-    rapidjson::Value& freightShips = document["FreightShip"];
-    loadVehicle(freightShips);
-    rapidjson::Value& storage = document["Storage"];
-    loadVehicle(storage);
-    rapidjson::Value& seaShips = document["SeaShip"];
-    loadVehicle(seaShips);
-    rapidjson::Value& trains = document["Train"];
-    loadVehicle(trains);
-    rapidjson::Value& AGVs = document["AGV"];
-    loadVehicle(AGVs);
-    rapidjson::Value& truckCranes = document["TruckCrane"];
-    loadVehicle(truckCranes);
+    loadVehicle("FreightShip", document, simulator);
+    loadVehicle("Storage", document, simulator);
+    loadVehicle("SeaShip", document, simulator);
+    loadVehicle("Train", document, simulator);
+    loadVehicle("AGV", document, simulator);
+    loadVehicle("TruckCrane", document, simulator); 
     //JSONGenerator generator;
-    string test = JSONGenerator::toString(freightShips);
-    cout << test << endl;
     //cout << toString(freightShips) << endl;
 }
 
 
-void JSONReader::loadVehicle(rapidjson::Value& freightJSON){
+void JSONReader::loadVehicle(string key,rapidjson::Document& document, Connections* simulator){
     /*
     "FreightShip":{
       "count":8,
@@ -54,9 +46,9 @@ void JSONReader::loadVehicle(rapidjson::Value& freightJSON){
       }
    },
     */
-    cout << "Began reading freightship json" << endl;
-    int count = freightJSON["count"].GetInt();
-    const Value& positions = freightJSON["positions"];
+    rapidjson::Value& transportJSON = document[key];
+    int count = transportJSON["count"].GetInt();
+    const Value& positions = transportJSON["positions"];
     for (rapidjson::SizeType i = 0; i < positions.Size(); i++)
     {
         const rapidjson::Value& position = positions[i];
@@ -66,17 +58,16 @@ void JSONReader::loadVehicle(rapidjson::Value& freightJSON){
         z = position[2].GetDouble();
         cout << x << " " << y << " " << z << endl;
     }
-    const Value& rotation = freightJSON["rotation"];
+    const Value& rotation = transportJSON["rotation"];
     double rotX, rotY, rotZ;
     rotX = rotation[0].GetDouble();
     rotY = rotation[1].GetDouble();
     rotZ = rotation[2].GetDouble();
-    cout << rotX << " " << rotY << " " << rotZ << endl;
-    double speed = freightJSON["speed"].GetDouble();
-    Value::ConstMemberIterator itr = freightJSON.FindMember("grabber");
-    if (itr != freightJSON.MemberEnd()){
+    double speed = transportJSON["speed"].GetDouble();
+    Value::ConstMemberIterator itr = transportJSON.FindMember("grabber");
+    if (itr != transportJSON.MemberEnd()){
         //vehicle has a grabber
-        const Value& grabber = freightJSON["grabber"];
+        const Value& grabber = transportJSON["grabber"];
         double holderSpeed = grabber["holderSpeed"].GetDouble();
         const Value& grabberPosition = grabber["position"];
         double grabberPosX = grabberPosition[0].GetDouble();
@@ -86,7 +77,6 @@ void JSONReader::loadVehicle(rapidjson::Value& freightJSON){
         double grabber_y_offset = grabber["y_offset"].GetDouble();
         bool has_holder = grabber["has_holder"].GetBool();
     }
-    cout << count << endl;
 }
 /*template <class T>
 std::string JSONReader::toString(T &jsonValue){

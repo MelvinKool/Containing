@@ -76,6 +76,11 @@ thread* Connections::newClientThread(int number)
             this->simulator = &(this->clients[number]);
             isSim = true;
         }
+        //send all simulation objects to the simulator
+        if(isSim){
+            JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json");
+            jsonReader.loadTransport(this);
+        }
         //load vehicles
         while(!this->stop)
         {
