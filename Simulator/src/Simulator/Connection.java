@@ -155,7 +155,7 @@ public class Connection
                 while (!shouldStop) 
                 {   
                     write("connection_check");
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 }
             } 
             catch (Exception e) 
