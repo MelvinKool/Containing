@@ -28,8 +28,8 @@ void Server::checkContainers()
 
         //Logics outline and stuffs to send and let everything move
         //TODO getting the right time into querries!!
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.date, arr.timeFrom FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID";// AND arr.date = "+ currentDate +" AND arr.timeFrom = "+ currentTime;
-        string departures = "SELECT cont.containerID, ship.sort, dep.date, dep.timeFrom FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID";// AND arr.date = "+ currentDate +" AND arr.timeFrom = "+ currentTime;
+        string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         //process leaving containers
         MYSQL_RES* res1 = db.select(departures);
@@ -70,9 +70,10 @@ void Server::checkContainers()
 
 void Server::processLeavingContainer(MYSQL_ROW &row)
 {
+    int container = atoi(row[0]);
     string vehicle = row[1];
 
-    int agvID = getFreeAGV(); //TODO
+    int agvID = getFreeAGV(vector3f(x,y,z)); //TODO
     crane.goTo(vector3f(x,y,z)); //crane at container dump
     agvs[agvID].goTo(vector3f(x,y,z)); // send agv to dump row
     crane.transfer(container,dump,agvID); //transfer container from dump to agv
@@ -113,10 +114,11 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
 
 void Server::processArrivingContainer(MYSQL_ROW &row)
 {
-
+    int container = atoi(row[0]);
     string vehicle = row[1];
+    x=atoi(row[3]);y=atoi(row[4]);z=atoi(row[5]);//these are relative container coordinates,relative to vehicle position
+    int agvID = getFreeAGV(vector3f(x,y,z));//x,y,z are destination, so those have to be known by this point
 
-    int agvID = getFreeAGV();
     if(vehicle=="vrachtauto") //TODO
     {
         //TODO spawn truck
@@ -174,7 +176,52 @@ void Server::stopRunning()
     stop = true;
 }
 
-int Server::getFreeAGV()
+int Server::getFreeAGV(vector3f destination)
 {
-    return 0;
+    static int i = 0;
+    int e = i, idClosestAGV = 0;
+    double distClosesestAGV = 999999999.9999;
+    if (i > 99)
+    {
+        i = 0;
+    }
+
+    for (int j = 0; j < 5; j++)
+    {
+        double distance = -1;
+        while (distance < 0)
+        {
+            AGV agv = agvs[e];
+            if (agv.getWorkingState()) //if agv is bussy, dont even try to give it a new order
+            {
+                continue;
+            }
+
+            try
+            {
+                distance = pathFinderUnloaded.route(agv.getCurrentLocation().toString(),destination.toString()).first;
+
+                if (distance < distClosesestAGV) //if there is a distance, see if it is shorter than previous
+                {
+                    distClosesestAGV = distance;
+                    idClosestAGV = e;
+                }
+            }
+            catch (string error)
+            {
+                distance = -1;
+            }
+
+            if (e == 99)
+            {
+                e = 0;
+            }
+            else
+            {
+                e++;
+            }
+        }
+    }
+    i = i + 2;
+    return idClosestAGV;
 }

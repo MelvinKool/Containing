@@ -25,7 +25,7 @@ class Server
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
         float x = 0,y = 0,z = 0;
-        int container = 3,dump = 2,train = 6,truck = 7,ship = 8;
+        int dump = 2,train = 6,truck = 7,ship = 8;
     private:
         Database db;
         XmlParser xmlParser;
@@ -34,7 +34,7 @@ class Server
         bool stop = false;
         void processLeavingContainer(MYSQL_ROW &row);
         void processArrivingContainer(MYSQL_ROW &row);
-        int getFreeAGV();
+        int getFreeAGV(vector3f destination);
 };
 
 #endif

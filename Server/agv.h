@@ -12,10 +12,13 @@ class AGV : Transport
     public:
         AGV(){};
         void goTo(vector3f destination);
+        vector3f getCurrentLocation();
+        bool getWorkingState();
+        void arrived();
     private:
         Server* server;
         int ID;
-        bool loaded = false;
+        bool loaded = false,bizzy = false;
     public:
         AGV(int id,float x,float y,float z,Server* ser);
 };
