@@ -9,17 +9,28 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Plane;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Quad;
+import com.jme3.util.SkyFactory;
+import com.jme3.water.SimpleWaterProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends SimpleApplication
 {
     boolean connected = false;
-        
+    private Spatial SimWorld;    
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
@@ -38,7 +49,7 @@ public class Main extends SimpleApplication
         Main app = new Main();
         app.start();
     }
-    
+
     @Override
     public void simpleInitApp()
     {
@@ -52,7 +63,7 @@ public class Main extends SimpleApplication
         this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
-        cam.setFrustumFar(2000);
+        cam.setFrustumFar(3000);
         
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
@@ -89,28 +100,20 @@ public class Main extends SimpleApplication
         });
         t.start();
         
+        initWorld();
         initLight();
+        initWater();
+        initSkybox();
+        initFog();
         initInputs();
-        
-        Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
-        rootNode.attachChild(SimWorld);
-        rootNode.attachChild(this.dockCraneNode);
-        //TestFunction();
     }
     
-//    public void TestFunction(){
-//        vectors.add(new Vector3f(0,0,526516));
-//        vectors.add(new Vector3f(0,0,520));
-//        float dist = vectors.get(0).distance(vectors.get(1));
-//        System.out.println(dist);
-//    }
-    
     public void TeleAgv(){
-        worldObjects.agvs.get(2).node.move(0,0,9.75f);
-        locations.add(new Vector3f(38.75f,0f,-63.75f));
-        locations.add(new Vector3f(38.75f,0,-667.25f));
-        locations.add(new Vector3f(1592.25f,0,-667.25f));
-        locations.add(new Vector3f(1592.25f,0,-63.75f));
+        //worldObjects.agvs.get(2).node.move(0,0,9.75f);
+        locations.add(new Vector3f(113.75f, 0.0f, -63.75f));
+        locations.add(new Vector3f(38.75f, 0.0f, -63.75f));
+        locations.add(new Vector3f(38.75f, 0.0f, -49.5f));
+        locations.add(new Vector3f(100.00f, 0.0f, -49.5f));
         System.out.println(locations);
     }
     public void MoveAgv(){
@@ -294,5 +297,59 @@ public class Main extends SimpleApplication
         sun2.setDirection((new Vector3f(0.5f, -0.5f, 0.5f)).normalizeLocal());
         sun2.setColor(ColorRGBA.White);
         rootNode.addLight(sun2); 
+    }
+    private void initWater()
+    {
+        // we create a water processor
+        SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
+        waterProcessor.setReflectionScene(SimWorld);
+
+        // we set the water plane
+        Vector3f waterLocation=new Vector3f(0,-6,0);
+        waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
+        viewPort.addProcessor(waterProcessor);
+
+        // we set wave properties
+        waterProcessor.setWaterDepth(40);         // transparency of water
+        waterProcessor.setDistortionScale(0.05f); // strength of waves
+        waterProcessor.setWaveSpeed(0.05f);       // speed of waves
+
+        // we define the wave size by setting the size of the texture coordinates
+        Quad quad = new Quad(5000,5000);
+        quad.scaleTextureCoordinates(new Vector2f(6f,6f));
+
+        // we create the water geometry from the quad
+        Geometry water=new Geometry("water", quad);
+        water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
+        water.setLocalTranslation(-1000, -6, 1000);
+        water.setShadowMode(ShadowMode.Receive);
+        water.setMaterial(waterProcessor.getMaterial());
+        rootNode.attachChild(water);
+    }
+    
+    private void initWorld()
+    {
+        //Load World and attach to scene.
+        SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
+        rootNode.attachChild(SimWorld);
+        rootNode.attachChild(this.dockCraneNode);
+    }
+    
+    private void initSkybox()
+    {
+        //Adds Skybox to the scene.
+        rootNode.attachChild(SkyFactory.createSky(assetManager, "Models/BrightSky.dds", false));
+    }
+    
+    private void initFog()
+    {
+         /** Add fog to a scene */
+        FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+        FogFilter fog=new FogFilter();
+        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 0.5f));
+        fog.setFogDistance(8000);
+        fog.setFogDensity(1.5f);
+        fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
     }
 }

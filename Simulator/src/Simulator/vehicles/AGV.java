@@ -103,17 +103,18 @@ public class AGV extends WorldObject {
     
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-            //this.motionPath.removeWayPoint(wayPointIndex);
-            if(currentLookPos < allWayPoints.size())
+        if(currentLookPos < allWayPoints.size()-1)
+        {
+            currentLookPos++;
+            if(currentLookPos == allWayPoints.size())
             {
-                currentLookPos++;
-                if(currentLookPos == allWayPoints.size())
                 currentLookPos = 0;
             }
+        }
             
-            lookAtPosition = allWayPoints.get(currentLookPos);
-            System.out.println("updated lookat " + lookAtPosition);
-            this.motionEvent.setLookAt(lookAtPosition, Vector3f.ZERO);
+        lookAtPosition = allWayPoints.get(currentLookPos);
+        System.out.println("updated lookat " + lookAtPosition);
+        this.motionEvent.setLookAt(lookAtPosition, Vector3f.ZERO);
             
         if (this.motionPath.getNbWayPoints() == wayPointIndex + 1) {
             System.out.println("delete motion");
