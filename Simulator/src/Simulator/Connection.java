@@ -136,7 +136,6 @@ public class Connection
                     if(input.contentEquals("disconnect"))
                     {
                         System.out.println("Disconnected from server.");
-                        shouldStop = true;
                         break;
                     }
                     System.out.println(input);
