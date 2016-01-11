@@ -33,16 +33,18 @@ public class CommandHandler
                 //get the route node
                 JSONArray route = jsonObject.getJSONArray("Route");
                 List Locations = new ArrayList<Vector3f>();
-                int x,y,z;
+                float x,y,z;
                 for(Object coordinate : route)
                 {
                     JSONArray coord = (JSONArray)coordinate;
-                    x = coord.getInt(0);
-                    y = coord.getInt(1);
-                    z = coord.getInt(2);
+                    x = (float)coord.getDouble(0);
+                    y = (float)coord.getDouble(1);
+                    z = (float)coord.getDouble(2);
                     Locations.add(new Vector3f(x,y,z));
                 }
-                objectloader.agvs.get(vehicleId).setPath(Locations);
+                System.out.println("Locations list: "+Locations);
+                objectloader.agvs.get(vehicleId).setWayPoints(Locations);
+                //objectloader.agvs.get(vehicleId).setPath(Locations);
                 break;   
             case "transferContainer":
                 break;

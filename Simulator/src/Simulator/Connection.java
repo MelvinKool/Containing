@@ -5,13 +5,14 @@ import java.io.*;
 public class Connection
 {
     private boolean stop = false;
-    
+    private String ip = "141.252.236.91";
+    // "141.252.236.91" "192.168.56.56"
     private class SimSocket extends Socket
     {
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        SocketAddress socket = new InetSocketAddress("192.168.56.56", 1337);
+        SocketAddress socket = new InetSocketAddress(ip, 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -39,7 +40,7 @@ public class Connection
     {
         //try
         //{
-            simSocket = new Connection.SimSocket(InetAddress.getByName("192.168.56.56"), 1337);
+            simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337);
             System.out.println(simSocket.socket.toString());
             if(simSocket != null)
                 write("Simulator");
@@ -126,7 +127,7 @@ public class Connection
             {
                 try
                 {
-                    simSocket = new Connection.SimSocket(InetAddress.getByName("192.168.56.56"), 1337);
+                    simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337);
                 } 
                 catch (Exception e)
                 {
