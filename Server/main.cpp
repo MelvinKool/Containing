@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
     Server* server = new Server();
 
-    for (uint i = 0; i < 5; i++)
+    for (uint i = 0; i < 100; i++)
     {
         server->agvs[i] = AGV(i+1,0.0,0.0,0.0,server);
     }

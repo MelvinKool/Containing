@@ -73,11 +73,10 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     int container = atoi(row[0]);
     string vehicle = row[1];
 
-    int agvID = getFreeAGV(vector3f(x,y,z)); //TODO
+    int agvID = getFreeAGV(vector3f(x,y,z));
     crane.goTo(vector3f(x,y,z)); //crane at container dump
     agvs[agvID].goTo(vector3f(x,y,z)); // send agv to dump row
     crane.transfer(container,dump,agvID); //transfer container from dump to agv
-
     if(vehicle=="trein") //TODO
     {
         //TODO spawn train
@@ -194,6 +193,14 @@ int Server::getFreeAGV(vector3f destination)
             AGV agv = agvs[e];
             if (agv.getWorkingState()) //if agv is bussy, dont even try to give it a new order
             {
+                if (e > 98)
+                {
+                    e = 0;
+                }
+                else
+                {
+                    e++;
+                }
                 continue;
             }
 
@@ -210,9 +217,11 @@ int Server::getFreeAGV(vector3f destination)
             catch (string error)
             {
                 distance = -1;
+                distance = 250.6; //just for testing purpose
+                idClosestAGV = e;
             }
 
-            if (e == 99)
+            if (e > 98)
             {
                 e = 0;
             }
@@ -222,6 +231,8 @@ int Server::getFreeAGV(vector3f destination)
             }
         }
     }
+
     i = i + 2;
+    cout<<idClosestAGV<<endl; //DEBUGINFO
     return idClosestAGV;
 }

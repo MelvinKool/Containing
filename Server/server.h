@@ -19,7 +19,7 @@ class Server
         void writeToSim(std::string message);
         void checkContainers();
         void stopRunning();
-        AGV agvs[5];
+        AGV agvs[100];
         Crane crane;
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
