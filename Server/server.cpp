@@ -1,7 +1,6 @@
 #include "server.h"
 
 #include <iostream>
-
 Server::Server()
 {
     if(db.isConnected())
@@ -10,8 +9,8 @@ Server::Server()
     }
     connections.acceptClients();
     httpserver.init();
-    pathFinderLoaded = ShortestPathDijkstra("pathtoloaded");
-    pathFinderUnloaded = ShortestPathDijkstra("pathtounloaded");
+    pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");
+    pathFinderUnloaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsUnloadedAGV.csv");
 }
 
 void Server::writeToSim(string message)

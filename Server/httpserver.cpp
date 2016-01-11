@@ -19,7 +19,7 @@ void HttpServer::init()
 {
     if(initSocket())
     {
-        std::cout << "HTTP Server is up, waiting for connoctions..." << std::endl;
+        std::cout << "HTTP Server is up, waiting for connections..." << std::endl;
         handleConnections();
     }
 }
@@ -93,7 +93,7 @@ void HttpServer::handleConnections()
                 if(std::regex_search (msg,m,e))
                 {
                     std::ostringstream location;
-                    location << "./Files/MobileApp/" << m[0];
+                    location << "./Files/MobileApp" << m[0];
 
                     std::ifstream str (location.str());
                     std::string result = "";
