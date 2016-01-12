@@ -87,6 +87,7 @@ public class AGV extends WorldObject {
             addNewWayPointToMPath(wayPoints.get(0));
         //add a new waypoint
         if(wayPoints.size() == 0){
+            this.container.operationDone();
             this.motionEvent = null;
             this.motionPath = null;
         }            

@@ -1,14 +1,12 @@
 package Simulator;
 
+import Simulator.cranes.Crane;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
-import org.json.JSONStringer;
 
 public class CommandHandler
 {
@@ -54,7 +52,8 @@ public class CommandHandler
                 System.out.println("Locations list: "+Locations);
                 objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
                 break;   
-            case "transferContainer":
+            case "craneMoveContainer":
+                this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
                 this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
@@ -77,5 +76,20 @@ public class CommandHandler
     {
         JSONObject jsonObject = new JSONObject(json);
         this.executeCommand(jsonObject);
+    }
+
+    private void craneMoveContainer(JSONObject jsonObject)
+    {
+        int craneId = jsonObject.getInt("craneId");
+        int containerId = jsonObject.getInt("containerId");
+        Crane crane = this.objectloader.cranes.get(craneId);
+        Container container = this.objectloader.containers.get(containerId);
+        JSONArray target = jsonObject.getJSONArray("target");
+        float x = (float) target.getDouble(0);
+        float y = (float) target.getDouble(1);
+        float z = (float) target.getDouble(2);
+        Vector3f targetVec = new Vector3f(x, y, z);
+        
+        crane.moveContainer(container, targetVec);
     }
 }
