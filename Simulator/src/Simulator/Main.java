@@ -67,12 +67,12 @@ public class Main extends SimpleApplication
         
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
-        this.containers = new ArrayList<>();
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
-
-        this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
+//        this.containers = new ArrayList<>();
+//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
+//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
+//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
+//
+//        this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
         Thread t = new Thread(new Runnable()
@@ -137,12 +137,6 @@ public class Main extends SimpleApplication
         if (this.train != null && this.train.canDestroy) {
             this.train = null;
         }
-        
-        //TODO Depending on wich way you're going (XYZ) 
-        //float afstand = AGV.GetMaxSpeed()*tpf;
-        //AGV.SetLocalTranslation(afstand);
-        //AGV.afstandToGo -= afstand;
-        //This kinda works, but it doesn't, since I don't specify the X, Y or Z
     }
 
     @Override
@@ -300,11 +294,12 @@ public class Main extends SimpleApplication
     
     private void initLight()
     {
+        //Light from right back
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun);
-        
+        //Light from left front
         DirectionalLight sun2 = new DirectionalLight();
         sun2.setDirection((new Vector3f(0.5f, -0.5f, 0.5f)).normalizeLocal());
         sun2.setColor(ColorRGBA.White);
@@ -312,25 +307,25 @@ public class Main extends SimpleApplication
     }
     private void initWater()
     {
-        // we create a water processor
+        //create a water processor
         SimpleWaterProcessor waterProcessor = new SimpleWaterProcessor(assetManager);
         waterProcessor.setReflectionScene(SimWorld);
 
-        // we set the water plane
+        //set the water plane
         Vector3f waterLocation=new Vector3f(0,-6,0);
         waterProcessor.setPlane(new Plane(Vector3f.UNIT_Y, waterLocation.dot(Vector3f.UNIT_Y)));
         viewPort.addProcessor(waterProcessor);
 
-        // we set wave properties
+        //set wave properties
         waterProcessor.setWaterDepth(40);         // transparency of water
         waterProcessor.setDistortionScale(0.05f); // strength of waves
         waterProcessor.setWaveSpeed(0.05f);       // speed of waves
 
-        // we define the wave size by setting the size of the texture coordinates
+        //define the wave size by setting the size of the texture coordinates
         Quad quad = new Quad(5000,8000);
         quad.scaleTextureCoordinates(new Vector2f(6f,6f));
 
-        // we create the water geometry from the quad
+        //create the water geometry from the quad
         Geometry water=new Geometry("water", quad);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
         water.setLocalTranslation(-1000, -6, 3000);
@@ -341,7 +336,7 @@ public class Main extends SimpleApplication
     
     private void initWorld()
     {
-        //Load World and attach to scene.
+        //Load world and attach to scene.
         SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
         rootNode.attachChild(this.dockCraneNode);
@@ -355,7 +350,7 @@ public class Main extends SimpleApplication
     
     private void initFog()
     {
-        //Add fog to a scene
+        //Add fog to the scene
         FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
         FogFilter fog=new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 0.5f));
