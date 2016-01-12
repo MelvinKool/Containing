@@ -4,9 +4,9 @@
  */
 package Simulator.vehicles;
 
+import Simulator.Container;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -47,12 +47,19 @@ public class Train
         this.node.addControl(this.trainControl);
     }
     
+    public void addContainers(List<Container> containers) {
+        for (int i = 0; i < containers.size(); i++) {
+            TrainCart trainCart = this.trainCarts.get(i);
+            trainCart.attachContainer(containers.get(i));
+        }
+    }
+    
     private void initTrainCarts(int length, AssetManager assetManager, Spatial trainCartModel) 
     {
-        Vector3f position;
+        Vector3f position = Vector3f.ZERO;
         
         for (int i = 0; i < length; i++) {
-            position = new Vector3f(0.0f, 0.0f, -((this.locomotive.getPosition().x + 18.45f) * i) - 13.21f);
+            position = position.set(0.0f, 0.0f, -((this.locomotive.getPosition().x + 18.45f) * i) - 13.21f);
             this.trainCarts.add(new TrainCart(this.node, assetManager, position, trainCartModel.clone()));
         }
     }
@@ -71,11 +78,13 @@ public class Train
         motionEvent.play();
     }
     
-    public void moveOut() {
+    public void moveOut() 
+    {
         this.moveTo(new Vector3f(1715.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
     
-    public void moveIn() {
+    public void moveIn() 
+    {
         this.moveTo(new Vector3f(45.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
     

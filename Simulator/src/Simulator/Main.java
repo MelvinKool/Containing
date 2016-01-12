@@ -67,11 +67,6 @@ public class Main extends SimpleApplication
         
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
-        this.containers = new ArrayList<>();
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
-
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
         readThread = initReadThread();
         readThread.start();
@@ -129,7 +124,7 @@ public class Main extends SimpleApplication
             this.test = true;
         }
         
-        // Destroy train when it says it can (when it's out of view)
+        // Destroy train when it says it can (when it's out of map)
         if (this.train != null && this.train.canDestroy) {
             this.train = null;
         }

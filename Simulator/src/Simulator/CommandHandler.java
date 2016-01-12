@@ -3,12 +3,9 @@ package Simulator;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
-import org.json.JSONStringer;
 
 public class CommandHandler
 {
@@ -19,13 +16,21 @@ public class CommandHandler
         this.objectloader = objectloader;
     }
     
-    public void ParseJSON(String json)
-    {
-        JSONObject jsonObject = new JSONObject(json);
+    public void setContainerCommands(JSONObject commands) {
+        int containerId = commands.getInt("container");
+        Container container = this.objectloader.containers.get(containerId);
+        List<JSONObject> commandList = (List<JSONObject>) commands.getJSONArray("commands").iterator();
+        container.setCommands(commandList);        
+    }
+    
+    public void executeCommand(JSONObject jsonObject) {
         String command = jsonObject.getString("Command");
         int vehicleId;
         switch(command)
         {
+            case "containerCommands":
+                this.setContainerCommands(jsonObject);
+                break;
             case "moveTo":
                 //code for parsing moveto
                 //get the vehicle ID
@@ -45,7 +50,7 @@ public class CommandHandler
                 System.out.println("Locations list: "+Locations);
                 objectloader.agvs.get(vehicleId).setWayPoints(Locations);
                 //objectloader.agvs.get(vehicleId).setPath(Locations);
-                break;   
+                break;
             case "transferContainer":
                 break;
             case "spawnObjects":
@@ -63,5 +68,11 @@ public class CommandHandler
                 objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));                
                 break;
         }
+    }
+    
+    public void ParseJSON(String json)
+    {
+        JSONObject jsonObject = new JSONObject(json);
+        this.executeCommand(jsonObject);
     }
 }

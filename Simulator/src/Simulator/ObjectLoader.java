@@ -60,6 +60,23 @@ public class ObjectLoader {
         this.rootNode = rootNode;
     }
     
+    public Container addContainer(JSONObject containerData, CommandHandler commandHandler) {
+        int containerId = containerData.getInt("containerId");
+        JSONArray position = containerData.getJSONArray("position");
+        float x = (float) position.getDouble(0);
+        float y = (float) position.getDouble(1);
+        float z = (float) position.getDouble(2);
+        Container container = new Container(
+                    this.rootNode,
+                    this.assetManager,
+                    new Vector3f(x, y, z),
+                    this.getContainerModel(),
+                    commandHandler);
+        
+        this.containers.put(containerId, container);
+        return container;
+    }
+    
     /**
      * Load json from filePath
      * @param filePath path to json file
@@ -199,7 +216,7 @@ public class ObjectLoader {
             grabberSpeed = (float) grabberInfo.getDouble("speed");
             holderSpeed = (float) grabberInfo.getDouble("holderSpeed");
             
-             holderPosition = new Vector3f(
+            holderPosition = new Vector3f(
                     (float) grabberPosition.getDouble(0),
                     (float) grabberPosition.getDouble(1),
                     (float) grabberPosition.getDouble(2)
