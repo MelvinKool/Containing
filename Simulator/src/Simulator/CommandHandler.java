@@ -19,13 +19,21 @@ public class CommandHandler
         this.objectloader = objectloader;
     }
     
-    public void ParseJSON(String json)
-    {
-        JSONObject jsonObject = new JSONObject(json);
+    public void setContainerCommands(JSONObject commands) {
+        int containerId = commands.getInt("container");
+        Container container = this.objectloader.containers.get(containerId);
+        List<JSONObject> commandList = (List<JSONObject>) commands.getJSONArray("commands").iterator();
+        container.setCommands(commandList);        
+    }
+    
+    public void executeCommand(JSONObject jsonObject) {
         String command = jsonObject.getString("Command");
         int vehicleId;
         switch(command)
         {
+            case "containerCommands":
+                this.setContainerCommands(jsonObject);
+                break;
             case "moveTo":
                 //code for parsing moveto
                 //get the vehicle ID
@@ -63,5 +71,11 @@ public class CommandHandler
                 objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));                
                 break;
         }
+    }
+    
+    public void ParseJSON(String json)
+    {
+        JSONObject jsonObject = new JSONObject(json);
+        this.executeCommand(jsonObject);
     }
 }
