@@ -105,14 +105,18 @@ public class Main extends SimpleApplication
     
     public void TeleAgv(){
         //worldObjects.agvs.get(2).node.move(0,0,9.75f);
-        locations.add(new Vector3f(113.75f, 0.0f, -63.75f));
-        locations.add(new Vector3f(38.75f, 0.0f, -63.75f));
-        locations.add(new Vector3f(38.75f, 0.0f, -49.5f));
-        locations.add(new Vector3f(100.00f, 0.0f, -49.5f));
-        System.out.println(locations);
+//        locations.add(new Vector3f(113.75f, 0.0f, -63.75f));
+//        locations.add(new Vector3f(38.75f, 0.0f, -63.75f));
+//        locations.add(new Vector3f(38.75f, 0.0f, -49.5f));
+//        locations.add(new Vector3f(100.00f, 0.0f, -49.5f));
+        locations.add(new Vector3f(100f, 0.0f, -50f));
+        locations.add(new Vector3f(100f, 0.0f, -60f));
+//        locations.add(new Vector3f(90f, 0.0f, -40f));
+//        locations.add(new Vector3f(80f, 0.0f, -40f));
+//        System.out.println(locations);
     }
     public void MoveAgv(){
-        worldObjects.agvs.get(2).setWayPoints(locations);
+        worldObjects.agvs.get(2).setPath(locations,2000f);
     }
     
     boolean test = false; //TODO: remove this line
@@ -219,8 +223,12 @@ public class Main extends SimpleApplication
 //                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
                         break;
                     case "xm":
+                        //cont.node.move(-5,0,0);
+                        if(!locations.isEmpty())
+                        {
+                            MoveAgv();
+                        }
                         cont.node.move(-5,0,0);
-//                        MoveAgv();
                         break;
                     case "zp":
                         cont.node.move(0,0,5);
@@ -232,8 +240,6 @@ public class Main extends SimpleApplication
                         break;
                     }
                 }
-                System.out.println(cont.getPosition());
-
             }
         };
 
@@ -316,13 +322,13 @@ public class Main extends SimpleApplication
         waterProcessor.setWaveSpeed(0.05f);       // speed of waves
 
         // we define the wave size by setting the size of the texture coordinates
-        Quad quad = new Quad(5000,5000);
+        Quad quad = new Quad(5000,8000);
         quad.scaleTextureCoordinates(new Vector2f(6f,6f));
 
         // we create the water geometry from the quad
         Geometry water=new Geometry("water", quad);
         water.setLocalRotation(new Quaternion().fromAngleAxis(-FastMath.HALF_PI, Vector3f.UNIT_X));
-        water.setLocalTranslation(-1000, -6, 1000);
+        water.setLocalTranslation(-1000, -6, 3000);
         water.setShadowMode(ShadowMode.Receive);
         water.setMaterial(waterProcessor.getMaterial());
         rootNode.attachChild(water);
@@ -344,7 +350,7 @@ public class Main extends SimpleApplication
     
     private void initFog()
     {
-         /** Add fog to a scene */
+        //Add fog to a scene
         FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
         FogFilter fog=new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 0.5f));

@@ -3,9 +3,12 @@ package Simulator;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONString;
+import org.json.JSONStringer;
 
 public class CommandHandler
 {
@@ -47,10 +50,10 @@ public class CommandHandler
                     z = (float)coord.getDouble(2);
                     Locations.add(new Vector3f(x,y,z));
                 }
+                float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                objectloader.agvs.get(vehicleId).setWayPoints(Locations);
-                //objectloader.agvs.get(vehicleId).setPath(Locations);
-                break;
+                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                break;   
             case "transferContainer":
                 break;
             case "spawnObjects":
