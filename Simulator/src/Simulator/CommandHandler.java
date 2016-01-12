@@ -48,7 +48,8 @@ public class CommandHandler
                 break;   
             case "transferContainer":
                 break;
-            case "spawnObject":
+            case "spawnObjects":
+                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
                 break;
             case "teleportObject":
                 vehicleId = jsonObject.getInt("vehicleId");
