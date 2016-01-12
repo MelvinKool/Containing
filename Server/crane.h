@@ -10,8 +10,7 @@ class Crane : Transport
 {
     public:
         Crane(){};
-        void goTo(vector3f destination);
-        void transfer(int containerID,int originID,int destID);
+        std::string transfer(int containerID,int destID);
     private:
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
         int ID;

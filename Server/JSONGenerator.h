@@ -12,6 +12,7 @@ class JSONGenerator
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
     std::string transferContainer(int containerId, int sourceId, int targetId);
     std::string spawnObject(int objectId, vector3f coordinates);
+    std::string generateCommandList(int containerId, std::vector<std::string> commandList);
   private:
     rapidjson::Document createJSONDocument();
     std::string toString(rapidjson::Document *document);

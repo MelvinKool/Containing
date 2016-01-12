@@ -74,6 +74,11 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(&document);
 }
 
+string JSONGenerator::generateCommandList(int containerId, vector<string> commandList)
+{
+	return "";
+}
+
 //converts json document to string
 string JSONGenerator::toString(rapidjson::Document *document)
 {

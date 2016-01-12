@@ -27,16 +27,16 @@ class Connections
             std::string type;
             bool used;
             ClientSocket* socket;
-            thread* worker;
+            std::thread* worker;
         };
         ServerSocket* socket;
         Client* simulator = nullptr;
         bool stop = false;
         std::vector<Client> clients;
-        thread* acceptThread;
+        std::thread* acceptThread;
 
         int getFreeClientNumber();
-        thread* newClientThread(int number);
+        std::thread* newClientThread(int number);
 };
 
 #endif //CONNECTIONS_H

@@ -9,18 +9,16 @@
 #include <unistd.h>
 #include <iostream>
 
-using namespace std;
-
 #define bufsize 4096
 
 class ClientSocket
 {
     public:
-        ClientSocket(string ip, int port);
+        ClientSocket(std::string ip, int port);
         ClientSocket(int sock);
         ~ClientSocket();
-        string read();
-        void write(string message);
+        std::string read();
+        void write(std::string message);
     private:
         int sock;
 };

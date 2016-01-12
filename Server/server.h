@@ -19,22 +19,32 @@ class Server
         void writeToSim(std::string message);
         void checkContainers();
         void stopRunning();
-        AGV agvs[100];
+
         Crane crane;
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
+
+        AGV agvs[100];
         float x = 0,y = 0,z = 0;
         int dump = 2,train = 6,truck = 7,ship = 8;
     private:
+        void processLeavingContainer(MYSQL_ROW &row);
+        void processArrivingContainer(MYSQL_ROW &row);
+        int getFreeAGV();
+        vector3f getTruckStop();
+        std::string spawnObject(int type,vector3f location);
+
         Database db;
         XmlParser xmlParser;
         Connections connections;
         HttpServer httpserver;
+
         bool stop = false;
-        void processLeavingContainer(MYSQL_ROW &row);
-        void processArrivingContainer(MYSQL_ROW &row);
-        int getFreeAGV(vector3f destination);
+        std::vector<vector3f> truckStops;
+        std::string vehicle = "";
+        int containerId = -1,agvID = 0;
+        std::vector<std::string> commands;
 };
 
 #endif

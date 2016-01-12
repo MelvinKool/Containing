@@ -10,7 +10,6 @@ using namespace std;
 
 void containers(Server* ser)
 {
-    cout << "Thread calls method" << endl;
     ser->checkContainers();
 }
 
