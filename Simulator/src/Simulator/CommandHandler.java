@@ -42,9 +42,9 @@ public class CommandHandler
                     z = (float)coord.getDouble(2);
                     Locations.add(new Vector3f(x,y,z));
                 }
+                float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                objectloader.agvs.get(vehicleId).setWayPoints(Locations);
-                //objectloader.agvs.get(vehicleId).setPath(Locations);
+                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
                 break;   
             case "transferContainer":
                 break;
