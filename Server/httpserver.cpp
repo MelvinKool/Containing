@@ -97,10 +97,11 @@ void HttpServer::handleConnections()
 
                     if(location.str() == "./Files/MobileApp/DATA.json")
                     {
-                        //get the DATA
-                        std::string result = "result";
-                        oss << result.size() << "\r\n\r\n";
-                        oss << result;
+                        static int i = 0;
+                        i++;
+                        std::string s = std::to_string(i);
+                        oss << s.size() << "\r\n\r\n";
+                        oss << s;
                     }
                     else
                     {
