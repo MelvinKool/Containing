@@ -47,6 +47,24 @@ string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
 	document.AddMember("spawnLocation",coordinateObject,allocator);
 	return toString(document);
 }
+/*
+//make something for deleting an object
+//generates JSON for spawning an object
+string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "spawnObject", allocator);
+	document.AddMember("objectId",objectId, allocator);
+	rapidjson::Value coordinateObject(rapidjson::kObjectType);
+	coordinateObject.AddMember("X",coordinate.getX(),allocator);
+	coordinateObject.AddMember("Y",coordinate.getY(),allocator);
+	coordinateObject.AddMember("Z",coordinate.getZ(),allocator);
+	document.AddMember("spawnLocation",coordinateObject,allocator);
+	return toString(document);
+}*/
 
 //generates JSON for moving a vehicle
 string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance)
@@ -74,6 +92,21 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(document);
 }
 
+std::string JSONGenerator::generateCommandList(int containerId, vector<string> commandList)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","ContainerCommandList", allocator);
+	document.AddMember("containerId", containerId, allocator);
+	rapidjson::Value commandList(rapidjson::kArrayType);
+	for(string s : commandList){
+		commandList.PushBack(s, allocator);
+	}
+	document.AddMember("commandList", commandList);
+	return toString(document);
+}
 /*template <class T>
 std::string JSONGenerator::toString(T &jsonValue){
 	StringBuffer strbuf;

@@ -10,7 +10,10 @@ JSONReader::JSONReader(char* transportFPath){
     this->transportFPath = transportFPath;
 }
 
-void JSONReader::loadTransport(Connections* simulator){
+void JSONReader::loadTransport(Connections* simulator,vector<Crane>& freightShipCranes,
+                                vector<Crane>& storageCranes, vector<Crane>& seaShipCranes, vector<Crane>& trainCranes,
+                                vector<AGV>& agvs, vector<Crane>& truckCranes)
+{
     string temp, transportJSON;
     ifstream jsonLoader(transportFPath);
     while(getline(jsonLoader,temp)){
@@ -19,18 +22,21 @@ void JSONReader::loadTransport(Connections* simulator){
     }
     Document document;
     document.Parse(transportJSON.c_str());
-    loadVehicle("FreightShip", document, simulator);
-    loadVehicle("Storage", document, simulator);
-    loadVehicle("SeaShip", document, simulator);
-    loadVehicle("Train", document, simulator);
-    loadVehicle("AGV", document, simulator);
-    loadVehicle("TruckCrane", document, simulator); 
+    loadVehicle("FreightShip", document,simulator,freightShipCranes);
+    loadVehicle("Storage", document,simulator,storageCranes);
+    loadVehicle("SeaShip", document,simulator,seaShipCranes);
+    loadVehicle("Train", document,simulator,trainCranes);
+    loadVehicle("AGV", document,simulator,agvs);
+    loadVehicle("TruckCrane", document,simulator,truckCranes);
     //JSONGenerator generator;
     //cout << toString(freightShips) << endl;
 }
 
 
-void JSONReader::loadVehicle(string key,rapidjson::Document& document, Connections* simulator){
+void JSONReader::loadVehicle(std::string key,rapidjson::Document& document,Connections* simulator, vector<Transport>& transportVector){
+    /*simulator,vector<Crane>& freightShipCranes,
+        vector<Crane>& storageCranes, vector<Crane>& seaShipCranes, vector<Crane>& trainCranes,
+        vector<AGV>& agvs, vector<Crane>& truckCranes*/
     /*
     "FreightShip":{
       "count":8,
@@ -42,9 +48,7 @@ void JSONReader::loadVehicle(string key,rapidjson::Document& document, Connectio
          "position":[ ],
          "speed":1.0,
          "y_offset":-11.0,
-         "has_holder":true
-      }
-   },
+         "has_holder":truetrainCranes
     */
     rapidjson::Value& transportJSON = document[key];
     int count = transportJSON["count"].GetInt();
