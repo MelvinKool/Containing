@@ -42,7 +42,7 @@ void Server::checkContainers()
             }
             catch (string error)
             {
-                cout<<error<<endl;
+                //cout<<error<<endl;
             }
         }
         mysql_free_result(res1);
@@ -59,7 +59,7 @@ void Server::checkContainers()
             }
             catch (string error)
             {
-                cout<<error<<endl;
+                //cout<<error<<endl;
             }
         }
         mysql_free_result(res2);
