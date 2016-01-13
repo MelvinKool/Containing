@@ -31,8 +31,8 @@ public class Main extends SimpleApplication
 {
     boolean connected = false;
     private Spatial SimWorld;    
-    private Node dockCraneNode;
-    private List<Container> containers;
+    //private Node dockCraneNode;
+    //private List<Container> containers;
     private Connection connection;
     private Thread readThread;
     private Thread connectionAlive;
@@ -40,7 +40,7 @@ public class Main extends SimpleApplication
     private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader worldObjects;
     
-    boolean playing;
+    //boolean playing;
     
     private Train train; // TODO: this is test code
 
@@ -53,27 +53,21 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
         this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
-        long end = System.currentTimeMillis();
+        //long end = System.currentTimeMillis();
 
-        System.out.println(end - start);
+        //System.out.println(end - start);
 
-        this.dockCraneNode = new Node();
-        this.playing = false;
+        //this.dockCraneNode = new Node();
+        //this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
         
+        //create a train of 80 carts long.
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
-//        this.containers = new ArrayList<>();
-//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
-//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
-//        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
-//
-//        this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
-
         readThread = initReadThread();
         readThread.start();
         Thread t = new Thread(new Runnable()
@@ -106,7 +100,7 @@ public class Main extends SimpleApplication
         initWater();
         initSkybox();
         initFog();
-        initInputs();
+        //initInputs();
     }
     
     public void TeleAgv(){
@@ -122,7 +116,7 @@ public class Main extends SimpleApplication
 //        System.out.println(locations);
     }
     public void MoveAgv(){
-        worldObjects.agvs.get(2).setPath(locations,2000f);
+        //worldObjects.agvs.get(2).setPath(locations,2000f);
     }
     
     boolean test = false; //TODO: remove this line
@@ -169,92 +163,91 @@ public class Main extends SimpleApplication
         Runtime.getRuntime().exit(1);
     }
 
-    public Crane getNearestCrane(Node obj)
-    {
-        float dist;
-        float minDist = -1;
+   public Crane getNearestCrane(Node obj){
+//        float dist;
+//        float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.worldObjects.cranes.values())
-        {
-            dist = obj.getLocalTranslation().distance(crane.getPosition());
-            if (dist < minDist || minDist == -1)
-            {
-                minDist = dist;
-                nCrane = crane;
-            }
-        }
+//        for (Crane crane : this.worldObjects.cranes.values())
+//        {
+//            dist = obj.getLocalTranslation().distance(crane.getPosition());
+//            if (dist < minDist || minDist == -1)
+//            {
+//                minDist = dist;
+//                nCrane = crane;
+//            }
+//        }
         return nCrane;
-    }
-    
-    private void initInputs()
-    {
-        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
-        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
-
-        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
-        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
-        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
-        
-        ActionListener acl = new ActionListener()
-        {
-            public void onAction(String name, boolean keyPressed, float tpf)
-            {
-                Container cont = containers.get(0);
-                Container cont2 = containers.get(1);
-                Container cont3 = containers.get(2);
-                if(name.equals("play_stop") && keyPressed)
-                {
-                    if (playing) {
-                        playing = false;
-                        
-                    } else {
-                        playing = true;
-                    }
-                } else if (keyPressed) {
-                    switch (name) {
-                    case "target":
-                        Crane crane = getNearestCrane(cont.node);
-                        crane.moveContainer(cont, new Vector3f(55,0,-10));
-                        break;
-                    case "target2":
-                        Crane crane2 = getNearestCrane(cont2.node);
-                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
-                        break;
-                    case "xp":
-                        cont.node.move(5,0,0);
-//                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
-                        break;
-                    case "xm":
-                        //cont.node.move(-5,0,0);
-                        if(!locations.isEmpty())
-                        {
-                            MoveAgv();
-                        }
-                        cont.node.move(-5,0,0);
-                        break;
-                    case "zp":
-                        cont.node.move(0,0,5);
-                        break;
-                    case "zm":
-                        cont.node.move(0,0,-5);
-//                        TeleAgv();
-                        //cont.node.move(0,0,-5);
-                        break;
-                    }
-                }
-            }
-        };
-
-        inputManager.addListener(acl, "play_stop");
-        inputManager.addListener(acl, "xp");
-        inputManager.addListener(acl, "zp");
-        inputManager.addListener(acl, "xm");
-        inputManager.addListener(acl, "zm");
-        inputManager.addListener(acl, "target");
-        inputManager.addListener(acl, "target2");
-    }
+   }
+   
+    private void initInputs(){
+//        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
+//        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+//        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
+//
+//        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
+//        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
+//        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
+//        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
+//        
+//        ActionListener acl = new ActionListener()
+//        {
+//            public void onAction(String name, boolean keyPressed, float tpf)
+//            {
+//                Container cont = containers.get(0);
+//                Container cont2 = containers.get(1);
+//                Container cont3 = containers.get(2);
+////                if(name.equals("play_stop") && keyPressed)
+////                {
+////                    if (playing) {
+////                        playing = false;
+////                        
+////                    } else {
+////                        playing = true;
+////                    }
+//                //else if
+//                if (keyPressed) {
+//                    switch (name) {
+//                    case "target":
+//                        Crane crane = getNearestCrane(cont.node);
+//                        crane.moveContainer(cont, new Vector3f(55,0,-10));
+//                        break;
+//                    case "target2":
+//                        Crane crane2 = getNearestCrane(cont2.node);
+//                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
+//                        break;
+//                    case "xp":
+//                        cont.node.move(5,0,0);
+////                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
+//                        break;
+//                    case "xm":
+//                        //cont.node.move(-5,0,0);
+//                        if(!locations.isEmpty())
+//                        {
+//                            MoveAgv();
+//                        }
+//                        cont.node.move(-5,0,0);
+//                        break;
+//                    case "zp":
+//                        cont.node.move(0,0,5);
+//                        break;
+//                    case "zm":
+//                        cont.node.move(0,0,-5);
+////                        TeleAgv();
+//                        //cont.node.move(0,0,-5);
+//                        break;
+//                    }
+//                }
+//            }
+//        };
+//
+//        inputManager.addListener(acl, "play_stop");
+//        inputManager.addListener(acl, "xp");
+//        inputManager.addListener(acl, "zp");
+//        inputManager.addListener(acl, "xm");
+//        inputManager.addListener(acl, "zm");
+//        inputManager.addListener(acl, "target");
+//        inputManager.addListener(acl, "target2");
+   }
     
     private Thread initReadThread()
     {
@@ -344,7 +337,6 @@ public class Main extends SimpleApplication
         //Load world and attach to scene.
         SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
-        rootNode.attachChild(this.dockCraneNode);
     }
     
     private void initSkybox()

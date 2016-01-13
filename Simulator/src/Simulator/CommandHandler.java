@@ -50,7 +50,7 @@ public class CommandHandler
                 }
                 float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
                 break;   
             case "craneMoveContainer":
                 this.craneMoveContainer(jsonObject);
