@@ -38,8 +38,7 @@ class Connections
 
         int getFreeClientNumber();
         std::thread* newClientThread(int number);
-        //std::string dataForApp = "0,0,0,0,0,0,0";
-        std::string dataForApp = "1,1,1,1,1,1,1";
+        std::string dataForApp = "0,0,0,0,0,0,0";
 };
 
 #endif //CONNECTIONS_H

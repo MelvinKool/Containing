@@ -100,10 +100,6 @@ thread* Connections::newClientThread(int number)
             }
             else if(input.substr(0, 11) == "dataforapp/")
             {
-                //std::string delimiter = "/";
-                //std::string result = input.substr(input.find(delimiter) + 1, 13);
-                //dataForApp = result;
-
                 std::string result = input.erase(0, 11);
                 dataForApp = result;
             }
