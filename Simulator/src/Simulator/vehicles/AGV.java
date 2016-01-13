@@ -27,16 +27,16 @@ public class AGV extends WorldObject {
     private MotionPath motionPath;
     private MotionEvent motionEvent;
     List<Vector3f> wayPoints;
-    private float totalDistance;
-    private int agvSpeed = 400;
+    List<Float> durations;
+    //private float duration;
     public Container container;
     
     public AGV(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
         super(rootNode, assetManager, position, model);
     }
     
-    public void setPath(List<Vector3f> wayPoints, float totalDistance) {
-        if(wayPoints == null || totalDistance == 0 || motionEvent.getPlayState() == PlayState.Playing)
+    public void setPath(List<Vector3f> wayPoints, List<Float> durations) {
+        if(wayPoints == null || durations == null || motionEvent.getPlayState() == PlayState.Playing)
             return;
         //set motionpath
         motionPath = new MotionPath();
@@ -65,24 +65,31 @@ public class AGV extends WorldObject {
     private void addNewWayPointToMPath(Vector3f goalPath){
         motionPath.addWayPoint(node.getWorldTranslation());
         motionPath.addWayPoint(goalPath);
-        float duration = calculateDuration(node.getWorldTranslation(), goalPath);
-        startMotionEvent(duration);
-    }
-    private float calculateDuration(Vector3f pos1, Vector3f pos2)
-    {
-        float distSideAC = Math.abs(Math.abs(pos2.x) - Math.abs(pos1.x));
-        float distSideBC = Math.abs(Math.abs(pos2.z) - Math.abs(pos1.z));
-        float distanceP1ToP2 = (float)Math.sqrt(Math.pow(distSideAC,2) + Math.pow(distSideBC,2));
-        System.out.println(distanceP1ToP2);
-        return distanceP1ToP2;
+        //float duration = calculateDuration(node.getWorldTranslation(), goalPath);
+        startMotionEvent(durations.get(0));
     }
     
+    
+//    private float calculateDuration(Vector3f pos1, Vector3f pos2)
+//    {
+//        float distSideAC = Math.abs(Math.abs(pos2.x) - Math.abs(pos1.x));
+//        float distSideBC = Math.abs(Math.abs(pos2.z) - Math.abs(pos1.z));
+//        float distanceP1ToP2 = (float)Math.sqrt(Math.pow(distSideAC,2) + Math.pow(distSideBC,2));
+//        System.out.println(distanceP1ToP2);
+//        float duration = distanceP1ToP2/agvSpeed;
+//        
+//        return duration;
+//    }
+    
     @Override
-    //When the agv reaches its destination: remove the first from all location list,
+    //When the agv reaches its destination: remove the first from all location list
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         
         if(wayPoints.size() > 0)
+        {
             wayPoints.remove(0);
+            durations.remove(0);
+        }
         if(wayPoints.size() > 0)
             addNewWayPointToMPath(wayPoints.get(0));
         //add a new waypoint
