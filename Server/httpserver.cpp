@@ -89,41 +89,52 @@ void HttpServer::handleConnections()
                 oss << " HTTP/1.1 200 OK\r\n \r\nContent-Type: text/html\r\nContent-Length: ";
 
                 std::smatch m;
-                std::regex e ("([^ ]*)(.css|.js|.html|.json)");
+                std::regex e ("([^ ]*)(.css|.html|.json|.js)");
                 if(std::regex_search (msg,m,e))
                 {
                     std::ostringstream location;
                     location << "./Files/MobileApp" << m[0];
 
-                    std::ifstream str (location.str());
-                    std::string result = "";
-                    if(str.good())
+                    if(location.str() == "./Files/MobileApp/DATA.json")
                     {
-                        std::string line;
-                        while(!str.eof())
-                        {
-                            getline(str,line);
-                            result+= line + '\n';
-                        }
-                        oss << result.size()  <<  "\r\n\r\n";
-                        oss << result;
+                        static int i = 0;
+                        i++;
+                        std::string s = std::to_string(i);
+                        oss << s.size() << "\r\n\r\n";
+                        oss << s;
                     }
-                    else //Load the default page
+                    else
                     {
-                        std::string defaultPage = "";
-                        std::ifstream str ("./Files/MobileApp/Default.html");
+                        std::ifstream str (location.str());
+                        std::string result = "";
                         if(str.good())
                         {
                             std::string line;
                             while(!str.eof())
                             {
                                 getline(str,line);
-                                defaultPage += line + '\n';
+                                result+= line + '\n';
                             }
+                            oss << result.size()  <<  "\r\n\r\n";
+                            oss << result;
                         }
-                        str.close();
-                        oss << defaultPage.size() << "\r\n\r\n";
-                        oss << defaultPage;
+                        else //Load the default page
+                        {
+                            std::string defaultPage = "";
+                            std::ifstream str ("./Files/MobileApp/Default.html");
+                            if(str.good())
+                            {
+                                std::string line;
+                                while(!str.eof())
+                                {
+                                    getline(str,line);
+                                    defaultPage += line + '\n';
+                                }
+                            }
+                            str.close();
+                            oss << defaultPage.size() << "\r\n\r\n";
+                            oss << defaultPage;
+                        }
                     }
                 }
                 std::string reply = oss.str();

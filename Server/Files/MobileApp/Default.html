@@ -2,25 +2,34 @@
 <html>
     <head>
         <title>Containing</title>
+        <link rel="shortcut icon" href="http://icons.iconarchive.com/icons/martz90/hex/72/stats-icon.png">
+
+        <meta charset="utf-8"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
         <script src="ChartJS/Chart.js"></script>
         <script src="Main.js"></script>
+
         <style>
             body{
-                background-color: #505050;
-                height: 100%;
+                background-color: #CCCCCC;
             }
-
             #chartCanvas{
-                border: 2px solid #000000;
+                padding: 0;
+                margin: auto;
                 display: block;
-                margin-left: auto;
-                margin-right: auto;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
             }
         </style>
     </head>
 
     <body onLoad="main()">
-        <canvas id="chartCanvas" width="400" height="300">
+        <canvas id="chartCanvas">
             Your current webbrowser does not support HTML5. Update or change your webbrowser.
         </canvas>
     </body>
