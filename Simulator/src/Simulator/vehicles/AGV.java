@@ -11,6 +11,7 @@ import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.PlayState;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -98,5 +99,16 @@ public class AGV extends WorldObject {
             this.motionEvent = null;
             this.motionPath = null;
         }            
+    }
+    
+    public void attachContainer(Container container) {
+        Vector3f pos = container.node.getWorldTranslation();
+        Quaternion rot = container.node.getWorldRotation();
+        this.node.attachChild(container.node);
+        container.node.setLocalTranslation(this.node.worldToLocal(pos, null));
+        
+        this.node.attachChild(container.node);
+        this.container = container;
+        this.container.setVehicle(this);
     }
 }

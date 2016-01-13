@@ -31,9 +31,9 @@ public class ObjectLoader {
     private Spatial truckCrane;
     private Spatial trainCrane;
     private Spatial agv;
-    private Spatial freightTruck;
+    private Spatial truck;
     private Spatial locomotive;
-    private Spatial Ship;
+    private Spatial ship;
     private Spatial trainCart;
     
     private AssetManager assetManager;
@@ -57,6 +57,8 @@ public class ObjectLoader {
         this.locomotive = assetManager.loadModel("Models/train/train.j3o");
         this.trainCart = assetManager.loadModel("Models/train/wagon.j3o");
         this.agv = assetManager.loadModel("Models/agv/agv.j3o");
+        this.truck = assetManager.loadModel("Models/truck/truck.j3o");
+        this.ship = assetManager.loadModel("Models/ship/seaship.j3o");
         this.assetManager = assetManager;
         this.motionControls = motionControls;
         this.rootNode = rootNode;
@@ -153,6 +155,20 @@ public class ObjectLoader {
      */
     public Spatial getLocomotiveModel() {
        return this.locomotive.clone();
+    }
+    
+    /**
+     * @return clone of ship model
+     */
+    public Spatial getShipModel() {
+        return this.ship.clone();
+    }
+    
+    /**
+     * @return clone of truck model
+     */
+    public Spatial getTruckModel() {
+        return this.truck.clone();
     }
     
     /**
