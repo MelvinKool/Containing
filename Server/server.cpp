@@ -8,7 +8,7 @@ Server::Server()
         xmlParser.readXML(db);
     }
     connections.acceptClients();
-    httpserver.init();
+    httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");
     pathFinderUnloaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsUnloadedAGV.csv");
 }

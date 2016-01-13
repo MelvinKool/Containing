@@ -3,6 +3,7 @@
 
 #include <netdb.h>
 #include <thread>
+#include "connections.h"
 
 constexpr int BACKLOG = 10;
 
@@ -12,7 +13,7 @@ class HttpServer
         // Do not remove this default constructor.
         HttpServer(){}
         ~HttpServer();
-        void init();
+        void init(Connections& connections);
     private:
         int sockfd; //listen on sock_fd
         struct addrinfo hints, *serverinfo;//, *p;
@@ -24,7 +25,7 @@ class HttpServer
         std::thread *handleConnectionsThread;
 
         bool initSocket();
-        void handleConnections();
+        void handleConnections(Connections& connections);
         int acceptClient();
 };
 

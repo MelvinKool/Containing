@@ -16,6 +16,7 @@ class Connections
         ~Connections();
         void acceptClients();
         void writeToSim(std::string message);
+        std::string getDataForApp();
     private:
         // Holds som information about the client.
         //   type - either simulator or mobile app
@@ -37,6 +38,8 @@ class Connections
 
         int getFreeClientNumber();
         thread* newClientThread(int number);
+        //std::string dataForApp = "0,0,0,0,0,0,0";
+        std::string dataForApp = "1,1,1,1,1,1,1";
 };
 
 #endif //CONNECTIONS_H

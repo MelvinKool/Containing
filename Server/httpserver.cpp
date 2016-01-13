@@ -15,12 +15,12 @@ HttpServer::~HttpServer()
     delete handleConnectionsThread;
 }
 
-void HttpServer::init()
+void HttpServer::init(Connections& connections)
 {
     if(initSocket())
     {
         std::cout << "HTTP Server is up, waiting for connections..." << std::endl;
-        handleConnections();
+        handleConnections(connections);
     }
 }
 
@@ -70,9 +70,9 @@ bool HttpServer::initSocket()
     return true;
 }
 
-void HttpServer::handleConnections()
+void HttpServer::handleConnections(Connections& connections)
 {
-    handleConnectionsThread = new std::thread([this]()
+    handleConnectionsThread = new std::thread([this, &connections]()
     {
         while(!stop)
         {
@@ -97,11 +97,9 @@ void HttpServer::handleConnections()
 
                     if(location.str() == "./Files/MobileApp/DATA.json")
                     {
-                        static int i = 0;
-                        i++;
-                        std::string s = std::to_string(i);
-                        oss << s.size() << "\r\n\r\n";
-                        oss << s;
+                        std::string response = connections.getDataForApp();
+                        oss << response.size() << "\r\n\r\n";
+                        oss << response;
                     }
                     else
                     {
