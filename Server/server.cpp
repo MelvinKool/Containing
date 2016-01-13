@@ -29,7 +29,7 @@ void Server::checkContainers()
 {
     while (!stop)
     {
-        //cout<<"container check"<<endl;
+        cout<<"container check"<<endl;
         this_thread::sleep_for(chrono::seconds(1));
 
         //Logics outline and stuffs to send and let everything move
@@ -87,44 +87,44 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     {
         vector3f truckLocation = getTruckStop();
         spawnObject("truck",truckLocation);
-        commands.push_back(agvs[agvID].goTo(truckLocation));
+        commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID)); //get container from truck to agv
     }
-
+    /*
     if(vehicle=="trein") //TODO
     {
         //TODO spawn train
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z)));
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
     }
 
     if(vehicle=="zeeschip") //TODO
     {
         //TODO spawn seaship
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z)));
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
         /*
         if(crane.currentRowContainerCount()==0)
         {
             //crane to new row?
             //or do this at first line of code
-        }*/
+        }
     }
 
     if(vehicle=="binnenschip") //TODO
     {
         //TODO spawn ship
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z)));
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
         /*
         if(crane.currentRowContainerCount()==0)
         {
             //crane to new row?
             //or do this at first line of code
-        }*/
+        }
     }
-
-    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); //move to dump row
+    */
+    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //move to dump row
     //crane.getBestDumpPosition(); //get best spot to place container in dumping row //TODO
     commands.push_back(crane.transfer(containerId,dump));
     writeToSim(JGen.generateCommandList(containerId,commands));
@@ -137,12 +137,12 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     agvID = getFreeAGV();
 
     //crane.goTo(vector3f(x,y,z)); //crane at container dump
-    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); // send agv to dump row
+    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false)); // send agv to dump row
     commands.push_back(crane.transfer(containerId,agvID)); //transfer container from dump to agv
     if(vehicle=="trein") //TODO
     {
         //TODO spawn train
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); //send agv with current container to unloading position
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,train)); //transfer container from agv to train
     }
@@ -150,7 +150,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     if(vehicle=="vrachtauto") //TRUCK YEAH!! //TODO
     {
         //TODO spawn truck
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); //send agv with current container to unloading position
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,truck)); //transfer container from agv to truck
     }
@@ -159,7 +159,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     {
         //TODO spawn seaship
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); //send agv with current container to unloading position
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
 
@@ -167,7 +167,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     {
         //TODO spawn ship
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z))); //send agv with current container to unloading position
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
 

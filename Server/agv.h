@@ -11,13 +11,12 @@ class AGV : Transport
 {
     public:
         AGV(){};
-        std::string goTo(vector3f destination);
+        std::string goTo(vector3f destination,vector3f lastKnowPointShortestPath,bool loaded);
         vector3f getCurrentLocation();
         AGV(int id,float x,float y,float z,Server* ser);
     private:
         Server* server;
         int ID;
-        bool loaded = false;
 };
 
 #endif
