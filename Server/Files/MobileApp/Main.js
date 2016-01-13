@@ -24,7 +24,7 @@ function main(){
         scaleFontStyle: "normal",
         scaleFontColor: "#000000",
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         showTooltips: true,
         customTooltips: false,
         tooltipEvents: ["mousemove", "touchstart", "touchmove"],
@@ -48,12 +48,12 @@ function main(){
         onAnimationComplete: function(){}
     };
     var data = {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: ["Zeeschip", "Binnenschip", "AGV", "Trein", "Vrachtauto", "Opslag", "Diversen"],
         datasets: [
             {
-                fillColor:   "rgba(58, 147, 241, 0.8)",
+                fillColor: "rgba(58, 147, 241, 0.8)",
                 strokeColor: "rgba(11, 129, 251, 0.8)",
-                data: [65, 59, 80, 81, 56, 55, 40]
+                data: [0,0,0,0,0,0,0]
             }
         ]
     };
@@ -72,7 +72,7 @@ function main(){
     };
     var ctx = document.getElementById("chartCanvas").getContext("2d");
     chart = new Chart(ctx).Bar(data, options);
-    //setInterval(update, 1000);
+    setInterval(update, 1000);
 }
 
 function update(){
@@ -82,23 +82,14 @@ function update(){
 
 xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
-
-
-
         var response = xhttp.responseText;
-
-        //JSON.parse(jsonString);
-
-        console.log(response);
-        chart.datasets[0].bars[0].value = parseInt(response);
+        response = response.split(",");
+        for(var i = 0; i < 7; i++){
+            chart.datasets[0].bars[i].value = parseInt(response[i]);
+        }
         chart.update();
-
-
-
     }
 };
-
-
 
 //------------------------------------------------------------------------------
 var i = 0;

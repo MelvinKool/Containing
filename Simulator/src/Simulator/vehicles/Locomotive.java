@@ -8,6 +8,7 @@ import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  *
@@ -15,7 +16,7 @@ import com.jme3.scene.Node;
  */
 public class Locomotive extends WorldObject {
     
-    public Locomotive(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile) {
-        super(rootNode, assetManager, position, modelFile);
+    public Locomotive(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
+        super(rootNode, assetManager, position, model);
     }    
 }

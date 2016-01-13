@@ -98,6 +98,11 @@ thread* Connections::newClientThread(int number)
             {
                 //dont do anything.
             }
+            else if(input.substr(0, 11) == "dataforapp/")
+            {
+                std::string result = input.erase(0, 11);
+                dataForApp = result;
+            }
             else
             {
                 //what to do with the input?
@@ -132,4 +137,9 @@ void Connections::writeToSim(string message)
             cout << "Could not write to Simulator." << endl;
         }
     }
+}
+
+std::string Connections::getDataForApp()
+{
+    return dataForApp;
 }

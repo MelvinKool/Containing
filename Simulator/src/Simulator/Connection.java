@@ -1,15 +1,22 @@
 package Simulator;
-
+import Simulator.vehicles.AGV;
+import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Ship;
+import Simulator.vehicles.Train;
 import java.net.*;
 import java.io.*;
+import java.util.Map;
 
 public class Connection
 {
+    private String ip = "localhost";
+    
     private class SimSocket extends Socket
     {
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
+        private SocketAddress socket = new InetSocketAddress(ip, 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -31,7 +38,6 @@ public class Connection
         }
     }
     
-    
     private boolean shouldStop = false;
     private SimSocket simSocket;
     private ObjectLoader objectLoader;
@@ -39,7 +45,7 @@ public class Connection
     private Thread tConnection;
     private Thread tRead;
     private Thread tCheck;
-    
+    private Thread tDataForApp;
     
     public Connection(ObjectLoader objectLoader) throws Exception
     {
@@ -102,14 +108,17 @@ public class Connection
                     
                     tRead = initTRead();
                     tCheck = initTCheck();
+                    tDataForApp = initTDataFotApp();
                     
                     tRead.start();
                     tCheck.start();
+                    tDataForApp.start();
                     
                     try
                     {
                         tCheck.join();
                         tRead.stop();
+                        tDataForApp.stop();
                     }
                     catch(Exception e){}
                 }
@@ -165,9 +174,67 @@ public class Connection
         }});
     }
     
+    private Thread initTDataFotApp()
+    {
+        return new Thread(new Runnable() { @Override public void run() 
+        {
+            try 
+            {
+                while (!shouldStop) 
+                {
+                    int zeeschip    = 0;
+                    int binnenschip = 0;
+                    int agv         = 0;
+                    int trein       = 0;
+                    int vrachtauto  = 0;
+                    int opslag      = 0;
+                    int diversen    = 0;
+                    
+                    for (Map.Entry pair : objectLoader.containers.entrySet()) {
+                        System.out.println(pair.getKey() + " = " + pair.getValue());
+                        
+                        if(pair.getValue() instanceof Ship){
+                            zeeschip++;
+                        }
+                        //else if(pair.getValue() instanceof Ship){
+                        //    
+                        //}
+                        else if(pair.getValue() instanceof AGV){
+                            agv++;
+                        }
+                        else if(pair.getValue() instanceof Train){
+                            trein++;
+                        }
+                        else if(pair.getValue() instanceof FreightTruck){
+                            vrachtauto++;
+                        }
+                        //else if(pair.getValue() instanceof ){
+                        //    opslag
+                        //}
+                        else{
+                            diversen++;
+                        }
+                    }
+                    
+                    String result = "dataforapp/"+
+                                    zeeschip+","+
+                                    binnenschip+","+
+                                    agv+","+
+                                    trein+","+
+                                    vrachtauto+","+
+                                    opslag+","+
+                                    diversen;
+                    write(result);
+                    Thread.sleep(1000);
+                }
+            } 
+            catch (Exception e){}
+        }});
+    }
+    
     private void initSocket()
     {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337); }
+        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
         catch(Exception e) { simSocket = null; }
     }
 }
