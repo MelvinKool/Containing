@@ -10,7 +10,7 @@ import java.util.Map;
 public class Connection
 {
     private String ip = "localhost";
-    
+
     private class SimSocket extends Socket
     {
         private DataInputStream in;

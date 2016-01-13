@@ -56,7 +56,6 @@ public class CommandHandler
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                System.out.println("spawn");
                 this.objectloader.spawnObjectList = jsonObject.getJSONArray("objects");
                 break;
 //            case "teleportObject":

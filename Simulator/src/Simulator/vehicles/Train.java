@@ -54,6 +54,23 @@ public class Train
         }
     }
     
+    public void addContainer(Container container) {
+        for (TrainCart cart : this.trainCarts) {
+            if (!cart.hasContainer()) {
+                cart.attachContainer(container);
+            }
+        }
+    }
+    
+    public TrainCart getFirstFreeCart() {
+        for (TrainCart cart : this.trainCarts) {
+            if (cart.hasContainer()) {
+                return cart;
+            }
+        }
+        return null;
+    }
+    
     private void initTrainCarts(int length, AssetManager assetManager, Spatial trainCartModel) 
     {
         Vector3f position = Vector3f.ZERO;

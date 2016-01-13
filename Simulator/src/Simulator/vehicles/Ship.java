@@ -24,4 +24,15 @@ public class Ship extends WorldObject {
         super(rootNode, assetManager, position, model);
     }
     
+    public void addContainers(List<Container> containers) {
+        this.containers = containers;
+        for (Container container : this.containers) {
+            container.setVehicle(this);
+        }
+    }
+    
+    public void addContainer(Container container) {
+        this.containers.add(container);
+        container.setVehicle(this);
+    }
 }
