@@ -11,7 +11,7 @@ Server::Server()
         xmlParser.readXML(db);
     }
     connections.acceptClients();
-    httpserver.init();
+    httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");
     pathFinderUnloaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsUnloadedAGV.csv");
     for (int stops = 1; stops < 21; stops++)
@@ -81,14 +81,15 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     containerId = atoi(row[0]);
     vehicle = row[1];
     //x=atoi(row[3]);y=atoi(row[4]);z=atoi(row[5]);//these are relative container coordinates,relative to vehicle position
-    agvID = getFreeAGV();//x,y,z are destination, so those have to be known by this point
+    agvID = getFreeAGV();
 
     if(vehicle=="vrachtauto") //TODO
     {
-        vector3f truckLocation = getTruckStop();
-        spawnObject("truck",truckLocation);
-        commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),vector3f(x,y,z),false));
-        commands.push_back(crane.transfer(containerId,agvID)); //get container from truck to agv
+        int truckLoc = getTruckStop();
+        vector3f truckLocation = truckStops[truckLoc];
+        spawnObject("truck",truckLocation,containerId);
+        commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
+        commands.push_back(crane.transfer(containerId,truckLoc,"truck",agvID)); //get container from truck to agv
     }
     /*
     if(vehicle=="trein") //TODO
@@ -124,14 +125,15 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
     }
     */
-    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //move to dump row
+    commands.push_back(agvs[agvID].goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
     //crane.getBestDumpPosition(); //get best spot to place container in dumping row //TODO
-    commands.push_back(crane.transfer(containerId,dump));
+    commands.push_back(crane.transfer(containerId,24,"storage",dump));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 
 void Server::processLeavingContainer(MYSQL_ROW &row)
 {
+    /*
     containerId = atoi(row[0]);
     vehicle = row[1];
     agvID = getFreeAGV();
@@ -141,7 +143,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     commands.push_back(crane.transfer(containerId,agvID)); //transfer container from dump to agv
     if(vehicle=="trein") //TODO
     {
-        //TODO spawn train
+        //TODO spawn train //-1 if no container present
         commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,train)); //transfer container from agv to train
@@ -170,7 +172,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
         commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
-
+    */
 }
 
 void Server::stopRunning()
@@ -267,10 +269,10 @@ vector3f Server::getTruckStop()
         i++;
     }
 
-    return truckStops[i];
+    return i;
 }
 
-string Server::spawnObject(string type,vector3f location)
+void Server::spawnObject(string type,vector3f location, int contID)
 {
-    return JGen.spawnObject(type,location);
+    writeToSim(JGen.spawnObject(type,location,contID));
 }
