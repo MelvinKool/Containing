@@ -32,7 +32,7 @@ public class TrainCart extends WorldObject {
         
         container.setPosition(containerPos);
         container.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
-        
+        container.setVehicle(this);
     }
         
     
