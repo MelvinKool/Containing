@@ -72,7 +72,7 @@ function main(){
     };
     var ctx = document.getElementById("chartCanvas").getContext("2d");
     chart = new Chart(ctx).Bar(data, options);
-    setInterval(update, 1000);
+    setInterval(update, 3000);
 }
 
 function update(){
