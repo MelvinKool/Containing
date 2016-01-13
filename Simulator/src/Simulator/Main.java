@@ -132,6 +132,10 @@ public class Main extends SimpleApplication
         if (this.train != null && this.train.canDestroy) {
             this.train = null;
         }
+        
+        if (this.worldObjects.checkObjects()) {
+            this.worldObjects.spawnObjects(this.worldObjects.spawnObjectList);
+        }
     }
 
     @Override

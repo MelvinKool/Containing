@@ -88,7 +88,6 @@ public class WorldObject implements Cloneable, MotionPathListener
         {
             this.node = (Node) spatial;
         }
-        
         this.setPosition(initialPosition);
         this.rootNode.attachChild(this.node);
     }

@@ -12,6 +12,7 @@ public class Container extends WorldObject
     public String containerId;
     public List<JSONObject> commands;
     
+    private WorldObject vehicle;
     private CommandHandler commandHandler;
     
     public Container(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, CommandHandler commandHandler)
@@ -34,5 +35,14 @@ public class Container extends WorldObject
     public void operationDone() {
         JSONObject command = this.commands.remove(0);
         this.commandHandler.executeCommand(command);
+        this.vehicle = null;
+    }
+    
+    public WorldObject getVehicle() {
+        return this.vehicle;
+    }
+    
+    public void setVehicle(WorldObject vehicle) {
+        this.vehicle = vehicle;
     }
 }

@@ -38,7 +38,7 @@ public class CommandHandler
                 vehicleId = jsonObject.getInt("vehicleId");
                 //get the route node
                 JSONArray route = jsonObject.getJSONArray("Route");
-                List Locations = new ArrayList<Vector3f>();
+                List Locations = new ArrayList<>();
                 float x,y,z;
                 for(Object coordinate : route)
                 {
@@ -56,7 +56,8 @@ public class CommandHandler
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+                System.out.println("spawn");
+                this.objectloader.spawnObjectList = jsonObject.getJSONArray("objects");
                 break;
 //            case "teleportObject":
 //                vehicleId = jsonObject.getInt("vehicleId");

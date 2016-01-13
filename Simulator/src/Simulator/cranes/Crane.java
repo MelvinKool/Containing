@@ -237,6 +237,7 @@ public class Crane extends WorldObject {
         System.out.println("grabbed");
         this.cmd = Cmd.GRABBER;
         this.grabber.resetPosition(this);
+        this.targetContainer.setVehicle(this);
     }
     
     /**
