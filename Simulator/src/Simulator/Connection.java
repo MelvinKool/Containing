@@ -5,7 +5,7 @@ import java.io.*;
 public class Connection
 {
     private boolean stop = false;
-    private String ip = "141.252.236.91";
+    private String ip = "127.0.0.1";
     // "141.252.236.91" "192.168.56.56"
     private class SimSocket extends Socket
     {

@@ -41,10 +41,12 @@ public class ObjectLoader {
     private Node rootNode;
     private Node craneNode;
     private Node dockCraneNode;
+    private boolean canSpawn;
     
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
     public HashMap<Integer, Container> containers = new HashMap<>();
+    public JSONArray spawnObjectList;
 
     public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
@@ -58,6 +60,7 @@ public class ObjectLoader {
         this.assetManager = assetManager;
         this.motionControls = motionControls;
         this.rootNode = rootNode;
+        this.canSpawn = true;
     }
     
     public Container addContainer(JSONObject containerData, CommandHandler commandHandler) {
@@ -159,6 +162,14 @@ public class ObjectLoader {
         return this.agv.clone();
     }
     
+    public boolean checkObjects() {
+        if (this.spawnObjectList != null && this.canSpawn) {
+            this.canSpawn = false;
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * get spawn information from file and spawn objects
      */
@@ -167,9 +178,9 @@ public class ObjectLoader {
         this.craneNode = new Node();
         this.dockCraneNode = new Node();
         
-        for(Object object : (Iterable) objects)
+        for(int i = 0; i < objects.length(); i++)
         {
-            this.spawnObject((JSONObject) object);
+            this.spawnObject(objects.getJSONObject(i));
         }
         
         this.craneNode.attachChild(this.dockCraneNode);
@@ -186,7 +197,7 @@ public class ObjectLoader {
         String type = object.getString("type");
         int id = object.getInt("id");
         
-        JSONArray position = object.getJSONArray("spawnPosition");
+        JSONArray position = object.getJSONArray("position");
         
         float speed = (float) object.getDouble("speed");
         float holderSpeed = 0.0f;
