@@ -58,17 +58,17 @@ public class CommandHandler
             case "spawnObjects":
                 this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
                 break;
-            case "teleportObject":
-                vehicleId = jsonObject.getInt("vehicleId");
-                float rotation = (float)jsonObject.getDouble("rotation");
-                JSONObject teleportVector = jsonObject.getJSONObject("teleportLocation");
-                float telX,telY,telZ;
-                telX = (float)teleportVector.getDouble("X");
-                telY = (float)teleportVector.getDouble("Y");
-                telZ = (float)teleportVector.getDouble("Z");
-                objectloader.agvs.get(vehicleId).node.rotate(0, rotation*FastMath.DEG_TO_RAD, 0);
-                objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));                
-                break;
+//            case "teleportObject":
+//                vehicleId = jsonObject.getInt("vehicleId");
+//                float rotation = (float)jsonObject.getDouble("rotation");
+//                JSONObject teleportVector = jsonObject.getJSONObject("teleportLocation");
+//                float telX,telY,telZ;
+//                telX = (float)teleportVector.getDouble("X");
+//                telY = (float)teleportVector.getDouble("Y");
+//                telZ = (float)teleportVector.getDouble("Z");
+//                objectloader.agvs.get(vehicleId).node.rotate(0, rotation*FastMath.DEG_TO_RAD, 0);
+//                objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));                
+//                break;
         }
     }
     
