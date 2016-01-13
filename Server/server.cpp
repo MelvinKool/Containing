@@ -256,7 +256,7 @@ int Server::getFreeAGV()
     */
 }
 
-vector3f Server::getTruckStop()
+int Server::getTruckStop()
 {
     static int i = -1;
 
