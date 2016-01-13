@@ -1,15 +1,17 @@
 package Simulator;
-
 import java.net.*;
 import java.io.*;
 
 public class Connection
 {
+    private String ip = "localhost";
+    
     private class SimSocket extends Socket
     {
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
+        private SocketAddress socket = new InetSocketAddress(ip, 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -31,7 +33,6 @@ public class Connection
         }
     }
     
-    
     private boolean shouldStop = false;
     private SimSocket simSocket;
     private ObjectLoader objectLoader;
@@ -39,7 +40,6 @@ public class Connection
     private Thread tConnection;
     private Thread tRead;
     private Thread tCheck;
-    
     
     public Connection(ObjectLoader objectLoader) throws Exception
     {
@@ -167,7 +167,7 @@ public class Connection
     
     private void initSocket()
     {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337); }
+        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
         catch(Exception e) { simSocket = null; }
     }
 }

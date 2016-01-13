@@ -56,6 +56,7 @@ public class WorldObject implements Cloneable, MotionPathListener
         return this.node.getLocalTranslation();
     }
     
+    @Override
     public WorldObject clone() throws CloneNotSupportedException
     {
        return (WorldObject) super.clone();
@@ -87,7 +88,6 @@ public class WorldObject implements Cloneable, MotionPathListener
         {
             this.node = (Node) spatial;
         }
-        
         this.setPosition(initialPosition);
         this.rootNode.attachChild(this.node);
     }

@@ -49,9 +49,10 @@ public class Crane extends WorldObject {
     
     /**
      * initialize grabber and grabberholder for this crane
-     * @param position
-     * @param holderSpeed
-     * @param yOffset 
+     * @param position position of grabberHolder in relation to crane
+     * @param grabberSpeed speed of grabber
+     * @param holderSpeed speed of holder
+     * @param yOffset offset to normal position of grabber on the y axis
      */
     public final void initGrabber(Vector3f position, float grabberSpeed, float holderSpeed, float yOffset) {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType, holderSpeed);
@@ -173,7 +174,7 @@ public class Crane extends WorldObject {
     }
     
     /**
-     * check if crane and grabber are position
+     * check if crane and grabber are in position
      * if that's the case, then move grabber to target
      */
     private void moveGrabberIfReady() 
@@ -225,17 +226,31 @@ public class Crane extends WorldObject {
         this.grabberHolder.fixPositionToTarget();
     }
     
+    /**
+     * Attach container after delay.
+     * WARNING:
+     * this method is called from a separate thread. This means that it is not
+     * possible to make any modifications to the scene from this method.
+     */
     private void delayAttachContainer() 
     {
         System.out.println("grabbed");
         this.cmd = Cmd.GRABBER;
         this.grabber.resetPosition(this);
+        this.targetContainer.setVehicle(this);
     }
     
+    /**
+     * Detach container after delay.
+     * WARNING:
+     * this method is called from a separate thread. This means that it is not
+     * possible to make any modifications to the scene from this method.
+     */
     private void delayDetachContainer() 
     {        
         this.cmd = Cmd.RESET;
         this.grabber.resetPosition(this);
+        this.targetContainer.operationDone();
     }
     
     /**
