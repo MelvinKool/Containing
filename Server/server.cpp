@@ -86,7 +86,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     if(vehicle=="vrachtauto") //TODO
     {
         vector3f truckLocation = getTruckStop();
-        spawnObject(0,truckLocation);
+        spawnObject("truck",truckLocation);
         commands.push_back(agvs[agvID].goTo(truckLocation));
         commands.push_back(crane.transfer(containerId,agvID)); //get container from truck to agv
     }
@@ -270,24 +270,7 @@ vector3f Server::getTruckStop()
     return truckStops[i];
 }
 
-string Server::spawnObject(int type,vector3f location)
+string Server::spawnObject(string type,vector3f location)
 {
-    switch (type)
-    {
-        case 0: //Spawn a truck
-            return JGen.spawnObject(3,location);
-            break;
-        case 1: //spawn a train
-            return JGen.spawnObject(4,location);
-            break;
-        case 2: //spawn ship
-            return JGen.spawnObject(5,location);
-            break;
-        case 3: //spawn seaship
-            return JGen.spawnObject(6,location);
-            break;
-        default:
-            break;
-    }
-    return "";
+    return JGen.spawnObject(type,location);
 }

@@ -33,7 +33,7 @@ class Server
         void processArrivingContainer(MYSQL_ROW &row);
         int getFreeAGV();
         vector3f getTruckStop();
-        std::string spawnObject(int type,vector3f location);
+        std::string spawnObject(std::string type,vector3f location);
 
         Database db;
         XmlParser xmlParser;

@@ -32,14 +32,14 @@ string JSONGenerator::transferContainer(int containerId, int sourceId, int targe
 }
 
 //generates JSON for spawning an object
-string JSONGenerator::spawnObject(int objectId, vector3f coordinate)
+string JSONGenerator::spawnObject(string objectName, vector3f coordinate)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command", "spawnObject", allocator);
-	document.AddMember("objectId",objectId, allocator);
+	document.AddMember("objectId","objectName", allocator);
 	rapidjson::Value coordinateObject(rapidjson::kObjectType);
 	coordinateObject.AddMember("X",coordinate.getX(),allocator);
 	coordinateObject.AddMember("Y",coordinate.getY(),allocator);
