@@ -34,6 +34,7 @@ public class AGV extends WorldObject {
         if (this.motionPath == null) {
             this.motionPath = new MotionPath();
             this.motionPath.addWayPoint(this.node.getWorldTranslation());
+
             System.out.println("new motionpath");
         }
         
@@ -44,18 +45,15 @@ public class AGV extends WorldObject {
         
         if (this.motionEvent == null) {
             this.motionEvent = new MotionEvent(this.node, this.motionPath);
-            //this.motionPath.setCurveTension(0.0f);
-            this.motionEvent.setLookAt(Vector3f.NAN, Vector3f.ZERO);
+            this.motionEvent.setLookAt(wayPoints.get(0), Vector3f.ZERO);
             this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
             
             System.out.println("new motionevent");
         }
         
-        //this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
-        
         if (this.motionEvent.getPlayState() != PlayState.Playing) {
             this.motionEvent.play();
-            
+                        this.motionPath.setCurveTension(0.0f);
             System.out.println("start play");
         }
         
@@ -68,8 +66,7 @@ public class AGV extends WorldObject {
         if (this.motionPath.getNbWayPoints() == wayPointIndex + 1) {
             System.out.println("delete motion");
             this.motionPath = null;
-            this.motionEvent = null;
-            
+            this.motionEvent = null; 
         }
     }
 }

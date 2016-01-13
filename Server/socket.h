@@ -15,24 +15,24 @@ using namespace std;
 
 class ClientSocket
 {
-public:
-    ClientSocket(string ip, int port);
-    ClientSocket(int sock);
-    ~ClientSocket();
-    string read();
-    void write(string message);
-private:
-    int sock;
+    public:
+        ClientSocket(string ip, int port);
+        ClientSocket(int sock);
+        ~ClientSocket();
+        string read();
+        void write(string message);
+    private:
+        int sock;
 };
 
 class ServerSocket
 {
-public:
-    ServerSocket(int port);
-    ~ServerSocket();
-    int accept();
-private:
-    int sock;
+    public:
+        ServerSocket(int port);
+        ~ServerSocket();
+        int accept();
+    private:
+        int sock;
 };
 
 #endif //SOCKET_H

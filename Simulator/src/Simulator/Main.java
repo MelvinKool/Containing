@@ -17,16 +17,12 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
-    boolean connected = false;
-        
     private Node dockCraneNode;
     private List<Container> containers;
     private Connection connection;
-    private Thread readThread;
-    private Thread connectionAlive;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
-    private ObjectLoader objectLoader;
-    
+    private List<Vector3f> locations = new ArrayList<>();
+    private ObjectLoader worldObjects;
     boolean playing;
 
     public static void main(String[] args)
@@ -39,58 +35,54 @@ public class Main extends SimpleApplication
     public void simpleInitApp()
     {
         long start = System.currentTimeMillis();
-        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
         
+        locations.add(new Vector3f(0,0,0));
+        
         this.dockCraneNode = new Node();
         this.playing = false;
-        //flyCam.setEnabled(false);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(2000);
         
         this.containers = new ArrayList<>();
-        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.objectLoader.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(75, 0, 35), this.worldObjects.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(235, 0, -200), this.worldObjects.getContainerModel()));
+        this.containers.add(new Container(this.rootNode, this.assetManager, this.motionControls, new Vector3f(0, 0, 0), this.worldObjects.getContainerModel()));
+
         this.containers.get(0).node.rotate(0.0f, (float) Math.PI / 2, 0.0f);
-        readThread = initReadThread();
-        readThread.start();
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
-                while (true)
-                {            
-                    try
-                    {
-                        if(connected)
-                        {
-                            connectionAlive = connection.connectionThread();
-                            connectionAlive.start();
-                            break;
-                        }
-                        Thread.sleep(1000);
-                    } 
-                    catch (Exception e)
-                    {
-                    }
-                }
-            }
-        });
-        t.start();
         
         initLight();
         initInputs();
         
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
+        rootNode.attachChild(this.dockCraneNode);
+        
+        try { connection = new Connection(worldObjects); }
+        catch (Exception e) { System.out.println(e); }
     }
     
-    boolean test = false;
     @Override
     public void simpleUpdate(float tpf)
     {
+//        if (this.test == false) {
+//            this.test = true;
+//            AGV tagv = this.worldObjects.agvs.get(0);
+//            List<float[]> path = new ArrayList<>();
+//            path.add(new float[] {0.0f, 0.0f, 0.0f});
+//            tagv.setPath(path);
+//            
+//        }
         
+        //TODO Depending on wich way you're going (XYZ) 
+        //float afstand = AGV.GetMaxSpeed()*tpf;
+        //AGV.SetLocalTranslation(afstand);
+        //AGV.afstandToGo -= afstand;
+        //This kinda works, but it doesn't, since I don't specify the X, Y or Z
     }
 
     @Override
@@ -99,23 +91,13 @@ public class Main extends SimpleApplication
         
     }
     
-    //This is important to properly close
-    //the connection with the server.
+    //This is important to properly close the connection
+    //with the server when you try to close the simulator.
     @Override
     public void destroy()
     {
         super.destroy();
-        if(connectionAlive!= null)
-        {
-            connectionAlive.stop();    
-        }
-        readThread.stop();
-        if(connection != null)
-        {
-            connection.stop();
-        }
-        //Dirty as fuck, fix it later...
-        Runtime.getRuntime().exit(1);
+        if(connection != null) connection.stop();
     }
 
     public Crane getNearestCrane(Node obj)
@@ -123,7 +105,7 @@ public class Main extends SimpleApplication
         float dist;
         float minDist = -1;
         Crane nCrane = null;
-        for (Crane crane : this.objectLoader.cranes)
+        for (Crane crane : this.worldObjects.cranes)
         {
             dist = obj.getLocalTranslation().distance(crane.getPosition());
             if (dist < minDist || minDist == -1)
@@ -139,6 +121,8 @@ public class Main extends SimpleApplication
     {
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
+
         inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
         inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
         inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
@@ -149,6 +133,8 @@ public class Main extends SimpleApplication
             public void onAction(String name, boolean keyPressed, float tpf)
             {
                 Container cont = containers.get(0);
+                Container cont2 = containers.get(1);
+                Container cont3 = containers.get(2);
                 if(name.equals("play_stop") && keyPressed)
                 {
                     if (playing) {
@@ -157,79 +143,58 @@ public class Main extends SimpleApplication
                     } else {
                         playing = true;
                     }
-                }
-                else if(keyPressed)
-                {
-                    switch(name)
-                    {
-                        case "target":
-                            Crane crane = getNearestCrane(cont.node);
-                            crane.targetContainer(cont);
-                            break;
-                        case "xp":
-                            cont.node.move(1,0,0);
-                            break;
-                        case "xm":
-                            cont.node.move(-1,0,0);
-                            break;
-                        case "zp":
-                            cont.node.move(0,0,1);
-                            break;
-                        case "zm":
-                            cont.node.move(0,0,-1);
-                            break;
+                } else if (keyPressed) {
+                    switch (name) {
+                    case "target":
+                        Crane crane = getNearestCrane(cont.node);
+                        crane.moveContainer(cont, new Vector3f(55,0,-10));
+                        break;
+                    case "target2":
+                        Crane crane2 = getNearestCrane(cont2.node);
+                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
+                        break;
+                    case "xp":
+                        cont.node.move(5,0,0);
+                        break;
+                    case "xm":
+                        cont.node.move(-5,0,0);
+                        break;
+                    case "zp":
+                        cont.node.move(0,0,5);
+                        break;
+                    case "zm":
+                        cont.node.move(0,0,-5);
+//                        worldObjects.agvs.get(0).setPath(locations);
+//                        worldObjects.agvs.get(1).setPath(locations);
+//                        worldObjects.agvs.get(2).setPath(locations);
+//                        worldObjects.agvs.get(3).setPath(locations);
+//                        worldObjects.agvs.get(4).setPath(locations);
+//                        worldObjects.agvs.get(5).setPath(locations);
+//                        worldObjects.agvs.get(6).setPath(locations);
+//                        worldObjects.agvs.get(7).setPath(locations);
+//                        worldObjects.agvs.get(8).setPath(locations);
+//                        worldObjects.agvs.get(9).setPath(locations);
+//                        worldObjects.agvs.get(10).setPath(locations);
+//                        worldObjects.agvs.get(11).setPath(locations);
+//                        worldObjects.agvs.get(12).setPath(locations);
+//                        worldObjects.agvs.get(13).setPath(locations);
+//                        worldObjects.agvs.get(14).setPath(locations);
+//                        worldObjects.agvs.get(15).setPath(locations);
+                        break;
                     }
                 }
+                System.out.println(cont.getPosition());
 
             }
         };
+
         inputManager.addListener(acl, "play_stop");
         inputManager.addListener(acl, "xp");
         inputManager.addListener(acl, "zp");
         inputManager.addListener(acl, "xm");
         inputManager.addListener(acl, "zm");
         inputManager.addListener(acl, "target");
-    }
-    
-    private Thread initReadThread()
-    {
-        return new Thread(new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
-                    //while (true)
-                    //{                        
-                    //    try 
-                    //    {
-                    //        Thread.sleep(5000);
-                    //        connection = new Connection();
-                    //        connected = true;
-                    //        break;
-                    //    } 
-                    //    catch (Exception e) 
-                    //    {
-                    //        System.out.println("Creating connection");
-                    //    }
-                    //}
-                    connection = new Connection();
-                    CommandHandler commandHandler = new CommandHandler(objectLoader);
-                    while(true)
-                    {
-                        //What to do with the input?
-                        String input = connection.read();
-                        System.out.println(input);
-                        commandHandler.ParseJSON(input);
-                    }
-                }
-                catch(Exception e)
-                {
-                    //Always throws a exception after the socket is closed.
-                    //System.out.println(e);
-                }
-            }
-        });
+        inputManager.addListener(acl, "target2");
     }
     
     private void initLight()

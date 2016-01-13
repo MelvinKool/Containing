@@ -16,7 +16,7 @@ Connections::~Connections()
     this->acceptThread->join();
     delete this->acceptThread;
 
-    for(int i = 0; i < clients.size(); i++)
+    for(uint i = 0; i < clients.size(); i++)
     {
         clients[i].socket->write("disconnect");
         clients[i].worker->join();
@@ -48,7 +48,7 @@ void Connections::acceptClients()
 // Looks for a unused client to reuse, else makes a new client.
 int Connections::getFreeClientNumber()
 {
-    int number = 0;
+    uint number = 0;
     while(number < clients.size() && clients[number].used) number++;
     if(number == clients.size())
     {
@@ -88,7 +88,7 @@ thread* Connections::newClientThread(int number)
             {
                 input = "disconnect";
             }
-            
+
             if(input == "disconnect")
             {
                 cout << clients[number].type + " disconneced." << endl;
@@ -103,7 +103,7 @@ thread* Connections::newClientThread(int number)
                 //what to do with the input?
                 cout << input << endl;
             }
-            
+
             if(this->stop)
             {
                 break;

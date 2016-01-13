@@ -7,6 +7,7 @@
 
 class Container
 {
+    public:
     private:
         struct DateTime{
             int year;
@@ -21,7 +22,6 @@ class Container
         std::string position, content_Name, content_Type, content_Danger;
         double weight, weight_Empty;
         int container_Nr;
-    public:
 };
 
 #endif //CONTAINER_H
