@@ -25,7 +25,7 @@ def init_commands(file_path, cams=True):
       {'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
       {'cmdt': 55, 'cmd': {'Command': 'agvAttachContainer', 'agvId': 89, 'containerId': 1}},
       {'cmdt': 56, 'cmd': {'Command': 'agvAttachContainer', 'agvId': 90, 'containerId': 2}},
-      {'cmdt': 56, 'cmd': {'Command': 'craneMoveContainer', 'craneId': 63, 'containerId': 4, 'target': [43.0, 1, -720.0]}},
+      #{'cmdt': 56, 'cmd': {'Command': 'craneMoveContainer', 'craneId': 63, 'containerId': 4, 'target': [43.0, 1, -720.0]}},
       {'cmdt': 55, 'cmd': {'Command': 'moveTo', 'vehicleId': 89, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 94.0 + 27.0}},
       {'cmdt': 58, 'cmd': {'Command': 'moveTo', 'vehicleId': 90, 'Route': [[842.75, 0.0, -51.5], [798.5, 0.0, -51.5], [798.5, 0.0, -73.5]], 'totalDistance': 15.0 + 27.0}},
       {'cmdt': 71, 'cmd': {'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 1, 'target': [793.75, 0.0, -95.5]}}, # 2:50
@@ -82,8 +82,8 @@ class Server(object):
 
 if __name__ == '__main__':
   if 'nocams' in sys.argv:
-    commands = init_commands('../spawns.json', False)
+    commands = init_commands('spawns.json', False)
   else:
-    commands = init_commands('../spawns.json')
+    commands = init_commands('spawns.json')
   server = Server('127.0.0.1', commands)
   server.start()
