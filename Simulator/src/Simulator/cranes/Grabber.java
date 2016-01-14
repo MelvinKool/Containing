@@ -92,7 +92,7 @@ public class Grabber extends WorldObject {
 //        Quaternion rot = container.node.getWorldRotation();
 //        container.node.setLocalTranslation(pos);
 //        container.node.setLocalRotation(rot);
-//        //container = null;
+//        container = null;
 //    }
     
     /**

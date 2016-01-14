@@ -1,8 +1,12 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
+import Simulator.vehicles.AGV;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.scene.CameraNode;
+import com.jme3.scene.control.CameraControl;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
@@ -10,11 +14,15 @@ import org.json.JSONObject;
 
 public class CommandHandler
 {
-    ObjectLoader objectloader;
-    
-    public CommandHandler(ObjectLoader objectloader)
+    private ObjectLoader objectloader;
+    private CameraNode camera;
+   
+    public CommandHandler(ObjectLoader objectloader, Camera cam)
     {
         this.objectloader = objectloader;
+        this.camera = new CameraNode("cam", cam);
+        camera.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
+        camera.rotate(0.0f, 90.0f * FastMath.DEG_TO_RAD, 0.0f);
     }
     
     public void setContainerCommands(JSONObject commands) {
@@ -29,6 +37,14 @@ public class CommandHandler
         int vehicleId;
         switch(command)
         {
+            case "setCamera":
+                int contId = jsonObject.getInt("container");
+                Container container = this.objectloader.containers.get(contId);
+                this.camera.removeFromParent();
+                container.node.attachChild(camera);
+                camera.setLocalTranslation(-30.0f, 5.0f, 0.0f);
+                //camera.lookAt(camera.worldToLocal(container.node.getWorldTranslation(), null), new Vector3f(0,1,0));
+                break;
             case "containerCommands":
                 this.setContainerCommands(jsonObject);
                 break;
@@ -38,7 +54,7 @@ public class CommandHandler
                 vehicleId = jsonObject.getInt("vehicleId");
                 //get the route node
                 JSONArray route = jsonObject.getJSONArray("Route");
-                List Locations = new ArrayList<>();
+                List Locations = new ArrayList<Vector3f>();
                 float x,y,z;
                 for(Object coordinate : route)
                 {
@@ -50,13 +66,31 @@ public class CommandHandler
                 }
                 float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
-                break;   
+                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                break;
+            case "agvAttachContainer":
+                int agvId = jsonObject.getInt("agvId");
+                int containerId = jsonObject.getInt("containerId");
+                AGV agv = this.objectloader.agvs.get(agvId);
+                Container cont = this.objectloader.containers.get(containerId);
+                agv.attachContainer(cont);
+                break;
             case "craneMoveContainer":
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                this.objectloader.spawnObjectList = jsonObject.getJSONArray("objects");
+                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+                break;
+            case "spawnTruck":
+                this.spawnTruck(jsonObject);
+                break;
+            case "spawnTrain":
+                this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
+                break;
+            case "trainCam":
+                this.camera.removeFromParent();
+                this.objectloader.rootNode.attachChild(this.camera);
+                this.camera.setLocalTranslation(1460.0f, 10.0f, -724.0f);
                 break;
 //            case "teleportObject":
 //                vehicleId = jsonObject.getInt("vehicleId");
@@ -91,5 +125,17 @@ public class CommandHandler
         Vector3f targetVec = new Vector3f(x, y, z);
         
         crane.moveContainer(container, targetVec);
+    }
+
+    private void spawnTruck(JSONObject jsonObject)
+    {
+        Container container = this.objectloader.addContainer(jsonObject.getInt("container"), this);
+        JSONArray pos = jsonObject.getJSONArray("position");
+        float x = (float) pos.getDouble(0);
+        float y = (float) pos.getDouble(1);
+        float z = (float) pos.getDouble(2);
+        Vector3f position = new Vector3f(x, y, z);
+        
+        this.objectloader.spawnTruck(container, position);
     }
 }

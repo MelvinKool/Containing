@@ -39,10 +39,10 @@ public class Main extends SimpleApplication
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader worldObjects;
+    private List<String> commandQueue;
+    private CommandHandler commandHandler;
     
     //boolean playing;
-    
-    private Train train; // TODO: this is test code
 
     public static void main(String[] args)
     {
@@ -53,20 +53,23 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
+        
         //long start = System.currentTimeMillis();
         this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
         //long end = System.currentTimeMillis();
+        this.commandQueue = new ArrayList<>();
+        this.commandHandler = new CommandHandler(this.worldObjects, cam);
+        Container container1 = this.worldObjects.addContainer(3, commandHandler);
+        Container container2 = this.worldObjects.addContainer(4, commandHandler);
+        container1.setPosition(new Vector3f(57.0f, 0.0f, -95.5f));
+        container2.setPosition(new Vector3f(62.5f,0.0f, -95.5f));
 
         //System.out.println(end - start);
-
         //this.dockCraneNode = new Node();
         //this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
-        
-        //create a train of 80 carts long.
-        this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
         
         readThread = initReadThread();
         readThread.start();
@@ -100,7 +103,7 @@ public class Main extends SimpleApplication
         initWater();
         initSkybox();
         initFog();
-        //initInputs();
+        initInputs();
     }
     
     public void TeleAgv(){
@@ -123,19 +126,16 @@ public class Main extends SimpleApplication
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (this.test == false) {
-            train.moveIn();
-            this.test = true;
-        }
-        
-        // Destroy train when it says it can (when it's out of map)
-        if (this.train != null && this.train.canDestroy) {
-            this.train = null;
+        if (!this.commandQueue.isEmpty()) {
+            String command = this.commandQueue.remove(0);
+            this.commandHandler.ParseJSON(command);
         }
         
         if (this.worldObjects.checkObjects()) {
             this.worldObjects.spawnObjects(this.worldObjects.spawnObjectList);
         }
+        
+        
     }
 
     @Override
@@ -181,7 +181,7 @@ public class Main extends SimpleApplication
    
     private void initInputs(){
 //        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
-//        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
 //        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
 //
 //        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
@@ -189,55 +189,43 @@ public class Main extends SimpleApplication
 //        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
 //        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
 //        
-//        ActionListener acl = new ActionListener()
-//        {
-//            public void onAction(String name, boolean keyPressed, float tpf)
-//            {
-//                Container cont = containers.get(0);
-//                Container cont2 = containers.get(1);
-//                Container cont3 = containers.get(2);
-////                if(name.equals("play_stop") && keyPressed)
-////                {
-////                    if (playing) {
-////                        playing = false;
-////                        
-////                    } else {
-////                        playing = true;
-////                    }
-//                //else if
-//                if (keyPressed) {
-//                    switch (name) {
-//                    case "target":
-//                        Crane crane = getNearestCrane(cont.node);
-//                        crane.moveContainer(cont, new Vector3f(55,0,-10));
-//                        break;
-//                    case "target2":
-//                        Crane crane2 = getNearestCrane(cont2.node);
-//                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
-//                        break;
-//                    case "xp":
-//                        cont.node.move(5,0,0);
-////                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
-//                        break;
-//                    case "xm":
-//                        //cont.node.move(-5,0,0);
-//                        if(!locations.isEmpty())
-//                        {
-//                            MoveAgv();
-//                        }
-//                        cont.node.move(-5,0,0);
-//                        break;
-//                    case "zp":
-//                        cont.node.move(0,0,5);
-//                        break;
-//                    case "zm":
-//                        cont.node.move(0,0,-5);
-////                        TeleAgv();
-//                        //cont.node.move(0,0,-5);
-//                        break;
+        ActionListener acl = new ActionListener()
+        {
+            public void onAction(String name, boolean keyPressed, float tpf)
+            {
+//                if(name.equals("play_stop") && keyPressed)
+//                {
+//                    if (playing) {
+//                        playing = false;
+//                        
+//                    } else {
+//                        playing = true;
 //                    }
-//                }
-//            }
+                //else if
+                if (keyPressed) {
+                    switch (name) {
+                    case "target":
+                        if (flyCam.isEnabled()) {
+                            flyCam.setEnabled(false);
+                        } else {
+                            flyCam.setEnabled(true);
+                        }
+                        break;
+                    case "target2":
+                        break;
+                    case "xp":
+                        break;
+                    case "xm":
+                        break;
+                    case "zp":
+                        break;
+                    case "zm":
+                        //cont.node.move(0,0,-5);
+                        break;
+                    }
+                }
+            }
+        };
 //        };
 //
 //        inputManager.addListener(acl, "play_stop");
@@ -245,9 +233,10 @@ public class Main extends SimpleApplication
 //        inputManager.addListener(acl, "zp");
 //        inputManager.addListener(acl, "xm");
 //        inputManager.addListener(acl, "zm");
-//        inputManager.addListener(acl, "target");
+        inputManager.addListener(acl, "target");
 //        inputManager.addListener(acl, "target2");
-   }
+
+    }
     
     private Thread initReadThread()
     {
@@ -272,13 +261,12 @@ public class Main extends SimpleApplication
                     //    }
                     //}
                     connection = new Connection();
-                    CommandHandler commandHandler = new CommandHandler(worldObjects);
                     while(true)
                     {
                         //What to do with the input?
                         String input = connection.read();
                         System.out.println(input);
-                        commandHandler.ParseJSON(input);
+                        commandQueue.add(input);
                     }
                 }
                 catch(Exception e)
