@@ -18,7 +18,7 @@ Connections::~Connections()
     this->acceptThread->join();
     delete this->acceptThread;
 
-    for(int i = 0; i < clients.size(); i++)
+    for(uint i = 0; i < clients.size(); i++)
     {
         clients[i].socket->write("disconnect");
         clients[i].worker->join();
@@ -50,7 +50,7 @@ void Connections::acceptClients()
 // Looks for a unused client to reuse, else makes a new client.
 int Connections::getFreeClientNumber()
 {
-    int number = 0;
+    uint number = 0;
     while(number < clients.size() && clients[number].used) number++;
     if(number == clients.size())
     {
@@ -108,6 +108,11 @@ thread* Connections::newClientThread(int number)
             {
                 //dont do anything.
             }
+            else if(input.substr(0, 11) == "dataforapp/")
+            {
+                std::string result = input.erase(0, 11);
+                dataForApp = result;
+            }
             else
             {
                 //what to do with the input?
@@ -142,4 +147,9 @@ void Connections::writeToSim(string message)
             cout << "Could not write to Simulator." << endl;
         }
     }
+}
+
+std::string Connections::getDataForApp()
+{
+    return dataForApp;
 }

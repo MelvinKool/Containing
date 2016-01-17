@@ -15,27 +15,27 @@ HttpServer::~HttpServer()
     delete handleConnectionsThread;
 }
 
-void HttpServer::init(char* port)
+void HttpServer::init(Connections& connections)
 {
-    if(initSocket(port))
+    if(initSocket())
     {
-        std::cout << "HTTP Server is up, waiting for connoctions..." << std::endl;
-        handleConnections();
+        std::cout << "HTTP Server is up, waiting for connections..." << std::endl;
+        handleConnections(connections);
     }
 }
 
-bool HttpServer::initSocket(char* port)
+bool HttpServer::initSocket()
 {
     memset(&hints, 0, sizeof hints);
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags    = AI_PASSIVE; //use current ip
-    
-    if((rv = getaddrinfo(nullptr, port, &hints, &serverinfo)) != 0)
+
+    if((rv = getaddrinfo(nullptr, "4000", &hints, &serverinfo)) != 0)
     {
         std::cout << stderr << "getaddrinfo: " << gai_strerror(rv) << std::endl;
     }
-    
+
     //loop through all the results and bind to the first wee can
     for(struct addrinfo *p = serverinfo; p != nullptr; p = p->ai_next)
     {
@@ -58,72 +58,81 @@ bool HttpServer::initSocket(char* port)
         }
         break;
     }
-    
+
     freeaddrinfo(serverinfo);
-    
+
     if(listen(sockfd, BACKLOG) == -1)
     {
         perror("httpserver: listen");
         return false;
     }
-    
+
     return true;
 }
 
-void HttpServer::handleConnections()
+void HttpServer::handleConnections(Connections& connections)
 {
-    handleConnectionsThread = new std::thread([this]()
+    handleConnectionsThread = new std::thread([this, &connections]()
     {
         while(!stop)
         {
             int connection = acceptClient();
-    
+
             if(connection != -1)
             {
                 char buf [1024];
                 int bytes = read(connection, buf, sizeof(buf));
                 buf[bytes]=0;
                 std::string msg(buf);
-        
+
                 std::ostringstream oss;
                 oss << " HTTP/1.1 200 OK\r\n \r\nContent-Type: text/html\r\nContent-Length: ";
-        
+
                 std::smatch m;
-                std::regex e ("([^ ]*)(.css|.js|.html|.json)");
+                std::regex e ("([^ ]*)(.css|.html|.json|.js)");
                 if(std::regex_search (msg,m,e))
                 {
                     std::ostringstream location;
-                    location << "./Files/MobileApp/" << m[0];
-        
-                    std::ifstream str (location.str());
-                    std::string result = "";
-                    if(str.good())
+                    location << "./Files/MobileApp" << m[0];
+
+                    if(location.str() == "./Files/MobileApp/DATA.json")
                     {
-                        std::string line;
-                        while(!str.eof())
-                        {
-                            getline(str,line);
-                            result+= line + '\n';
-                        }
-                        oss << result.size()  <<  "\r\n\r\n";
-                        oss << result;
+                        std::string response = connections.getDataForApp();
+                        oss << response.size() << "\r\n\r\n";
+                        oss << response;
                     }
-                    else //Load the default page
+                    else
                     {
-                        std::string defaultPage = "";
-                        std::ifstream str ("./Files/MobileApp/Default.html");
+                        std::ifstream str (location.str());
+                        std::string result = "";
                         if(str.good())
                         {
                             std::string line;
                             while(!str.eof())
                             {
                                 getline(str,line);
-                                defaultPage += line + '\n';
+                                result+= line + '\n';
                             }
+                            oss << result.size()  <<  "\r\n\r\n";
+                            oss << result;
                         }
-                        str.close();
-                        oss << defaultPage.size() << "\r\n\r\n";
-                        oss << defaultPage;
+                        else //Load the default page
+                        {
+                            std::string defaultPage = "";
+                            std::ifstream str ("./Files/MobileApp/Default.html");
+                            if(str.good())
+                            {
+                                std::string line;
+                                while(!str.eof())
+                                {
+                                    getline(str,line);
+                                    defaultPage += line + '\n';
+                                }
+                            }
+                            str.close();
+                            oss << defaultPage.size() << "\r\n\r\n";
+                            oss << defaultPage;
+                        }
                     }
                 }
                 std::string reply = oss.str();

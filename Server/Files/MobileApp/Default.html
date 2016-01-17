@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <p>Containing Mobile App</p>
-        <button onclick="showAlert()">boo!</button>
-        <script>
-            function showAlert() {
-                alert("I am an alert box!");
+    <head>
+        <title>Containing</title>
+        <link rel="shortcut icon" href="http://icons.iconarchive.com/icons/martz90/hex/72/stats-icon.png">
+
+        <meta charset="utf-8"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+        <script src="ChartJS/Chart.js"></script>
+        <script src="Main.js"></script>
+
+        <style>
+            html{
+                height: 100%;
             }
-        </script>
+            body{
+                background-color: #CCCCCC;
+                margin: 10px;
+                height: 97%;
+            }
+        </style>
+    </head>
+
+    <body onLoad="main()">
+        <canvas id="chartCanvas">Canvas is not supported in your current browser.</canvas>
     </body>
 </html>

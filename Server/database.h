@@ -11,6 +11,13 @@
 
 class Database
 {
+    public:
+        Database();
+        ~Database();
+        bool isConnected();
+        bool execute(std::string sqlStatement);
+        MYSQL_RES* select(std::string sqlStatement);
+        bool resetDatabase();
     private:
         MYSQL* connection;
         std::string server = "localhost";
@@ -21,13 +28,6 @@ class Database
         
         bool createAllTables();
         bool dropAllTables();
-    public:
-        Database();
-        ~Database();
-        bool isConnected();
-        bool execute(std::string sqlStatement);
-        MYSQL_RES* select(std::string sqlStatement);
-        bool resetDatabase();
 };
 
 #endif //DATABASE_H

@@ -1,5 +1,7 @@
 #include "socket.h"
 
+using namespace std;
+
 ClientSocket::ClientSocket(string ip, int port)
 {
     sockaddr_in sa;

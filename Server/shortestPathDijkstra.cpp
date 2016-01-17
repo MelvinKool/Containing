@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-#include "shortestpathdijkstra.h"
+#include "shortestPathDijkstra.h"
 
 using namespace std;
 
@@ -30,7 +30,9 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
-	if(loadRoutes.is_open()){
+
+	if(loadRoutes.is_open())
+    {
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;

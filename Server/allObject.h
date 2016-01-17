@@ -2,11 +2,14 @@
 #define ALLOBJECTS_H
 #include "agv.h"
 #include "crane.h"
-class AllObject{
+#include <vector>
+
+class AllObject
+{
 private:
 public:
-    vector<Crane> freightShipCranes, storageCranes, seaShipCranes, trainCranes, truckCranes;
-    vector<AGV> agvs;
+    std::vector<Crane> freightShipCranes, storageCranes, seaShipCranes, trainCranes, truckCranes;
+    std::vector<AGV> agvs;
 private:
     //common object methods here
 };

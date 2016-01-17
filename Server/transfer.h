@@ -3,8 +3,8 @@
 
 class Transfer
 {
-    private:
     public:
+    private:
     protected:
 };
 
