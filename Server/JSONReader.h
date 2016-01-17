@@ -25,7 +25,7 @@ class JSONReader{
     private:
         //void loadVehicle(const char* key,rapidjson::Document& document,Connections& simulator, vector<Crane>& transportVector);
         //void loadVehicle(const char* key,rapidjson::Document& document,Connections& simulator, vector<AGV>& transportVector);
-        template <class T>
+        /*template <class T>
         string vector_join( const vector<T>& v, const string& token ){
           ostringstream result;
           for (typename vector<T>::const_iterator i = v.begin(); i != v.end(); i++){
@@ -33,7 +33,7 @@ class JSONReader{
             result << *i;
           }
           return result.str();
-        }
+        }*/
         template <class Vehicle>
         void loadVehicle(string key,rapidjson::Document& document,Connections& simulator, vector<Vehicle>& transportVector){
             rapidjson::Value& transportJSON = document[key.c_str()];
@@ -87,14 +87,6 @@ class JSONReader{
                 //spawn objects in simulator
                 //simulator.writeToSim(genJSON);
             }
-            //string final_JSON_string = vector_join(allObjectsJSON, ",");
-            //simulator.writeToSim(final_JSON_string);
         }
-        /*void loadVehicle(std::string key,rapidjson::Document& document,Connections* simulator,vector<Crane>& freightShipCranes,
-            vector<Crane>& storageCranes, vector<Crane>& seaShipCranes, vector<Crane>& trainCranes,
-            vector<AGV>& agvs, vector<Crane>& truckCranes);*/
-        /*template <class T>
-        std::string toString(T &jsonValue);*/
-        //std::string toString(rapidjson::Value &jsonValue);
 };
 #endif

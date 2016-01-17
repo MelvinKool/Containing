@@ -155,7 +155,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(document);
 }
 
-/*std::string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
+std::string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -163,11 +163,12 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command","ContainerCommandList", allocator);
 	document.AddMember("containerId", containerId, allocator);
-	rapidjson::Value commandList(rapidjson::kArrayType);
-	for(string s : commandList){
-		commandList.PushBack(s, allocator);
+	rapidjson::Value commandArray(rapidjson::kArrayType);
+	for(string& s : commandList){
+		Value commandStr;
+		commandStr.SetString(s.c_str(),strlen(s.c_str()),allocator);
+		commandArray.PushBack(commandStr, allocator);
 	}
-	document.AddMember("commandList", commandList);
+	document.AddMember("commandList", commandArray, allocator);
 	return toString(document);
 }
-*/
