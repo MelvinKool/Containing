@@ -6,6 +6,7 @@ Server::Server()
     if(db.isConnected()){
         xmlParser.readXML(db);
     }
+    connections.initConnections(allObjects);
     connections.acceptClients();
     httpserver.init("4000");
 }

@@ -5,8 +5,10 @@
 
 using namespace std;
 
-class vector3f {
+class vector3f
+{
     public:
+        vector3f(){}
         vector3f(float x,float y, float z);
         float getX();
         float getY();

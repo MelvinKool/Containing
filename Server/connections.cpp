@@ -1,11 +1,13 @@
 #include "connections.h"
-
+#include "JSONReader.h"
 #include <iostream>
+#include "allObject.h"
 
 using namespace std;
 
-Connections::Connections()
+void Connections::initConnections(AllObject allObjects)
 {
+    this->allObjects = allObjects;
     this->socket = new ServerSocket(1337);
 }
 
@@ -79,7 +81,9 @@ thread* Connections::newClientThread(int number)
         //send all simulation objects to the simulator
         if(isSim){
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json");
-            jsonReader.loadTransport(this);
+            jsonReader.loadTransport(this,allObjects.freightShipCranes,allObjects.storageCranes,
+                                    allObjects.seaShipCranes,allObjects.trainCranes,
+                                    allObjects.agvs, allObjects.truckCranes);
         }
         //load vehicles
         while(!this->stop)

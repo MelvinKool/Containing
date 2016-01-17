@@ -5,7 +5,7 @@ JSONReader.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -Wall $(shell mysql_config --cflags)
+CFLAGS=-c $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server

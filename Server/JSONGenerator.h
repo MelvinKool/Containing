@@ -13,7 +13,11 @@ class JSONGenerator
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
     std::string transferContainer(int containerId, int sourceId, int targetId);
-    std::string spawnObject(int objectId, vector3f coordinates);
+    //std::string spawnObject(int objectId, char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
+    string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
+    string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed,
+    										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
+    //std::string generateCommandList(int containerId, vector<string> commandList);
     template <class T>
     static std::string toString(T &jsonValue){
     	rapidjson::StringBuffer strbuf;

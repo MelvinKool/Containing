@@ -17,6 +17,10 @@ public:
 	pair<double,vector<vector3f>> route(string name1, string name2);
 	void reset();
 private:
+	struct Road{
+		double distance;
+		double speed;
+	};
 	struct Place
 	{
 		Place(string name) : name(name) {}
