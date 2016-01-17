@@ -65,7 +65,7 @@ class JSONReader{
             JSONGenerator generator;
             vector3f tempVect;
             const Value& positions = transportJSON["positions"];
-            vector<string> allObjectsJSON;
+            //vector<string> allObjectsJSON;
             for (rapidjson::SizeType i = 0; i < positions.Size(); i++)
             {
                 const rapidjson::Value& position = positions[i];
@@ -79,13 +79,16 @@ class JSONReader{
                 //generate spawn json
                 //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
                 //JSONGenerator::spawnObject(int, char*, vector3f, vector3f, float, float, float, float, vector3f, bool)
-                allObjectsJSON.push_back(generator.spawnObject((int)i, key.c_str(), tempVect, rotationVect, speed,holderSpeed,grabberSpeed,
-                                                                grabber_y_offset, grabberPos, has_holder));
+                string final_JSON_string = generator.spawnObject((int)i, key.c_str(), tempVect, rotationVect,
+                                                                speed,holderSpeed,grabberSpeed, grabber_y_offset,
+                                                                grabberPos, has_holder);
+                cout << final_JSON_string << endl;
+                simulator.writeToSim(final_JSON_string);
                 //spawn objects in simulator
                 //simulator.writeToSim(genJSON);
             }
-            string final_JSON_string = vector_join(allObjectsJSON, ",");
-            simulator.writeToSim(final_JSON_string);
+            //string final_JSON_string = vector_join(allObjectsJSON, ",");
+            //simulator.writeToSim(final_JSON_string);
         }
         /*void loadVehicle(std::string key,rapidjson::Document& document,Connections* simulator,vector<Crane>& freightShipCranes,
             vector<Crane>& storageCranes, vector<Crane>& seaShipCranes, vector<Crane>& trainCranes,

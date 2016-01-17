@@ -2,7 +2,6 @@
 #include <iostream>
 #include <map>
 #include "server.h"
-
 using namespace std;
 
 //map<int,Transport> transportMap;
@@ -10,11 +9,6 @@ int main(int argc, char* argv[])
 {
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
-    cout << "begin" << endl;
-    //JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json");
-    //jsonReader.loadTransport(transportMap);
-    cout << "end" << endl;
-    //JSONGenerator generator;
     Server server;
     while(true)
     {

@@ -15,3 +15,7 @@ void Server::writeToSim(string message)
 {
     connections.writeToSim(message);
 }
+
+Connections* Server::getConnections(){
+    return &connections;
+}

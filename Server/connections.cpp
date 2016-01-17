@@ -80,6 +80,7 @@ thread* Connections::newClientThread(int number)
         }
         //send all simulation objects to the simulator
         if(isSim){
+            cout << "sending initialization json to simulator..." << endl;
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json");
             jsonReader.loadTransport(this,allObjects.freightShipCranes,allObjects.storageCranes,
                                     allObjects.seaShipCranes,allObjects.trainCranes,

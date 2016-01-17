@@ -16,6 +16,7 @@ public:
     Server();
     void writeToSim(std::string message);
     AllObject allObjects;
+    Connections* getConnections();
 private:
     Database db;
     XmlParser xmlParser;

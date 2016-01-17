@@ -12,7 +12,7 @@ public class Connection
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
-        SocketAddress socket = new InetSocketAddress("141.252.236.91", 1337);
+        SocketAddress socket = new InetSocketAddress("localhost", 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
