@@ -16,6 +16,7 @@ public class CommandHandler
     public CommandHandler(ObjectLoader objectloader)
     {
         this.objectloader = objectloader;
+        this.commandQueue = new ArrayList<>();
     }
     
     public void setContainerCommands(JSONObject commands) {
