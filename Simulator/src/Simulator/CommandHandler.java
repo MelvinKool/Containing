@@ -11,6 +11,7 @@ import org.json.JSONObject;
 public class CommandHandler
 {
     ObjectLoader objectloader;
+    private List<String> commandQueue;
     
     public CommandHandler(ObjectLoader objectloader)
     {
@@ -91,5 +92,19 @@ public class CommandHandler
         Vector3f targetVec = new Vector3f(x, y, z);
         
         crane.moveContainer(container, targetVec);
+    }
+
+    public void queueCommand(String input)
+    {
+        this.commandQueue.add(input);
+    }
+    
+    public void executeQueued() {
+        if (!this.commandQueue.isEmpty()) {
+            for (String cmd : this.commandQueue) {
+                this.ParseJSON(cmd);
+                this.commandQueue.remove(cmd);
+            }
+        }
     }
 }

@@ -35,6 +35,7 @@ public class Main extends SimpleApplication
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader worldObjects;
+    private CommandHandler commandHandler;
 
     private Train train; // TODO: this is test code
 
@@ -49,6 +50,7 @@ public class Main extends SimpleApplication
     {
         //long start = System.currentTimeMillis();
         this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        this.commandHandler = new CommandHandler(this.worldObjects);
         //long end = System.currentTimeMillis();
 
         //this.playing = false;
@@ -69,7 +71,10 @@ public class Main extends SimpleApplication
         Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
         rootNode.attachChild(SimWorld);
         
-        try { connection = new Connection(worldObjects); }
+        try 
+        { 
+            connection = new Connection(worldObjects, commandHandler);
+        }
         catch (Exception e) { System.out.println(e); }
 
     }
@@ -108,6 +113,8 @@ public class Main extends SimpleApplication
         if (this.worldObjects.checkObjects()) {
             this.worldObjects.spawnObjects(this.worldObjects.spawnObjectList);
         }
+        
+        this.commandHandler.executeQueued();
     }
 
     @Override

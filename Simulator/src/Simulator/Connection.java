@@ -37,15 +37,17 @@ public class Connection
     private boolean shouldStop = false;
     private SimSocket simSocket;
     private ObjectLoader objectLoader;
+    private CommandHandler commandHandler;
     
     private Thread tConnection;
     private Thread tRead;
     private Thread tCheck;
     private Thread tDataForApp;
     
-    public Connection(ObjectLoader objectLoader) throws Exception
+    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
     {
         this.objectLoader = objectLoader;
+        this.commandHandler = commandHandler;
         tConnection = initTConnection();
         tConnection.start();
     }
@@ -134,7 +136,6 @@ public class Connection
         {
             try
             {
-                CommandHandler commandHandler = new CommandHandler(objectLoader);
                 while(!shouldStop)
                 {
                     String input = read();
@@ -144,7 +145,7 @@ public class Connection
                         break;
                     }
                     System.out.println(input);
-                    commandHandler.ParseJSON(input);
+                    commandHandler.queueCommand(input);
                 }
             }
             catch(Exception e){}
