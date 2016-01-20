@@ -34,7 +34,6 @@ public class Main extends SimpleApplication
     //private Node dockCraneNode;
     //private List<Container> containers;
     private Connection connection;
-    private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader worldObjects;
     private CommandHandler commandHandler;
@@ -51,7 +50,7 @@ public class Main extends SimpleApplication
     public void simpleInitApp()
     {
         //long start = System.currentTimeMillis();
-        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager, this.motionControls);
+        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.worldObjects);
         //long end = System.currentTimeMillis();
 

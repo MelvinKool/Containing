@@ -55,7 +55,7 @@ public class ObjectLoader {
     public JSONArray spawnObjectList;
     private Train train;
 
-    public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
+    public ObjectLoader(Node rootNode, AssetManager assetManager) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
         this.sortCrane = assetManager.loadModel("Models/crane/storagecrane/crane.j3o");
         this.truckCrane = assetManager.loadModel("Models/crane/truckcrane/crane.j3o");
@@ -120,14 +120,16 @@ public class ObjectLoader {
         JSONArray sortFields;
         JSONArray position;
         JSONArray size;
-        Vector3f containerSizeVec = new Vector3f();
-        BoundingBox containerSizeV = (BoundingBox) this.container.getWorldBound();
         Vector3f positionVec;
         Vector3f sizeVec;
+        Vector3f containerSizeVec = new Vector3f();
+        BoundingBox containerSize = (BoundingBox) this.container.getWorldBound();
+        
+        containerSize.getExtent(containerSizeVec);
+        System.out.println("container dimensions: " + containerSizeVec);
+        
         sortFieldData = this.loadJson("assets/data/sortfields.json");
-
         sortFields = sortFieldData.getJSONArray("sortFields");
-        containerSizeV.getExtent(containerSizeVec);
         this.sortFields = new SortField[sortFields.length()];
         
         for (int i = 0; i < sortFields.length(); i++) {

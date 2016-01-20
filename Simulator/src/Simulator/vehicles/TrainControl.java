@@ -10,7 +10,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 
 /**
- *
+ * Culls parts of the train when they are out of the world bounds
  * @author erwin
  */
 public class TrainControl extends AbstractControl implements Cloneable      
