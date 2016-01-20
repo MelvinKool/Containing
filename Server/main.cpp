@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-
 #include "vector3f.h"
 #include "server.h"
 #include <vector>
@@ -24,7 +23,7 @@ int main(int argc, char* argv[])
     {
         server->agvs[i] = AGV(i+1,0.0,0.0,0.0,server);
     }
-    server->crane = Crane(12,0.0,0.0,0.0,server);
+    //server->crane = Crane(12,0.0,0.0,0.0,server);
     thread t1(containers,server);
 
     while(true)

@@ -4,17 +4,30 @@
 #include "Files/rapidjson/stringbuffer.h"
 #include "Files/rapidjson/writer.h"
 #include "vector3f.h"
+#include <vector>
+
+using namespace std;
 
 class JSONGenerator
 {
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
     std::string transferContainer(int containerId, int sourceId, int targetId);
-    std::string spawnObject(std::string objectName, vector3f coordinates);
-    std::string generateCommandList(int containerId, std::vector<std::string> commandList);
+    //std::string spawnObject(int objectId, char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
+    std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
+    std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed,
+    										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
+    std::string generateCommandList(int containerId, std::vector<std::string>& commandList);
+    template <class T>
+    static std::string toString(T &jsonValue){
+    	rapidjson::StringBuffer strbuf;
+    	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+    	jsonValue.Accept(writer);
+    	return strbuf.GetString();
+    }
+    //std::string toString(rapidjson::Value *jsonValue);
   private:
     rapidjson::Document createJSONDocument();
-    std::string toString(rapidjson::Document *document);
 };
 
 #endif

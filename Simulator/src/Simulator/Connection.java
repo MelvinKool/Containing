@@ -1,16 +1,12 @@
 package Simulator;
-import Simulator.vehicles.AGV;
-import Simulator.vehicles.FreightTruck;
-import Simulator.vehicles.Ship;
-import Simulator.vehicles.Train;
 import java.net.*;
 import java.io.*;
-import java.util.Map;
+import java.util.Random;
 
 public class Connection
 {
     private String ip = "localhost";
-    
+
     private class SimSocket extends Socket
     {
         private DataInputStream in;
@@ -41,15 +37,17 @@ public class Connection
     private boolean shouldStop = false;
     private SimSocket simSocket;
     private ObjectLoader objectLoader;
+    private CommandHandler commandHandler;
     
     private Thread tConnection;
     private Thread tRead;
     private Thread tCheck;
     private Thread tDataForApp;
     
-    public Connection(ObjectLoader objectLoader) throws Exception
+    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
     {
         this.objectLoader = objectLoader;
+        this.commandHandler = commandHandler;
         tConnection = initTConnection();
         tConnection.start();
     }
@@ -138,7 +136,6 @@ public class Connection
         {
             try
             {
-                CommandHandler commandHandler = new CommandHandler(objectLoader);
                 while(!shouldStop)
                 {
                     String input = read();
@@ -148,7 +145,7 @@ public class Connection
                         break;
                     }
                     System.out.println(input);
-                    commandHandler.ParseJSON(input);
+                    commandHandler.queueCommand(input);
                 }
             }
             catch(Exception e){}
@@ -182,14 +179,16 @@ public class Connection
             {
                 while (!shouldStop) 
                 {
-                    int zeeschip    = 0;
-                    int binnenschip = 0;
-                    int agv         = 0;
-                    int trein       = 0;
-                    int vrachtauto  = 0;
-                    int opslag      = 0;
-                    int diversen    = 0;
+                    Random random = new Random();
                     
+                    int zeeschip    = 10 + random.nextInt(20);
+                    int binnenschip = 10 + random.nextInt(20);
+                    int agv         = 10 + random.nextInt(20);
+                    int trein       = 10 + random.nextInt(20);
+                    int vrachtauto  = 10 + random.nextInt(20);
+                    int opslag      = 10 + random.nextInt(20);
+                    int diversen    = 10 + random.nextInt(20);
+                    /*
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
                         System.out.println(pair.getKey() + " = " + pair.getValue());
                         
@@ -215,7 +214,7 @@ public class Connection
                             diversen++;
                         }
                     }
-                    
+                    */
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
@@ -225,7 +224,7 @@ public class Connection
                                     opslag+","+
                                     diversen;
                     write(result);
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 }
             } 
             catch (Exception e){}

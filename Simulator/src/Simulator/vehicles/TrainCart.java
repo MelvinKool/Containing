@@ -23,17 +23,21 @@ public class TrainCart extends WorldObject {
     
     public TrainCart(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
         super(rootNode, assetManager, position, model);
+        this.container = null;
     }
     
     public void attachContainer(Container container) {
-        Vector3f cartPos = this.getPosition();
-        Vector3f containerPos = cartPos.add(0.0f, 1.0f, 0.0f);
-        this.node.attachChild(container.node);
-        
-        container.setPosition(containerPos);
-        container.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
         container.setVehicle(this);
+        this.node.attachChild(container.node);
+        container.setPosition(new Vector3f(0.0f, 2.0f, 0.0f));
+        container.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);this.container = container;
     }
-        
     
+    public void removeContainer() {
+        this.container = null;
+    }
+    
+    public boolean hasContainer() {
+        return this.container != null;
+    }    
 }

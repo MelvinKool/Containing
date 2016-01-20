@@ -4,16 +4,18 @@
 #include <vector>
 #include <string>
 #include <thread>
-
 #include "socket.h"
+#include "allObject.h"
 
+//class Server;
 
 // Handles all connections with simulators and mobile app's.
 class Connections
 {
     public:
-        Connections();
+        Connections(){}
         ~Connections();
+        void initConnections(AllObject allObjects);
         void acceptClients();
         void writeToSim(std::string message);
         std::string getDataForApp();
@@ -39,6 +41,7 @@ class Connections
         int getFreeClientNumber();
         std::thread* newClientThread(int number);
         std::string dataForApp = "0,0,0,0,0,0,0";
+        AllObject allObjects;
 };
 
 #endif //CONNECTIONS_H

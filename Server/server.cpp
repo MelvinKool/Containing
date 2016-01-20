@@ -10,6 +10,7 @@ Server::Server()
     {
         xmlParser.readXML(db);
     }
+    connections.initConnections(allObjects);
     connections.acceptClients();
     httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");
@@ -25,6 +26,10 @@ void Server::writeToSim(string message)
     connections.writeToSim(message);
 }
 
+Connections* Server::getConnections()
+{
+    return &connections;
+}
 void Server::checkContainers()
 {
     while (!stop)
@@ -90,7 +95,6 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         spawnObject("truck",truckLocation,containerId);
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
         commands.push_back(crane.transfer(containerId,truckLoc,"truck",agvID)); //get container from truck to agv
-    }
     /*
     if(vehicle=="trein") //TODO
     {

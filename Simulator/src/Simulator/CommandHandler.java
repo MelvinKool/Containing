@@ -1,7 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import com.jme3.math.FastMath;
+import Simulator.vehicles.AGV;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,12 @@ import org.json.JSONObject;
 public class CommandHandler
 {
     ObjectLoader objectloader;
+    private List<String> commandQueue;
     
     public CommandHandler(ObjectLoader objectloader)
     {
         this.objectloader = objectloader;
+        this.commandQueue = new ArrayList<>();
     }
     
     public void setContainerCommands(JSONObject commands) {
@@ -50,14 +52,26 @@ public class CommandHandler
                 }
                 float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
-                break;   
+                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                break;
+            case "agvAttachContainer":
+                int agvId = jsonObject.getInt("agvId");
+                int containerId = jsonObject.getInt("containerId");
+                AGV agv = this.objectloader.agvs.get(agvId);
+                Container cont = this.objectloader.containers.get(containerId);
+                agv.attachContainer(cont);
+                break;
             case "craneMoveContainer":
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                System.out.println("spawn");
-                this.objectloader.spawnObjectList = jsonObject.getJSONArray("objects");
+                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+                break;
+            case "spawnTruck":
+                this.spawnTruck(jsonObject);
+                break;
+            case "spawnTrain":
+                this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
                 break;
 //            case "teleportObject":
 //                vehicleId = jsonObject.getInt("vehicleId");
@@ -86,11 +100,38 @@ public class CommandHandler
         Crane crane = this.objectloader.cranes.get(craneId);
         Container container = this.objectloader.containers.get(containerId);
         JSONArray target = jsonObject.getJSONArray("target");
-        float x = (float) target.getDouble(0);
-        float y = (float) target.getDouble(1);
-        float z = (float) target.getDouble(2);
-        Vector3f targetVec = new Vector3f(x, y, z);
+        int sortFieldId = jsonObject.getInt("sortField");
+        int x = target.getInt(0);
+        int y = target.getInt(1);
+        int z = target.getInt(2);
+        Vector3f targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
         
         crane.moveContainer(container, targetVec);
+    }
+
+    private void spawnTruck(JSONObject jsonObject)
+    {
+        Container container = this.objectloader.addContainer(jsonObject.getInt("container"), this);
+        JSONArray pos = jsonObject.getJSONArray("position");
+        float x = (float) pos.getDouble(0);
+        float y = (float) pos.getDouble(1);
+        float z = (float) pos.getDouble(2);
+        Vector3f position = new Vector3f(x, y, z);
+        
+        this.objectloader.spawnTruck(container, position);
+    }
+
+    public void queueCommand(String input)
+    {
+        this.commandQueue.add(input);
+    }
+    
+    public void executeQueued() {
+        if (!this.commandQueue.isEmpty()) {
+            for (String cmd : this.commandQueue) {
+                this.ParseJSON(cmd);
+                this.commandQueue.remove(cmd);
+            }
+        }
     }
 }

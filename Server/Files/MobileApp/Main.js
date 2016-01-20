@@ -68,11 +68,25 @@ function main(){
         barStrokeWidth : 2,
         barValueSpacing : 5,
         barDatasetSpacing : 1,
-        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+        showTooltips : false,
+        onAnimationComplete : function(){
+            var ctx = this.chart.ctx;
+            ctx.font = this.scale.font;
+            ctx.fillStyle = this.scale.textColor;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+            
+            this.datasets.forEach(function (dataset) {
+                dataset.bars.forEach(function (bar) {
+                    ctx.fillText(bar.value, bar.x, bar.y - 5);
+                });
+            });
+        }
     };
     var ctx = document.getElementById("chartCanvas").getContext("2d");
     chart = new Chart(ctx).Bar(data, options);
-    setInterval(update, 1000);
+    setInterval(update, 3000);
 }
 
 function update(){
