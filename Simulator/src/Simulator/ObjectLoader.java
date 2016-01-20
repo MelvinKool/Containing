@@ -37,7 +37,7 @@ public class ObjectLoader {
     private Spatial trainCart;
     
     private AssetManager assetManager;
-    private List<MotionEvent> motionControls;
+    private SortField[] sortFields;
     private Node rootNode;
     private Node craneNode;
     private Node dockCraneNode;
@@ -60,7 +60,6 @@ public class ObjectLoader {
         this.truck = assetManager.loadModel("Models/truck/truck.j3o");
         this.ship = assetManager.loadModel("Models/ship/seaship.j3o");
         this.assetManager = assetManager;
-        this.motionControls = motionControls;
         this.rootNode = rootNode;
         this.canSpawn = true;
     }
@@ -106,6 +105,42 @@ public class ObjectLoader {
         }
         
         return new JSONObject(content);
+    }
+    
+    private void initSortFields() {
+        JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
+        JSONArray containerSize = sortFieldData.getJSONArray("containerSize");
+        JSONArray sortFields = sortFieldData.getJSONArray("sortFields");
+        JSONArray position;
+        JSONArray size;
+        Vector3f containerSizeVec = new Vector3f(
+                (float) containerSize.getDouble(0),
+                (float) containerSize.getDouble(1),
+                (float) containerSize.getDouble(2)
+            );
+        Vector3f positionVec;
+        Vector3f sizeVec;
+        
+        
+        this.sortFields = new SortField[sortFields.length()];
+        
+        for (int i = 0; i < sortFields.length(); i++) {
+            position = sortFields.getJSONObject(i).getJSONArray("position");
+            size = sortFields.getJSONObject(i).getJSONArray("size");
+            
+            positionVec = new Vector3f(
+                    (float) position.getDouble(0),
+                    (float) position.getDouble(1),
+                    (float) position.getDouble(2)
+                );
+            sizeVec = new Vector3f(
+                    (float) size.getDouble(0),
+                    (float) size.getDouble(1),
+                    (float) size.getDouble(2)
+                );
+            this.sortFields[i] = new SortField(positionVec, sizeVec, containerSizeVec);
+        }
+            
     }
     
     /**
