@@ -1,7 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import com.jme3.math.FastMath;
+import Simulator.vehicles.AGV;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +52,26 @@ public class CommandHandler
                 }
                 float totalDistance = (float)jsonObject.getDouble("totalDistance");
                 System.out.println("Locations list: "+Locations);
-                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
-                break;   
+                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                break;
+            case "agvAttachContainer":
+                int agvId = jsonObject.getInt("agvId");
+                int containerId = jsonObject.getInt("containerId");
+                AGV agv = this.objectloader.agvs.get(agvId);
+                Container cont = this.objectloader.containers.get(containerId);
+                agv.attachContainer(cont);
+                break;
             case "craneMoveContainer":
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                this.objectloader.spawnObjectList = jsonObject.getJSONArray("objects");
+                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+                break;
+            case "spawnTruck":
+                this.spawnTruck(jsonObject);
+                break;
+            case "spawnTrain":
+                this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
                 break;
 //            case "teleportObject":
 //                vehicleId = jsonObject.getInt("vehicleId");
@@ -93,6 +106,18 @@ public class CommandHandler
         Vector3f targetVec = new Vector3f(x, y, z);
         
         crane.moveContainer(container, targetVec);
+    }
+
+    private void spawnTruck(JSONObject jsonObject)
+    {
+        Container container = this.objectloader.addContainer(jsonObject.getInt("container"), this);
+        JSONArray pos = jsonObject.getJSONArray("position");
+        float x = (float) pos.getDouble(0);
+        float y = (float) pos.getDouble(1);
+        float z = (float) pos.getDouble(2);
+        Vector3f position = new Vector3f(x, y, z);
+        
+        this.objectloader.spawnTruck(container, position);
     }
 
     public void queueCommand(String input)

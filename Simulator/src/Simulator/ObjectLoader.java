@@ -6,6 +6,8 @@ import Simulator.cranes.SortCrane;
 import Simulator.cranes.TrainCrane;
 import Simulator.cranes.TruckCrane;
 import Simulator.vehicles.AGV;
+import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Train;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
@@ -46,7 +48,9 @@ public class ObjectLoader {
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
     public HashMap<Integer, Container> containers = new HashMap<>();
+    public List<WorldObject> vehicles = new ArrayList<>();
     public JSONArray spawnObjectList;
+    private Train train;
 
     public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
@@ -64,21 +68,16 @@ public class ObjectLoader {
         this.canSpawn = true;
     }
     
-    public Container addContainer(JSONObject containerData, CommandHandler commandHandler) {
-        int containerId = containerData.getInt("containerId");
-        JSONArray position = containerData.getJSONArray("position");
-        float x = (float) position.getDouble(0);
-        float y = (float) position.getDouble(1);
-        float z = (float) position.getDouble(2);
-        Container container = new Container(
+    public Container addContainer(int containerId, CommandHandler commandHandler) {
+        Container containerAdd = new Container(
                     this.rootNode,
                     this.assetManager,
-                    new Vector3f(x, y, z),
+                    new Vector3f(0, 0, 0),
                     this.getContainerModel(),
                     commandHandler);
-        
-        this.containers.put(containerId, container);
-        return container;
+
+        this.containers.put(containerId, containerAdd);
+        return containerAdd;
     }
     
     /**
@@ -221,6 +220,25 @@ public class ObjectLoader {
         return false;
     }
     
+    public void spawnTrain(JSONArray containers) {
+        this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        for (Object containerId : containers) {
+            this.train.addContainer(new Container(
+                    this.rootNode,
+                    this.assetManager,
+                    new Vector3f(0, 0, 0),
+                    this.getContainerModel(),
+                    null));            
+        }
+        this.train.moveIn();
+    }
+    
+    public void spawnTruck(Container container, Vector3f position) {
+        FreightTruck frtruck = new FreightTruck(this.rootNode, this.assetManager, position, this.getTruckModel());
+        frtruck.attachContainer(container);
+        this.vehicles.add(frtruck);
+    }
+
     /**
      * get spawn information from file and spawn objects
      */

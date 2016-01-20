@@ -29,8 +29,10 @@ import java.util.List;
 
 public class Main extends SimpleApplication
 {
-    //boolean connected = false;
-    private Spatial SimWorld;
+    boolean connected = false;
+    private Spatial SimWorld;    
+    //private Node dockCraneNode;
+    //private List<Container> containers;
     private Connection connection;
     private List<MotionEvent> motionControls = new ArrayList<MotionEvent>();
     private List<Vector3f> locations = new ArrayList<>();
@@ -53,8 +55,11 @@ public class Main extends SimpleApplication
         this.commandHandler = new CommandHandler(this.worldObjects);
         //long end = System.currentTimeMillis();
 
+        //System.out.println(end - start);
+
+        //this.dockCraneNode = new Node();
         //this.playing = false;
-        flyCam.setEnabled(false);
+        flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
         
@@ -96,7 +101,6 @@ public class Main extends SimpleApplication
     }
     
     boolean test = false; //TODO: remove this line
-    
     @Override
     public void simpleUpdate(float tpf)
     {
