@@ -100,10 +100,11 @@ public class CommandHandler
         Crane crane = this.objectloader.cranes.get(craneId);
         Container container = this.objectloader.containers.get(containerId);
         JSONArray target = jsonObject.getJSONArray("target");
-        float x = (float) target.getDouble(0);
-        float y = (float) target.getDouble(1);
-        float z = (float) target.getDouble(2);
-        Vector3f targetVec = new Vector3f(x, y, z);
+        int sortFieldId = jsonObject.getInt("sortField");
+        int x = target.getInt(0);
+        int y = target.getInt(1);
+        int z = target.getInt(2);
+        Vector3f targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
         
         crane.moveContainer(container, targetVec);
     }

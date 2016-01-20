@@ -39,12 +39,12 @@ public class ObjectLoader {
     private Spatial trainCart;
     
     private AssetManager assetManager;
-    private SortField[] sortFields;
     private Node rootNode;
     private Node craneNode;
     private Node dockCraneNode;
     private boolean canSpawn;
     
+    public SortField[] sortFields;
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
     public HashMap<Integer, Container> containers = new HashMap<>();
