@@ -9,8 +9,10 @@ import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Train;
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.io.BufferedReader;
@@ -66,6 +68,8 @@ public class ObjectLoader {
         this.assetManager = assetManager;
         this.rootNode = rootNode;
         this.canSpawn = true;
+        
+        this.initSortFields();
     }
     
     public Container addContainer(int containerId, CommandHandler commandHandler) {
@@ -108,19 +112,15 @@ public class ObjectLoader {
     
     private void initSortFields() {
         JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
-        JSONArray containerSize = sortFieldData.getJSONArray("containerSize");
         JSONArray sortFields = sortFieldData.getJSONArray("sortFields");
         JSONArray position;
         JSONArray size;
-        Vector3f containerSizeVec = new Vector3f(
-                (float) containerSize.getDouble(0),
-                (float) containerSize.getDouble(1),
-                (float) containerSize.getDouble(2)
-            );
+        Vector3f containerSizeVec = new Vector3f();
+        BoundingBox containerSizeV = (BoundingBox) ((Geometry) this.container).getModelBound();
         Vector3f positionVec;
         Vector3f sizeVec;
         
-        
+        containerSizeV.getExtent(containerSizeVec);
         this.sortFields = new SortField[sortFields.length()];
         
         for (int i = 0; i < sortFields.length(); i++) {
@@ -138,8 +138,7 @@ public class ObjectLoader {
                     (float) size.getDouble(2)
                 );
             this.sortFields[i] = new SortField(positionVec, sizeVec, containerSizeVec);
-        }
-            
+        }            
     }
     
     /**
