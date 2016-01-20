@@ -12,11 +12,13 @@ class JSONGenerator
 {
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
-    std::string transferContainer(int containerId, int sourceId, int targetId);
+    std::string craneTransferContainer(int craneId, int containerId, vector3f targetVect);
+    std::string agvAttachContainer(int agvId, int containerId);
     //std::string spawnObject(int objectId, char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
     std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
     std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed,
     										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
+    std::string spawnObjects(std::vector<std::string> spawnStrings);
     std::string generateCommandList(int containerId, std::vector<std::string>& commandList);
     template <class T>
     static std::string toString(T &jsonValue){

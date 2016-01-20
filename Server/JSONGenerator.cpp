@@ -16,21 +16,36 @@ rapidjson::Document JSONGenerator::createJSONDocument()
 	document.SetObject();
 	return document;
 }
-
 //generates JSON for doing a container transfer between two vehicles
-string JSONGenerator::transferContainer(int containerId, int sourceId, int targetId)
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
 {
+	//{'Command': 'craneMoveContainer', 'craneId': 8, 'containerId': 4, 'target': [51.25, 1.0, -73.5]}
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command", "transferContainer", allocator);
+	document.AddMember("Command", "craneMoveContainer", allocator);
+	document.AddMember("craneId", craneId, allocator);
 	document.AddMember("containerId", containerId, allocator);
-	document.AddMember("sourceId", sourceId, allocator);
-	document.AddMember("targetId", targetId, allocator);
+	rapidjson::Value target(rapidjson::kArrayType);
+	target..PushBack(targetVect.getX(), allocator).PushBack(targetVect.getY(), allocator).PushBack(targetVect.getZ(),allocator);
+	document.AddMember("target", target, allocator);
 	return toString(document);
 }
 
+//Method for attaching a container to an AGV
+string JSONGenerator::agvAttachContainer(int agvId, int containerId)
+{
+	//{'Command': 'agvAttachContainer', 'agvId': 90, 'containerId': 2}
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","agvAttachContainer", allocator);
+	document.AddMember("agvId", agvId, allocator);
+	document.AddMember("containerId", containerId, allocator);
+	return toString(document);
+}
 //!!!!!!!!!
 //generates JSON for spawning an object
 string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed)
@@ -129,6 +144,27 @@ string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3
 	return toString(document);
 }
 
+//spawn multiple objects with one string
+std::string JSONGenerator::spawnObjects(std::vector<std::string> spawnStrings)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	rapidjson::Value (rapidjson::kArrayType);
+	for(string spawnString : spawnStrings)
+	{
+		
+	}
+	document.AddMember("objects", , allocator);
+	return toString(document);
+}
+
+//setCamera
+//trainCam
+//spawnTrain
+//spawnTruck
+
 //generates JSON for moving a vehicle
 string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance)
 {
@@ -136,8 +172,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-	document.AddMember("Command", "moveTo", allocator);
+	document.AddMember("Command", "moveAGV", allocator);
 	document.AddMember("vehicleId", vehicleId, allocator);
 	// create a rapidjson array type with similar syntax to std::vector
 	// chain methods as rapidjson provides a fluent interface when modifying its objects
@@ -161,14 +196,29 @@ std::string JSONGenerator::generateCommandList(int containerId, vector<string>& 
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command","ContainerCommandList", allocator);
-	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("Command","containerCommands", allocator);
+	document.AddMember("container", containerId, allocator);
 	rapidjson::Value commandArray(rapidjson::kArrayType);
 	for(string& s : commandList){
 		Value commandStr;
 		commandStr.SetString(s.c_str(),strlen(s.c_str()),allocator);
 		commandArray.PushBack(commandStr, allocator);
 	}
-	document.AddMember("commandList", commandArray, allocator);
+	document.AddMember("commands", commandArray, allocator);
 	return toString(document);
 }
+
+/*std::string toCommandString(string commandString, int vehicleId){
+	int bufSize = commandString.length() + 50;
+	char buffer[bufSize];
+	int strLen = snprintf(buffer,bufSize, "{'cmdt': %d, 'cmd': %s}");
+	if(strLen > bufSize){
+		//buffer overflow
+		cout >> "buffer overflow" >> endl;
+	}
+	else{
+		cout >> "success" >> endl;
+	}
+	string finalCommandString = str(buffer);
+	return finalCommandString;
+}*/
