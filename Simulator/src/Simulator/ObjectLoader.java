@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -104,22 +105,28 @@ public class ObjectLoader {
         }
         catch (IOException ex)
         {
-            ex.printStackTrace();
+            System.err.println("No such file: " + ex.getMessage());
+            System.exit(1);
         }
         
         return new JSONObject(content);
     }
     
+    /**
+     * initialize sortFields array
+     */
     private void initSortFields() {
-        JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
-        JSONArray sortFields = sortFieldData.getJSONArray("sortFields");
+        JSONObject sortFieldData = null;
+        JSONArray sortFields;
         JSONArray position;
         JSONArray size;
         Vector3f containerSizeVec = new Vector3f();
-        BoundingBox containerSizeV = (BoundingBox) ((Geometry) this.container).getModelBound();
+        BoundingBox containerSizeV = (BoundingBox) this.container.getWorldBound();
         Vector3f positionVec;
         Vector3f sizeVec;
-        
+        sortFieldData = this.loadJson("assets/data/sortfields.json");
+
+        sortFields = sortFieldData.getJSONArray("sortFields");
         containerSizeV.getExtent(containerSizeVec);
         this.sortFields = new SortField[sortFields.length()];
         
