@@ -91,10 +91,12 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     if(vehicle=="vrachtauto") //TODO
     {
         int truckLoc = getTruckStop();
+        int transportId = getTransportID();
         vector3f truckLocation = truckStops[truckLoc];
-        writeToSim(JGen.spawnObject("Truck",truckLocation,containerId));
+        writeToSim(JGen.spawnObject("Truck",truckLocation,containerId,transportId));
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
         commands.push_back(crane.transfer(containerId,truckLoc,agvID)); //get container from truck to agv
+        commands.push_back(JGen.despawnObject(transportId));
     }
     /*
     if(vehicle=="trein") //TODO
@@ -273,5 +275,12 @@ int Server::getTruckStop()
         i++;
     }
 
+    return i;
+}
+
+int Server::getTransportID()
+{
+    static int i = -1;
+    i++;
     return i;
 }

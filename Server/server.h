@@ -35,6 +35,7 @@ class Server
         void processArrivingContainer(MYSQL_ROW &row);
         int getFreeAGV();
         int getTruckStop();
+        int getTransportID();
         void spawnObject(std::string type,vector3f location, int contID);
 
         Database db;

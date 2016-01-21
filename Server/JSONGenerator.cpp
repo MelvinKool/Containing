@@ -48,7 +48,7 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 }
 //!!!!!!!!!
 //generates JSON for spawning an object
-string JSONGenerator::spawnObject(string type,vector3f location, int contID)
+string JSONGenerator::spawnObject(string type,vector3f location, int contID,int transportID)
 {
     return "";
 }
