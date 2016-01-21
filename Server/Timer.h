@@ -3,6 +3,7 @@
 
 #include <string>
 #include <thread>
+#include <mutex>
 
 class Timer
 {
@@ -13,8 +14,6 @@ public:
     std::string getDate();
     std::string getTime();
 private:
-    //yyyy-mm-dd
-    //hh:mm
     int year;
     int month;
     int day;
@@ -22,6 +21,7 @@ private:
     int minute;
     std::thread* t_tick;
     bool stop;
+    std::mutex mtx;
 
     void tick();
 };

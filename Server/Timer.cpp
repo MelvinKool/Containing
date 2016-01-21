@@ -1,9 +1,6 @@
 #include "Timer.h"
 #include <unistd.h>
-#include <mutex>
 #include <sstream>
-
-#include <iostream>//remove
 
 Timer::Timer()
 {
@@ -30,6 +27,7 @@ void Timer::start()
 std::string Timer::getDate()
 {
     std::stringstream ss;
+    this->mtx.lock();
     ss << this->year << "-";
     if(this->month < 10)
     {
@@ -41,11 +39,13 @@ std::string Timer::getDate()
         ss << 0;
     }
     ss << this->day;
+    this->mtx.unlock();
     return ss.str();
 }
 std::string Timer::getTime()
 {
     std::stringstream ss;
+    this->mtx.lock();
     if(this->hour < 10)
     {
         ss << 0;
@@ -56,15 +56,15 @@ std::string Timer::getTime()
         ss << 0;
     }
     ss << this->minute;
+    this->mtx.unlock();
     return ss.str();
 }
 
 void Timer::tick()
 {
-    std::mutex mtx;
     while(!this->stop)
     {
-        mtx.lock();
+        this->mtx.lock();
         this->minute++;
         if(this->minute == 60)
         {
@@ -86,7 +86,7 @@ void Timer::tick()
                 }
             }
         }
-        mtx.unlock();
+        this->mtx.unlock();
         sleep(1);
     }
 }
