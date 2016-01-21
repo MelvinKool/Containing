@@ -24,7 +24,7 @@ public class FreightTruck extends WorldObject {
     public void attachContainer(Container container) {
         container.setVehicle(this);
         this.node.attachChild(container.node);
-        container.setPosition(new Vector3f(0,1,0));
-    }
+        container.setPosition(new Vector3f(0, 1, 0));
+    } 
     
 }

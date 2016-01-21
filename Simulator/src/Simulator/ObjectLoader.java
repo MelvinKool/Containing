@@ -51,11 +51,11 @@ public class ObjectLoader {
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
     public HashMap<Integer, Container> containers = new HashMap<>();
-    public List<WorldObject> vehicles = new ArrayList<>();
+    public HashMap<Integer, WorldObject> vehicles = new HashMap<>();
     public JSONArray spawnObjectList;
     private Train train;
 
-    public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
+    public ObjectLoader(Node rootNode, AssetManager assetManager) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
         this.sortCrane = assetManager.loadModel("Models/crane/storagecrane/crane.j3o");
         this.truckCrane = assetManager.loadModel("Models/crane/truckcrane/crane.j3o");
@@ -114,38 +114,36 @@ public class ObjectLoader {
     
     /**
      * initialize sortFields array
-     */
+     */    
     private void initSortFields() {
-        JSONObject sortFieldData = null;
-        JSONArray sortFields;
-        JSONArray position;
-        JSONArray size;
+        Vector3f positionVec;        
+        Vector3f maxIndex;
+        JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
+        JSONArray sortFieldPositions = sortFieldData.getJSONArray("positions");
+        JSONArray maxContainers = sortFieldData.getJSONArray("containers");
         Vector3f containerSizeVec = new Vector3f();
-        BoundingBox containerSizeV = (BoundingBox) this.container.getWorldBound();
-        Vector3f positionVec;
-        Vector3f sizeVec;
-        sortFieldData = this.loadJson("assets/data/sortfields.json");
-
-        sortFields = sortFieldData.getJSONArray("sortFields");
-        containerSizeV.getExtent(containerSizeVec);
-        this.sortFields = new SortField[sortFields.length()];
+        BoundingBox containerSize = (BoundingBox) this.container.getWorldBound();
         
-        for (int i = 0; i < sortFields.length(); i++) {
-            position = sortFields.getJSONObject(i).getJSONArray("position");
-            size = sortFields.getJSONObject(i).getJSONArray("size");
-            
+        maxIndex = new Vector3f(
+                (float) maxContainers.getInt(0),
+                (float) maxContainers.getInt(1),
+                (float) maxContainers.getInt(2));
+        
+        containerSize.getExtent(containerSizeVec);
+        System.out.println("container dimensions: " + containerSizeVec);
+        
+        this.sortFields = new SortField[sortFieldPositions.length()];
+        
+        for (int i = 0; i < sortFieldPositions.length(); i++) {
+            JSONArray posArray  = sortFieldPositions.getJSONArray(i);
             positionVec = new Vector3f(
-                    (float) position.getDouble(0),
-                    (float) position.getDouble(1),
-                    (float) position.getDouble(2)
+                    (float) posArray.getDouble(0),
+                    (float) posArray.getDouble(1),
+                    (float) posArray.getDouble(2)
                 );
-            sizeVec = new Vector3f(
-                    (float) size.getDouble(0),
-                    (float) size.getDouble(1),
-                    (float) size.getDouble(2)
-                );
-            this.sortFields[i] = new SortField(positionVec, sizeVec, containerSizeVec);
-        }            
+            this.sortFields[i] = new SortField(positionVec, containerSizeVec.mult(2), maxIndex);
+            System.out.println("new sortfield " + i + " at: " + positionVec);
+        }
     }
     
     /**
@@ -239,10 +237,10 @@ public class ObjectLoader {
         this.train.moveIn();
     }
     
-    public void spawnTruck(Container container, Vector3f position) {
+    public void spawnTruck(int id, Container container, Vector3f position) {
         FreightTruck frtruck = new FreightTruck(this.rootNode, this.assetManager, position, this.getTruckModel());
         frtruck.attachContainer(container);
-        this.vehicles.add(frtruck);
+        this.vehicles.put(id, frtruck);
     }
 
     /**
