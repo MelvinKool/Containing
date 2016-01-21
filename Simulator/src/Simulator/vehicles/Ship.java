@@ -25,14 +25,18 @@ public class Ship extends WorldObject {
     }
     
     public void addContainers(List<Container> containers) {
-        this.containers = containers;
         for (Container container : this.containers) {
-            container.setVehicle(this);
+            this.addContainer(container);
         }
     }
     
     public void addContainer(Container container) {
         this.containers.add(container);
         container.setVehicle(this);
+        this.attachContainer(container);
+    }
+    
+    public void attachContainer(Container container) {
+        
     }
 }

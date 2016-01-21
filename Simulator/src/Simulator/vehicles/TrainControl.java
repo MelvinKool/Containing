@@ -51,9 +51,6 @@ public class TrainControl extends AbstractControl implements Cloneable
     }
 
     @Override
-    protected void controlRender(RenderManager rm, ViewPort vp)
-    {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    protected void controlRender(RenderManager rm, ViewPort vp) { }
     
 }

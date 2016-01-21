@@ -56,8 +56,6 @@ public class Main extends SimpleApplication
 
         //System.out.println(end - start);
 
-        //this.dockCraneNode = new Node();
-        //this.playing = false;
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
@@ -111,10 +109,6 @@ public class Main extends SimpleApplication
         // Destroy train when it says it can (when it's out of map)
         if (this.train != null && this.train.canDestroy) {
             this.train = null;
-        }
-        
-        if (this.worldObjects.checkObjects()) {
-            this.worldObjects.spawnObjects(this.worldObjects.spawnObjectList);
         }
         
         this.commandHandler.executeQueued();
@@ -282,7 +276,7 @@ public class Main extends SimpleApplication
         FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
         FogFilter fog=new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 0.5f));
-        fog.setFogDistance(8000);
+        fog.setFogDistance(3000);
         fog.setFogDensity(1.5f);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);

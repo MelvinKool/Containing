@@ -1,7 +1,6 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.*;
 import java.util.List;

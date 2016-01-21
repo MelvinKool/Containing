@@ -111,6 +111,7 @@ public class AGV extends WorldObject {
             allWayPoints.clear();
             this.motionPath = null;
             this.motionEvent = null; 
+            this.container.operationDone();
         }
     }
     
