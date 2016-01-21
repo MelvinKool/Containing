@@ -10,7 +10,7 @@ class Crane : Transport
 {
     public:
         Crane(){};
-        std::string transfer(int containerID,int craneID,std::string craneType,int destID);
+        std::string transfer(int containerID,int craneID,int destID);
     private:
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
         int ID;

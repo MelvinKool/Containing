@@ -39,7 +39,7 @@ void Server::checkContainers()
 
         //Logics outline and stuffs to send and let everything move
         //TODO getting the right time into querries!!
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID ORDER BY arr.date ASC,arr.timeFrom,ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";// AND arr.date = "+ currentDate +" AND arr.timeFrom = "+ currentTime;
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID ORDER BY arr.date ASC,arr.timeFrom,ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";// AND arr.date = "+ currentDate.c_str() +" AND arr.timeFrom = "+ currentTime;
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         /*
@@ -92,9 +92,10 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     {
         int truckLoc = getTruckStop();
         vector3f truckLocation = truckStops[truckLoc];
-        spawnObject("truck",truckLocation,containerId);
+        writeToSim(JGen.spawnObject("Truck",truckLocation,containerId));
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
-        commands.push_back(crane.transfer(containerId,truckLoc,"truck",agvID)); //get container from truck to agv
+        commands.push_back(crane.transfer(containerId,truckLoc,agvID)); //get container from truck to agv
+    }
     /*
     if(vehicle=="trein") //TODO
     {
@@ -130,8 +131,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
     */
     commands.push_back(agvs[agvID].goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
-    //crane.getBestDumpPosition(); //get best spot to place container in dumping row //TODO
-    commands.push_back(crane.transfer(containerId,24,"storage",dump));
+    commands.push_back(crane.transfer(containerId,24,dump));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 
@@ -274,9 +274,4 @@ int Server::getTruckStop()
     }
 
     return i;
-}
-
-void Server::spawnObject(string type,vector3f location, int contID)
-{
-    writeToSim(JGen.spawnObject(type,location,contID));
 }

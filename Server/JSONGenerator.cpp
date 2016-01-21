@@ -28,7 +28,7 @@ string JSONGenerator::craneTransferContainer(int craneId, int containerId, vecto
 	document.AddMember("craneId", craneId, allocator);
 	document.AddMember("containerId", containerId, allocator);
 	rapidjson::Value target(rapidjson::kArrayType);
-	target..PushBack(targetVect.getX(), allocator).PushBack(targetVect.getY(), allocator).PushBack(targetVect.getZ(),allocator);
+	target.PushBack(targetVect.getX(), allocator).PushBack(targetVect.getY(), allocator).PushBack(targetVect.getZ(),allocator);
 	document.AddMember("target", target, allocator);
 	return toString(document);
 }
@@ -48,6 +48,11 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 }
 //!!!!!!!!!
 //generates JSON for spawning an object
+string JSONGenerator::spawnObject(string type,vector3f location, int contID)
+{
+    return "";
+}
+
 string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed)
 {
 	// document is the root of a json message
@@ -154,9 +159,9 @@ std::string JSONGenerator::spawnObjects(std::vector<std::string> spawnStrings)
 	rapidjson::Value (rapidjson::kArrayType);
 	for(string spawnString : spawnStrings)
 	{
-		
+
 	}
-	document.AddMember("objects", , allocator);
+	document.AddMember("objects", "", allocator);
 	return toString(document);
 }
 

@@ -15,6 +15,7 @@ class JSONGenerator
     std::string craneTransferContainer(int craneId, int containerId, vector3f targetVect);
     std::string agvAttachContainer(int agvId, int containerId);
     //std::string spawnObject(int objectId, char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
+    std::string spawnObject(string type,vector3f location, int contID);
     std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
     std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed,
     										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
