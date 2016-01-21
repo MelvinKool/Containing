@@ -11,6 +11,7 @@
 #include "agv.h"
 #include "crane.h"
 #include "JSONGenerator.h"
+#include "Timer.h"
 
 class Server
 {
@@ -40,6 +41,7 @@ class Server
         XmlParser xmlParser;
         Connections connections;
         HttpServer httpserver;
+        Timer timer;
 
         bool stop = false;
         std::vector<vector3f> truckStops;
