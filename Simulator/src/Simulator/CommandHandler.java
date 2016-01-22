@@ -112,13 +112,14 @@ public class CommandHandler
     private void spawnTruck(JSONObject jsonObject)
     {
         Container container = this.objectloader.addContainer(jsonObject.getInt("container"), this);
+        int id = jsonObject.getInt("id");
         JSONArray pos = jsonObject.getJSONArray("position");
         float x = (float) pos.getDouble(0);
         float y = (float) pos.getDouble(1);
         float z = (float) pos.getDouble(2);
         Vector3f position = new Vector3f(x, y, z);
         
-        this.objectloader.spawnTruck(container, position);
+        this.objectloader.spawnTruck(id, container, position);
     }
 
     public void queueCommand(String input)
