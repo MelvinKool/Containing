@@ -46,7 +46,6 @@ void Server::checkContainers()
         //process leaving containers
         MYSQL_RES* res1 = db.select(departures);
         MYSQL_ROW row1;
-        string vehicle1;
         while((row1 = mysql_fetch_row(res1)) != NULL)
         {
             try
@@ -64,7 +63,6 @@ void Server::checkContainers()
         //process arriving containers
         MYSQL_RES* res2 = db.select(arrivals);
         MYSQL_ROW row2;
-        string vehicle2;
         while((row2 = mysql_fetch_row(res2)) != NULL)
         {
             try
@@ -77,6 +75,10 @@ void Server::checkContainers()
             }
         }
         mysql_free_result(res2);
+        if (trainSpawned)
+        {
+            writeToSim(JGen.despawnObject(-1));
+        }
 
     }
 }
@@ -87,25 +89,46 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     vehicle = row[1];
     //x=atoi(row[3]);y=atoi(row[4]);z=atoi(row[5]);//these are relative container coordinates,relative to vehicle position
     agvID = getFreeAGV();
+    int transportId = getTransportID();
+    vector<int> containers;
 
     if(vehicle=="vrachtauto") //TODO
     {
         int truckLoc = getTruckStop();
-        int transportId = getTransportID();
         vector3f truckLocation = truckStops[truckLoc];
-        writeToSim(JGen.spawnObject("Truck",truckLocation,containerId,transportId));
+        writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
         commands.push_back(crane.transfer(containerId,truckLoc,agvID)); //get container from truck to agv
         commands.push_back(JGen.despawnObject(transportId));
     }
-    /*
+
     if(vehicle=="trein") //TODO
     {
-        //TODO spawn train
+        if (!trainSpawned)
+        {
+            string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\";";// AND arr.date = "+ currentDate.c_str() +" AND arr.timeFrom = "+ currentTime;
+
+            MYSQL_RES* resContainerList = db.select(treinContainers);
+            MYSQL_ROW row;
+            while((row = mysql_fetch_row(resContainerList)) != NULL)
+            {
+                try
+                {
+                    containers.push_back(atoi(row[0]));
+                }
+                catch (string error)
+                {
+                    //cout<<error<<endl;
+                }
+            }
+            mysql_free_result(resContainerList);
+
+            writeToSim(JGen.spawnObject("Train",containerIds))
+        }
         commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
     }
-
+    /*
     if(vehicle=="zeeschip") //TODO
     {
         //TODO spawn seaship

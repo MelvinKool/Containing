@@ -43,7 +43,7 @@ class Server
         Connections connections;
         HttpServer httpserver;
 
-        bool stop = false;
+        bool stop = false,trainSpawned =false;
         std::vector<vector3f> truckStops;
         std::string vehicle = "";
         int containerId = -1,agvID = 0;
