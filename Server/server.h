@@ -7,7 +7,7 @@
 #include "xmlparser.h"
 #include "database.h"
 #include "httpserver.h"
-#include "allObject.h"
+#include "allObjects.h"
 #include "agv.h"
 #include "crane.h"
 #include "JSONGenerator.h"
@@ -21,7 +21,7 @@ class Server
         void stopRunning();
         Connections* getConnections();
 
-        AllObject allObjects;
+        AllObjects allObjects;
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;

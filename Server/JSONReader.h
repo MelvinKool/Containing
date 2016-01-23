@@ -18,10 +18,11 @@ class JSONReader{
     private:
         char* transportFPath;
     public:
-        JSONReader(char* transportFPath);
-        void loadTransport(Connections* simulator,vector<Crane>& freightShipCranes,
+        JSONReader(char* transportFPath, Server* server);
+        void loadTransport(AllObjects& allObjects);
+        /*void loadTransport(Connections* simulator,vector<Crane>& freightShipCranes,
             vector<Crane>& storageCranes, vector<Crane>& seaShipCranes, vector<Crane>& trainCranes,
-            vector<AGV>& agvs, vector<Crane>& truckCranes);
+            vector<AGV>& agvs, vector<Crane>& truckCranes);*/
     private:
         //void loadVehicle(const char* key,rapidjson::Document& document,Connections& simulator, vector<Crane>& transportVector);
         //void loadVehicle(const char* key,rapidjson::Document& document,Connections& simulator, vector<AGV>& transportVector);
@@ -34,9 +35,12 @@ class JSONReader{
           }
           return result.str();
         }*/
+
+        /*loads all vehicles with the specified key into a list of json strings*/
+        Server* server;
         template <class Vehicle>
-        void loadVehicle(string key,rapidjson::Document& document,Connections& simulator, vector<Vehicle>& transportVector){
-            rapidjson::Value& transportJSON = document[key.c_str()];
+        std::vector<std::string> loadVehicle(const char* key,rapidjson::Document& document, vector<Vehicle>& transportVector){
+            rapidjson::Value& transportJSON = document[key];
             int count = transportJSON["count"].GetInt();
             const Value& rotation = transportJSON["rotation"];
             float rotX, rotY, rotZ;
@@ -66,6 +70,7 @@ class JSONReader{
             vector3f tempVect;
             const Value& positions = transportJSON["positions"];
             //vector<string> allObjectsJSON;
+            std::vector<std::string> allSpawnObjects;
             for (rapidjson::SizeType i = 0; i < positions.Size(); i++)
             {
                 const rapidjson::Value& position = positions[i];
@@ -79,14 +84,28 @@ class JSONReader{
                 //generate spawn json
                 //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
                 //JSONGenerator::spawnObject(int, char*, vector3f, vector3f, float, float, float, float, vector3f, bool)
-                string final_JSON_string = generator.spawnObject((int)i, key.c_str(), tempVect, rotationVect,
-                                                                speed,holderSpeed,grabberSpeed, grabber_y_offset,
-                                                                grabberPos, has_holder);
-                cout << final_JSON_string << endl;
-                simulator.writeToSim(final_JSON_string);
+                if(key == "AGV")
+                {
+                    cout << "AGV" << endl;
+                    AGV agv((int)i,x,y,z,server);
+                    string agvSpawn = generator.spawnAGV(agv, (int) i, rotationVect);
+                    allSpawnObjects.push_back(agvSpawn);
+                }
+                else{
+                    //this is a crane
+                    cout << "crane" << endl;
+                    /*Crane crane((int)i, key.c_str(), tempVect, rotationVect,
+                            speed,holderSpeed,grabberSpeed, grabber_y_offset,
+                            grabberPos, has_holder);
+                    string craneSpawn = generator.spawnCrane(crane, (int) i,rotationVect);//identity???
+                    allSpawnObjects.push_back(agvSpawn);*/
+                }
+                //simulator.writeToSim(final_JSON_string);
                 //spawn objects in simulator
                 //simulator.writeToSim(genJSON);
             }
+            return allSpawnObjects;
         }
+
 };
 #endif

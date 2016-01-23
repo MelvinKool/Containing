@@ -1,5 +1,5 @@
 #include "server.h"
-
+#include "connections.h"
 #include <iostream>
 
 using namespace std;
@@ -10,6 +10,7 @@ Server::Server()
     {
         xmlParser.readXML(db);
     }
+    connections = Connections(this);
     connections.initConnections(allObjects);
     connections.acceptClients();
     httpserver.init(connections);

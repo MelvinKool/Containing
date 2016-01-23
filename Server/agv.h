@@ -7,7 +7,7 @@
 
 class Server;
 
-class AGV : Transport
+class AGV : public Transport
 {
     public:
         AGV(){};
