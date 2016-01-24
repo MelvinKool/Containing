@@ -5,14 +5,11 @@
 
 using namespace std;
 
-Connections::Connections(Server* server){
-        this->server = server;
-}
-
-void Connections::initConnections(AllObjects allObjects)
+void Connections::initConnections(AllObjects& allObjects, Server* server)
 {
     this->allObjects = allObjects;
     this->socket = new ServerSocket(1337);
+    this->server = server;
 }
 
 // Stop all the running threads and delete them, then delete the socket.
@@ -86,7 +83,7 @@ thread* Connections::newClientThread(int number)
         if(isSim){
             cout << "sending initialization json to simulator..." << endl;
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json", server);
-            jsonReader.loadTransport(this,allObjects);
+            jsonReader.loadTransport(allObjects);
         }
         //load vehicles
         while(!this->stop)

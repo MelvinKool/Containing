@@ -11,6 +11,7 @@
 #include "JSONGenerator.h"
 #include <iostream>
 #include "vector3f.h"
+#include "server.h"
 
 using namespace rapidjson;
 

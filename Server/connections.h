@@ -13,10 +13,9 @@
 class Connections
 {
     public:
-        Connections(Server* server);
         Connections(){}
         ~Connections();
-        void initConnections(AllObjects allObjects);
+        void initConnections(AllObjects& allObjects, Server* server);
         void acceptClients();
         void writeToSim(std::string message);
         std::string getDataForApp();
