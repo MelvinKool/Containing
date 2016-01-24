@@ -6,15 +6,20 @@ import Simulator.cranes.SortCrane;
 import Simulator.cranes.TrainCrane;
 import Simulator.cranes.TruckCrane;
 import Simulator.vehicles.AGV;
+import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Train;
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,18 +42,20 @@ public class ObjectLoader {
     private Spatial trainCart;
     
     private AssetManager assetManager;
-    private List<MotionEvent> motionControls;
     private Node rootNode;
     private Node craneNode;
     private Node dockCraneNode;
     private boolean canSpawn;
     
+    public SortField[] sortFields;
     public HashMap<Integer, Crane> cranes = new HashMap<>();
     public HashMap<Integer, AGV> agvs = new HashMap<>();
     public HashMap<Integer, Container> containers = new HashMap<>();
+    public HashMap<Integer, WorldObject> vehicles = new HashMap<>();
     public JSONArray spawnObjectList;
+    private Train train;
 
-    public ObjectLoader(Node rootNode, AssetManager assetManager, List<MotionEvent> motionControls) {
+    public ObjectLoader(Node rootNode, AssetManager assetManager) {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
         this.sortCrane = assetManager.loadModel("Models/crane/storagecrane/crane.j3o");
         this.truckCrane = assetManager.loadModel("Models/crane/truckcrane/crane.j3o");
@@ -60,26 +67,22 @@ public class ObjectLoader {
         this.truck = assetManager.loadModel("Models/truck/truck.j3o");
         this.ship = assetManager.loadModel("Models/ship/seaship.j3o");
         this.assetManager = assetManager;
-        this.motionControls = motionControls;
         this.rootNode = rootNode;
         this.canSpawn = true;
+        
+        this.initSortFields();
     }
     
-    public Container addContainer(JSONObject containerData, CommandHandler commandHandler) {
-        int containerId = containerData.getInt("containerId");
-        JSONArray position = containerData.getJSONArray("position");
-        float x = (float) position.getDouble(0);
-        float y = (float) position.getDouble(1);
-        float z = (float) position.getDouble(2);
-        Container container = new Container(
+    public Container addContainer(int containerId, CommandHandler commandHandler) {
+        Container containerAdd = new Container(
                     this.rootNode,
                     this.assetManager,
-                    new Vector3f(x, y, z),
+                    new Vector3f(0, 0, 0),
                     this.getContainerModel(),
                     commandHandler);
-        
-        this.containers.put(containerId, container);
-        return container;
+
+        this.containers.put(containerId, containerAdd);
+        return containerAdd;
     }
     
     /**
@@ -102,10 +105,45 @@ public class ObjectLoader {
         }
         catch (IOException ex)
         {
-            ex.printStackTrace();
+            System.err.println("No such file: " + ex.getMessage());
+            System.exit(1);
         }
         
         return new JSONObject(content);
+    }
+    
+    /**
+     * initialize sortFields array
+     */    
+    private void initSortFields() {
+        Vector3f positionVec;        
+        Vector3f maxIndex;
+        JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
+        JSONArray sortFieldPositions = sortFieldData.getJSONArray("positions");
+        JSONArray maxContainers = sortFieldData.getJSONArray("containers");
+        Vector3f containerSizeVec = new Vector3f();
+        BoundingBox containerSize = (BoundingBox) this.container.getWorldBound();
+        
+        maxIndex = new Vector3f(
+                (float) maxContainers.getInt(0),
+                (float) maxContainers.getInt(1),
+                (float) maxContainers.getInt(2));
+        
+        containerSize.getExtent(containerSizeVec);
+        System.out.println("container dimensions: " + containerSizeVec);
+        
+        this.sortFields = new SortField[sortFieldPositions.length()];
+        
+        for (int i = 0; i < sortFieldPositions.length(); i++) {
+            JSONArray posArray  = sortFieldPositions.getJSONArray(i);
+            positionVec = new Vector3f(
+                    (float) posArray.getDouble(0),
+                    (float) posArray.getDouble(1),
+                    (float) posArray.getDouble(2)
+                );
+            this.sortFields[i] = new SortField(positionVec, containerSizeVec.mult(2), maxIndex);
+            System.out.println("new sortfield " + i + " at: " + positionVec);
+        }
     }
     
     /**
@@ -186,6 +224,25 @@ public class ObjectLoader {
         return false;
     }
     
+    public void spawnTrain(JSONArray containers) {
+        this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        for (Object containerId : containers) {
+            this.train.addContainer(new Container(
+                    this.rootNode,
+                    this.assetManager,
+                    new Vector3f(0, 0, 0),
+                    this.getContainerModel(),
+                    null));            
+        }
+        this.train.moveIn();
+    }
+    
+    public void spawnTruck(int id, Container container, Vector3f position) {
+        FreightTruck frtruck = new FreightTruck(this.rootNode, this.assetManager, position, this.getTruckModel());
+        frtruck.attachContainer(container);
+        this.vehicles.put(id, frtruck);
+    }
+
     /**
      * get spawn information from file and spawn objects
      */

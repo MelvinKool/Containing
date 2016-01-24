@@ -1,7 +1,6 @@
 package Simulator;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.*;
 import java.util.List;
@@ -33,9 +32,9 @@ public class Container extends WorldObject
      * Called by vehicles when they are done with their command
      */
     public void operationDone() {
-        JSONObject command = this.commands.remove(0);
-        this.commandHandler.executeCommand(command);
-        this.vehicle = null;
+//        JSONObject command = this.commands.remove(0);
+//        this.commandHandler.executeCommand(command);
+//        this.vehicle = null;
     }
     
     public WorldObject getVehicle() {

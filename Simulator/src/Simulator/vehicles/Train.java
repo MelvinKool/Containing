@@ -55,10 +55,8 @@ public class Train
     }
     
     public void addContainer(Container container) {
-        for (TrainCart cart : this.trainCarts) {
-            if (!cart.hasContainer()) {
-                cart.attachContainer(container);
-            }
+        for (int i = 0; i < this.trainCarts.size(); i++) {
+            this.trainCarts.get(i).attachContainer(container);
         }
     }
     

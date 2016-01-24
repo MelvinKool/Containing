@@ -39,12 +39,14 @@ public class Crane extends WorldObject {
     private float speed;
     private boolean holderDone;
     private boolean craneDone;
+    protected boolean hasHolder;
     
     public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model, String craneType, float speed) {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
         this.speed = speed;
+        this.hasHolder = true;
     }
     
     /**
@@ -179,10 +181,10 @@ public class Crane extends WorldObject {
      */
     private void moveGrabberIfReady() 
     {            
-        System.err.println("trymove");
+        System.out.println("trymove");
 
-        if (this.holderDone && this.craneDone) {
-            System.err.println("move");
+        if ((this.holderDone || !this.hasHolder) && this.craneDone) {
+            System.out.println("move");
             this.grabber.grabberMotion.play();
             if (this.cmd == Cmd.GRABBING) {
                 this.cmd = Cmd.Nothing;
@@ -268,7 +270,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(30000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,11 +281,11 @@ public class Crane extends WorldObject {
         } else if (this.cmd == Cmd.GRABBER) 
         {
             this.putContainer(this.containerTarget);
-            System.err.println("putting");
+            System.out.println("putting");
             this.cmd = Cmd.PUTTING;
         } else if (this.cmd == Cmd.PUTTING) 
         {
-            System.err.println("detach");
+            System.out.println("detach");
             Vector3f pos = targetContainer.node.getWorldTranslation();
             Quaternion rot = targetContainer.node.getWorldRotation();
             this.rootNode.attachChild(this.targetContainer.node);
@@ -294,7 +296,8 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(30000);
+                            Thread.sleep(3000
+                                    );
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -304,7 +307,7 @@ public class Crane extends WorldObject {
             }).start();
         } else if (this.cmd == Cmd.RESET) 
         {
-            System.err.println("reset");
+            System.out.println("reset");
             this.cmd = Cmd.Nothing;
             this.grabber.motionPath = null;
             this.targetContainer = null;
