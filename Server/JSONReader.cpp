@@ -30,13 +30,15 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     //loadVehicle("Storage", document,*simulator,storageCranes);
     //loadVehicle("SeaShip", document,*simulator,seaShipCranes);
     //loadVehicle("Train", document,*simulator,trainCranes);
-    loadVehicle("AGV", document, allObjects.agvs);
+    std::vector<std::string> agvObjects = loadVehicle("AGV", document, allObjects.agvs);
     //loadVehicle("TruckCrane", document,*simulator,truckCranes);
     //concentrate vectors
     std::vector<std::string> allObjectsStrVector;
-    //vector1.insert( vector1.end(), vector2.begin(), vector2.end() );
+    allObjectsStrVector.push_back(testJSON);
+    //allObjectsStrVector.insert( allObjectsStrVector.end(), agvObjects.begin(), agvObjects.end() );
     JSONGenerator generator;
     string allObjectsJSON = generator.spawnObjects(allObjectsStrVector);
+    //server->writeToSim();
     server->writeToSim(allObjectsJSON);
     //send everything to the simulator
 

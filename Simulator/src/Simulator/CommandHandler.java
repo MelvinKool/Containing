@@ -27,7 +27,7 @@ public class CommandHandler
     }
     
     public void executeCommand(JSONObject jsonObject) {
-        String command = jsonObject.getString("Command");
+         String command = jsonObject.getString("Command");
         int vehicleId;
         switch(command)
         {
@@ -129,7 +129,8 @@ public class CommandHandler
     
     public void executeQueued() {
         if (!this.commandQueue.isEmpty()) {
-            for (String cmd : this.commandQueue) {
+            for(int i = 0; i < this.commandQueue.size(); i++){
+                String cmd = commandQueue.get(i);
                 this.ParseJSON(cmd);
                 this.commandQueue.remove(cmd);
             }

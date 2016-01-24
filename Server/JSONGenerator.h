@@ -7,6 +7,8 @@
 #include "crane.h"
 #include "agv.h"
 #include <vector>
+#include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -27,7 +29,9 @@ class JSONGenerator
     	rapidjson::StringBuffer strbuf;
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     	jsonValue.Accept(writer);
-    	return strbuf.GetString();
+    	string stupidRapidJSONString = strbuf.GetString();
+        stupidRapidJSONString.erase(std::remove(stupidRapidJSONString.begin(), stupidRapidJSONString.end(), '\\'), stupidRapidJSONString.end());
+        return stupidRapidJSONString;
     }
     //std::string toString(rapidjson::Value *jsonValue);
   private:

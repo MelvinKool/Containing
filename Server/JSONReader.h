@@ -40,7 +40,7 @@ class JSONReader{
         /*loads all vehicles with the specified key into a list of json strings*/
         Server* server;
         template <class Vehicle>
-        std::vector<std::string> loadVehicle(const char* key,rapidjson::Document& document, vector<Vehicle>& transportVector){
+        std::vector<std::string> loadVehicle(const char* key,rapidjson::Document& document, std::vector<Vehicle>& transportVector){
             rapidjson::Value& transportJSON = document[key];
             int count = transportJSON["count"].GetInt();
             const Value& rotation = transportJSON["rotation"];
@@ -90,6 +90,7 @@ class JSONReader{
                     cout << "AGV" << endl;
                     AGV agv((int)i,x,y,z,server);
                     string agvSpawn = generator.spawnAGV(agv, (int) i, rotationVect);
+                    cout << "agv spawn " << agvSpawn << endl;
                     allSpawnObjects.push_back(agvSpawn);
                 }
                 else{

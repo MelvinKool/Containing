@@ -167,15 +167,15 @@ string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
 	document.AddMember("speed", agv.unloaded_Speed, allocator);
-	rapidjson::Value spawnLocation(rapidjson::kObjectType);
-	spawnLocation.AddMember("X",agv.currentLocation.getX(),allocator);
-	spawnLocation.AddMember("Y",agv.currentLocation.getY(),allocator);
-	spawnLocation.AddMember("Z",agv.currentLocation.getZ(),allocator);
+	rapidjson::Value spawnLocation(rapidjson::kArrayType);
+	spawnLocation.PushBack(agv.currentLocation.getX(), allocator)
+				.PushBack(agv.currentLocation.getY(), allocator)
+				.PushBack(agv.currentLocation.getZ(),allocator);
 	document.AddMember("position",spawnLocation,allocator);
-	rapidjson::Value spawnRotation(rapidjson::kObjectType);
-	spawnRotation.AddMember("X",rotation.getX(),allocator);
-	spawnRotation.AddMember("Y",rotation.getY(),allocator);
-	spawnRotation.AddMember("Z",rotation.getZ(),allocator);
+	rapidjson::Value spawnRotation(rapidjson::kArrayType);
+	spawnRotation.PushBack(rotation.getX(), allocator)
+				.PushBack(rotation.getY(), allocator)
+				.PushBack(rotation.getZ(),allocator);
 	document.AddMember("rotation",spawnRotation,allocator);
 	return toString(document);
 }
