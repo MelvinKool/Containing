@@ -180,6 +180,34 @@ string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
+template<class Allocator>
+rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & alloc) {
+  rapidjson::Value * rtn = new rapidjson::Value();
+
+  if(document.IsObject()) {
+
+    rtn->SetObject();
+    for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
+      rtn->AddMember(itr->name, itr->value, alloc);
+    }
+    return rtn;
+
+  } else if (document.IsArray()) {
+
+    rtn->SetArray();
+    for (int64_t i = 0; i < document.Size(); i++) {
+      rtn->PushBack(document[i], alloc);
+    }
+    return rtn;
+
+  } else {
+
+    delete rtn;
+    return NULL;
+
+  }
+}
+
 //spawn multiple objects with one JSON string
 std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 {
@@ -191,10 +219,16 @@ std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 	rapidjson::Value spawnCommandList(rapidjson::kArrayType);
 	for(string spawnString : spawnStrings)
 	{
+		/*Document tempDocument;
+		tempDocument.Parse(spawnString.c_str());*/
 		Value s;
 		const char* spawnString_c_str = spawnString.c_str();
 		s.SetString(spawnString_c_str,strlen(spawnString_c_str),allocator);
 		spawnCommandList.PushBack(s, allocator);
+		/*Document tempDocument;
+		tempDocument.Parse(spawnString.c_str());
+		Value* tempValue = document_to_value(tempDocument, tempDocument.GetAllocator());
+		spawnCommandList.PushBack(*tempValue, allocator);*/
 	}
 	document.AddMember("objects", spawnCommandList, allocator);
 	return toString(document);
