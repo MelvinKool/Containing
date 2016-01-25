@@ -104,7 +104,6 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 {
     containerId = atoi(row[0]);
     vehicle = row[1];
-    //x=atoi(row[3]);y=atoi(row[4]);z=atoi(row[5]);//these are relative container coordinates,relative to vehicle position
     agvID = getFreeAGV();
     int transportId = getTransportID();
     vector<int> containers;
@@ -114,6 +113,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         //crane ids: 67-86;
         int truckLoc = getTruckStop();
         vector3f truckLocation = truckStops[truckLoc];
+        //TODO void expression?!?
         //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
         commands.push_back(cranes[67+truckLoc].transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
