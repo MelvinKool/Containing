@@ -16,6 +16,8 @@ int main(int argc, char* argv[])
 {
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
+    //bool test = (37 & 1048576) != 0;
+    //cout << "is it? " << test << endl;
     Server* server = new Server();
     for (uint i = 0; i < 100; i++)
     {

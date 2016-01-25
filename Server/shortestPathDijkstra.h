@@ -18,10 +18,6 @@ public:
 	void reset();
 	double distance(std::string coordinate1, std::string coordinate2);
 private:
-	struct Road{
-		double distance;
-		double speed;
-	};
 	struct Place
 	{
 		Place(std::string name) : name(name) {}

@@ -17,6 +17,34 @@ rapidjson::Document JSONGenerator::createJSONDocument()
 	return document;
 }
 
+template<class Allocator>
+rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & alloc) {
+  rapidjson::Value * rtn = new rapidjson::Value();
+
+  if(document.IsObject()) {
+
+    rtn->SetObject();
+    for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
+      rtn->AddMember(itr->name, itr->value, alloc);
+    }
+    return rtn;
+
+  } else if (document.IsArray()) {
+
+    rtn->SetArray();
+    for (int64_t i = 0; i < document.Size(); i++) {
+      rtn->PushBack(document[i], alloc);
+    }
+    return rtn;
+
+  } else {
+
+    delete rtn;
+    return NULL;
+
+  }
+}
+
 //generates JSON for doing a container transfer between two vehicles
 string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
 {
@@ -155,7 +183,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 //(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
 //float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
 //vector3f rotation???
-string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
+std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -180,34 +208,6 @@ string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
-template<class Allocator>
-rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & alloc) {
-  rapidjson::Value * rtn = new rapidjson::Value();
-
-  if(document.IsObject()) {
-
-    rtn->SetObject();
-    for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
-      rtn->AddMember(itr->name, itr->value, alloc);
-    }
-    return rtn;
-
-  } else if (document.IsArray()) {
-
-    rtn->SetArray();
-    for (int64_t i = 0; i < document.Size(); i++) {
-      rtn->PushBack(document[i], alloc);
-    }
-    return rtn;
-
-  } else {
-
-    delete rtn;
-    return NULL;
-
-  }
-}
-
 //spawn multiple objects with one JSON string
 std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 {
@@ -221,16 +221,24 @@ std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 	{
 		/*Document tempDocument;
 		tempDocument.Parse(spawnString.c_str());*/
-		Value s;
+		/*Value s;
 		const char* spawnString_c_str = spawnString.c_str();
 		s.SetString(spawnString_c_str,strlen(spawnString_c_str),allocator);
-		spawnCommandList.PushBack(s, allocator);
-		/*Document tempDocument;
+		spawnCommandList.PushBack(s, allocator);*/
+		Document tempDocument;
 		tempDocument.Parse(spawnString.c_str());
-		Value* tempValue = document_to_value(tempDocument, tempDocument.GetAllocator());
-		spawnCommandList.PushBack(*tempValue, allocator);*/
+		rapidjson::Document::AllocatorType& tempDocAllocator = tempDocument.GetAllocator();
+		Value* tempValue = document_to_value(tempDocument, tempDocAllocator);
+		//string toString(*tempValue);
+		spawnCommandList.PushBack(*tempValue, allocator);
 	}
+	cout << "finaltest" << endl;
 	document.AddMember("objects", spawnCommandList, allocator);
+	for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
+		cout <<"name: " << toString(itr->name) << " value " << toString(itr->value) << endl;
+	  //rtn->AddMember(itr->name, itr->value, alloc);
+    }
+	cout <<" returing..." << endl;
 	return toString(document);
 }
 
