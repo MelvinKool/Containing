@@ -48,7 +48,7 @@ void Server::checkContainers()
 
     while (!stop)
     {
-        cout<<"container check"<<endl;
+        //cout<<"container check"<<endl;
         this_thread::sleep_for(chrono::seconds(1));
 
         //Logics outline and stuffs to send and let everything move

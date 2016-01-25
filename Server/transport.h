@@ -14,7 +14,6 @@ class Transport
         Transport();
         std::string vehicleType;
         vector3f currentLocation = vector3f(0,0,0);
-    protected:
         int loaded_Speed, unloaded_Speed,ID;
 };
 
