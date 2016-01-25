@@ -51,6 +51,7 @@ public class CommandHandler
                     Locations.add(new Vector3f(x,y,z));
                 }
                 float totalDistance = (float)jsonObject.getDouble("totalDistance");
+                System.out.println("totaldistance = "+ totalDistance);
                 System.out.println("Locations list: "+Locations);
                 objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
                 break;
@@ -65,7 +66,7 @@ public class CommandHandler
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+            this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
                 break;
             case "spawnTruck":
                 this.spawnTruck(jsonObject);
@@ -128,10 +129,12 @@ public class CommandHandler
     }
     
     public void executeQueued() {
-        if (!this.commandQueue.isEmpty()) {
-            for (String cmd : this.commandQueue) {
-                this.ParseJSON(cmd);
-                this.commandQueue.remove(cmd);
+        if (!this.commandQueue.isEmpty())
+        {
+            for(; 0 < commandQueue.size(); )
+            {
+                this.ParseJSON(commandQueue.get(0));
+                this.commandQueue.remove(0);
             }
         }
     }

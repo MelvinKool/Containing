@@ -3,7 +3,6 @@ package Simulator;
 import Simulator.cranes.Crane;
 import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -24,8 +23,14 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main extends SimpleApplication
 {
@@ -70,15 +75,30 @@ public class Main extends SimpleApplication
         initSkybox();
         initFog();
         
-        Spatial SimWorld = assetManager.loadModel("Models/world/SimWorld.j3o");
-        rootNode.attachChild(SimWorld);
-        
         try 
         { 
             connection = new Connection(worldObjects, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
 
+    }
+    
+    public String readJsonFile() throws FileNotFoundException, IOException{
+        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Klaas\\Documents\\GitHub\\Containing\\Simulator\\assets\\data\\spawns.json"));
+        String temp = "";
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                temp += line;
+                line = br.readLine();
+            }
+            String everything = sb.toString();
+        } finally {
+            br.close();
+        }
+        return temp;
     }
     
     public void TeleAgv(){
@@ -146,73 +166,83 @@ public class Main extends SimpleApplication
    }
    
     private void initInputs(){
-//        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
-//        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
-//        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
-//
-//        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
-//        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
-//        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
-//        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
-//        
-//        ActionListener acl = new ActionListener()
-//        {
-//            public void onAction(String name, boolean keyPressed, float tpf)
-//            {
+        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
+
+        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
+        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
+        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
+        
+        ActionListener acl = new ActionListener()
+        {
+            public void onAction(String name, boolean keyPressed, float tpf)
+            {
 //                Container cont = containers.get(0);
 //                Container cont2 = containers.get(1);
 //                Container cont3 = containers.get(2);
-////                if(name.equals("play_stop") && keyPressed)
-////                {
-////                    if (playing) {
-////                        playing = false;
-////                        
-////                    } else {
-////                        playing = true;
-////                    }
-//                //else if
-//                if (keyPressed) {
-//                    switch (name) {
-//                    case "target":
+//                if(name.equals("play_stop") && keyPressed)
+//                {
+//                    if (playing) {
+//                        playing = false;
+//                        
+//                    } else {
+//                        playing = true;
+//                    }
+                //else if
+                if (keyPressed) {
+                    switch (name) {
+                    case "target":
 //                        Crane crane = getNearestCrane(cont.node);
 //                        crane.moveContainer(cont, new Vector3f(55,0,-10));
-//                        break;
-//                    case "target2":
+                        break;
+                    case "target2":
 //                        Crane crane2 = getNearestCrane(cont2.node);
 //                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
-//                        break;
-//                    case "xp":
+                        break;
+                    case "xp":
 //                        cont.node.move(5,0,0);
-////                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
-//                        break;
-//                    case "xm":
-//                        //cont.node.move(-5,0,0);
-//                        if(!locations.isEmpty())
-//                        {
-//                            MoveAgv();
-//                        }
+//                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
+                        break;
+                    case "xm":
+                        //cont.node.move(-5,0,0);
+                        if(!locations.isEmpty())
+                        {
+                            MoveAgv();
+                        }
 //                        cont.node.move(-5,0,0);
-//                        break;
-//                    case "zp":
-//                        cont.node.move(0,0,5);
-//                        break;
-//                    case "zm":
-//                        cont.node.move(0,0,-5);
-////                        TeleAgv();
-//                        //cont.node.move(0,0,-5);
-//                        break;
-//                    }
-//                }
-//            }
-//        };
-//
-//        inputManager.addListener(acl, "play_stop");
-//        inputManager.addListener(acl, "xp");
-//        inputManager.addListener(acl, "zp");
-//        inputManager.addListener(acl, "xm");
-//        inputManager.addListener(acl, "zm");
-//        inputManager.addListener(acl, "target");
-//        inputManager.addListener(acl, "target2");
+                        break;
+                    case "zp":
+//                      cont.node.move(0,0,5);
+                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 11}");
+                            
+                        break;
+                    case "zm":
+                        try 
+                        {
+                            //TeleAgv();
+                            commandHandler.queueCommand(readJsonFile());
+                        }
+                        catch (FileNotFoundException ex) {
+                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        catch (IOException ex) {
+                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                }
+            }
+        };
+
+        inputManager.addListener(acl, "play_stop");
+        inputManager.addListener(acl, "xp");
+        inputManager.addListener(acl, "zp");
+        inputManager.addListener(acl, "xm");
+        inputManager.addListener(acl, "zm");
+        inputManager.addListener(acl, "target");
+        inputManager.addListener(acl, "target2");
    }
     
     private void initLight()
