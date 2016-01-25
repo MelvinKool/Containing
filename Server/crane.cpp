@@ -11,9 +11,7 @@ Crane::Crane(int id,float x,float y,float z,Server* ser)
     server = ser;
 }
 
-string Crane::transfer(int containerID,int destID)
+string Crane::transfer(int containerID,int destID,vector3f dest)
 {
-    return "";
-    //!!!!!!!!!!!!
-    //return server->JGen.craneTransferContainer(containerID,ID,destID);
+    return server->JGen.craneTransferContainer(ID,containerID,dest);
 }

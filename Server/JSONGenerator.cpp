@@ -77,6 +77,11 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 }
 
 //generates JSON for spawning an object
+string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
+{
+    return "";
+}
+
 //templates???
 //used for spawning trucks ships and tranes
 /*string JSONGenerator::spawnObject(Transport& transport)//rotation???
