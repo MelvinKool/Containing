@@ -16,6 +16,7 @@ rapidjson::Document JSONGenerator::createJSONDocument()
 	document.SetObject();
 	return document;
 }
+
 //generates JSON for doing a container transfer between two vehicles
 string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
 {
@@ -46,15 +47,19 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 	document.AddMember("containerId", containerId, allocator);
 	return toString(document);
 }
-//!!!!!!!!!
+
 //generates JSON for spawning an object
 string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
 {
     return "";
 }
 
-string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed)
+//templates???
+//used for spawning trucks ships and tranes
+/*string JSONGenerator::spawnObject(Transport& transport)//rotation???
 {
+	// {'cmdt': 2, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2}},
+	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -76,11 +81,14 @@ string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3
 	spawnRotation.AddMember("Z",coordinate.getZ(),allocator);
 	document.AddMember("spawnRotation",spawnRotation,allocator);
 	return toString(document);
-}
+}*/
 
 //JSON for crane
-string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed,
-										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
+//PUT THOSE OBJECTS IN CRANE CLASS
+//(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
+//float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
+//vector3f rotation???
+string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 {
 	/*
 	string objectStringTemplate =
@@ -117,51 +125,117 @@ string JSONGenerator::spawnObject(int objectId, const char* vehicleType, vector3
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command", "spawnObject", allocator);
-	document.AddMember("objectId",objectId, allocator);
+	document.AddMember("id",craneId, allocator);
 	Value s;
-	s.SetString(vehicleType,strlen(vehicleType),allocator);    // can contain null character, length derived at compile time
+	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
-	document.AddMember("vehicleType", s ,allocator);
-	document.AddMember("maximumSpeed", maximumSpeed, allocator);
-	rapidjson::Value spawnLocation(rapidjson::kObjectType);
-	spawnLocation.AddMember("X",coordinate.getX(),allocator);
-	spawnLocation.AddMember("Y",coordinate.getY(),allocator);
-	spawnLocation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnLocation",spawnLocation,allocator);
-	rapidjson::Value spawnRotation(rapidjson::kObjectType);
-	spawnRotation.AddMember("X",rotation.getX(),allocator);
-	spawnRotation.AddMember("Y",rotation.getY(),allocator);
-	spawnRotation.AddMember("Z",rotation.getZ(),allocator);
-	document.AddMember("spawnRotation",spawnRotation,allocator);
+	document.AddMember("type", s ,allocator);
+	document.AddMember("speed", crane.unloaded_Speed, allocator);
+	rapidjson::Value spawnLocation(rapidjson::kArrayType);
+	spawnLocation.PushBack(crane.currentLocation.getX(), allocator)
+				.PushBack(crane.currentLocation.getY(), allocator)
+				.PushBack(crane.currentLocation.getZ(),allocator);
+	document.AddMember("position",spawnLocation,allocator);
+	rapidjson::Value spawnRotation(rapidjson::kArrayType);
+	spawnRotation.PushBack(rotation.getX(), allocator)
+				.PushBack(rotation.getY(), allocator)
+				.PushBack(rotation.getZ(),allocator);
+	document.AddMember("rotation",spawnRotation,allocator);
 	rapidjson::Value grabber(rapidjson::kObjectType);
-	grabber.AddMember("holderSpeed",holderSpeed, allocator);
-	grabber.AddMember("grabberSpeed",holderSpeed, allocator);
-	grabber.AddMember("grabber_y_offset",holderSpeed, allocator);
+	grabber.AddMember("holderSpeed",crane.currentGrabber.holderSpeed, allocator);
 	//grabberPos
-	rapidjson::Value grabberPositon(rapidjson::kObjectType);
-	grabberPositon.AddMember("X",grabberPos.getX(),allocator);
-	grabberPositon.AddMember("Y",grabberPos.getY(),allocator);
-	grabberPositon.AddMember("Z",grabberPos.getZ(),allocator);
-	grabber.AddMember("grabberPos", grabberPositon, allocator);
-	grabber.AddMember("has_holder",has_holder, allocator);
+	rapidjson::Value grabberPositon(rapidjson::kArrayType);
+	grabberPositon.PushBack(crane.currentGrabber.position.getX(), allocator)
+				.PushBack(crane.currentGrabber.position.getY(), allocator)
+				.PushBack(crane.currentGrabber.position.getZ(),allocator);
+	grabber.AddMember("position", grabberPositon, allocator);
+	grabber.AddMember("has_holder",crane.currentGrabber.has_holder, allocator);
 	document.AddMember("grabber", grabber, allocator);
 	return toString(document);
 }
 
-//spawn multiple objects with one string
-std::string JSONGenerator::spawnObjects(std::vector<std::string> spawnStrings)
+
+//JSON for crane
+//PUT THOSE OBJECTS IN CRANE CLASS
+//(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
+//float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
+//vector3f rotation???
+string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	rapidjson::Value (rapidjson::kArrayType);
+	document.AddMember("id",agvId, allocator);
+	Value s;
+	s.SetString("AGV",strlen("AGV"),allocator);    // can contain null character, length derived at compile time
+	//s = vehicleType.c_str();
+	document.AddMember("type", s ,allocator);
+	document.AddMember("speed", agv.unloaded_Speed, allocator);
+	rapidjson::Value spawnLocation(rapidjson::kArrayType);
+	spawnLocation.PushBack(agv.currentLocation.getX(), allocator)
+				.PushBack(agv.currentLocation.getY(), allocator)
+				.PushBack(agv.currentLocation.getZ(),allocator);
+	document.AddMember("position",spawnLocation,allocator);
+	rapidjson::Value spawnRotation(rapidjson::kArrayType);
+	spawnRotation.PushBack(rotation.getX(), allocator)
+				.PushBack(rotation.getY(), allocator)
+				.PushBack(rotation.getZ(),allocator);
+	document.AddMember("rotation",spawnRotation,allocator);
+	return toString(document);
+}
+
+template<class Allocator>
+rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & alloc) {
+  rapidjson::Value * rtn = new rapidjson::Value();
+
+  if(document.IsObject()) {
+
+    rtn->SetObject();
+    for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
+      rtn->AddMember(itr->name, itr->value, alloc);
+    }
+    return rtn;
+
+  } else if (document.IsArray()) {
+
+    rtn->SetArray();
+    for (int64_t i = 0; i < document.Size(); i++) {
+      rtn->PushBack(document[i], alloc);
+    }
+    return rtn;
+
+  } else {
+
+    delete rtn;
+    return NULL;
+
+  }
+}
+
+//spawn multiple objects with one JSON string
+std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
+{
+	// document is the root of a json message
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "spawnObjects", allocator);
+	rapidjson::Value spawnCommandList(rapidjson::kArrayType);
 	for(string spawnString : spawnStrings)
 	{
-
+		/*Document tempDocument;
+		tempDocument.Parse(spawnString.c_str());*/
+		Value s;
+		const char* spawnString_c_str = spawnString.c_str();
+		s.SetString(spawnString_c_str,strlen(spawnString_c_str),allocator);
+		spawnCommandList.PushBack(s, allocator);
+		/*Document tempDocument;
+		tempDocument.Parse(spawnString.c_str());
+		Value* tempValue = document_to_value(tempDocument, tempDocument.GetAllocator());
+		spawnCommandList.PushBack(*tempValue, allocator);*/
 	}
-	document.AddMember("objects", "", allocator);
+	document.AddMember("objects", spawnCommandList, allocator);
 	return toString(document);
 }
 

@@ -4,7 +4,11 @@
 #include "Files/rapidjson/stringbuffer.h"
 #include "Files/rapidjson/writer.h"
 #include "vector3f.h"
+#include "crane.h"
+#include "agv.h"
 #include <vector>
+#include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -22,13 +26,19 @@ class JSONGenerator
     										float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
     std::string spawnObjects(std::vector<std::string> spawnStrings);
     std::string despawnObject(int transportID){};
+    std::string spawnObject(Transport& transport);//rotation???
+    std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
+    std::string spawnAGV(AGV& agv, int agvId, vector3f rotation);
+    std::string spawnObjects(std::vector<std::string>& spawnStrings);
     std::string generateCommandList(int containerId, std::vector<std::string>& commandList);
     template <class T>
     static std::string toString(T &jsonValue){
     	rapidjson::StringBuffer strbuf;
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     	jsonValue.Accept(writer);
-    	return strbuf.GetString();
+    	string stupidRapidJSONString = strbuf.GetString();
+        stupidRapidJSONString.erase(std::remove(stupidRapidJSONString.begin(), stupidRapidJSONString.end(), '\\'), stupidRapidJSONString.end());
+        return stupidRapidJSONString;
     }
     //std::string toString(rapidjson::Value *jsonValue);
   private:

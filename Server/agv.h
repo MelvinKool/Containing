@@ -7,7 +7,7 @@
 
 class Server;
 
-class AGV : Transport
+class AGV : public Transport
 {
     public:
         AGV(){};
@@ -16,7 +16,6 @@ class AGV : Transport
         AGV(int id,float x,float y,float z,Server* ser);
     private:
         Server* server;
-        int ID;
 };
 
 #endif
