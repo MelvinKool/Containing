@@ -10,10 +10,7 @@ Server::Server()
     {
         xmlParser.readXML(db);
     }
-    cout << "4" << endl;
     connections.initConnections(allObjects,this);
-    cout << "3" << endl;
-    //connections.initConnections(allObjects);
     connections.acceptClients();
     httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");

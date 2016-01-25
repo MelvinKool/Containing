@@ -22,6 +22,7 @@ private:
     std::thread* t_tick;
     bool stop;
     std::mutex mtx;
+    int multiplier;
 
     void tick();
 };

@@ -1,6 +1,8 @@
 #include "Timer.h"
 #include <unistd.h>
 #include <sstream>
+#include <iostream>
+#include <string>
 
 Timer::Timer()
 {
@@ -11,6 +13,11 @@ Timer::Timer()
     this->minute = 0;
 
     this->stop = false;
+
+    std::cout << "Set time multiplier: ";
+    std::string temp;
+    getline(std::cin, temp);
+    this->multiplier = atoi(temp.c_str());
 }
 
 Timer::~Timer()
@@ -65,20 +72,20 @@ void Timer::tick()
     while(!this->stop)
     {
         this->mtx.lock();
-        this->minute++;
-        if(this->minute == 60)
+        this->minute += 1 * this->multiplier;
+        if(this->minute >= 60)
         {
             this->minute = 0;
             this->hour++;
-            if(this->hour == 24)
+            if(this->hour >= 24)
             {
                 this->hour = 0;
                 this->day++;
-                if(this->day == 32)
+                if(this->day >= 32)
                 {
                     this->day = 1;
                     this->month++;
-                    if(this->month == 13)
+                    if(this->month >= 13)
                     {
                         this->month = 1;
                         this->year++;
@@ -87,6 +94,7 @@ void Timer::tick()
             }
         }
         this->mtx.unlock();
+        std::cout << this->getTime() << std::endl;
         sleep(1);
     }
 }
