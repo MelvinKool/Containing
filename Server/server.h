@@ -26,7 +26,7 @@ class Server
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
-        Crane crane;
+        Crane cranes[87];
         AGV agvs[100];
         float x = 0,y = 0,z = 0;
         int dump = 2,train = 6,truck = 7,ship = 8;
@@ -47,7 +47,7 @@ class Server
 
         bool stop = false,trainSpawned =false;
         std::vector<vector3f> truckStops;
-        std::string vehicle = "";
+        std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
         int containerId = -1,agvID = 0;
         std::vector<std::string> commands;
 };

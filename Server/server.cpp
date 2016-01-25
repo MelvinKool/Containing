@@ -4,6 +4,15 @@
 
 using namespace std;
 
+/*
+    OBJECT-ID's:
+    0-7     FreightShip Crane's
+    8-52    Storage Crane's
+    53-62   SeaShip Crane's
+    63-66   Train Crane's
+    67-86   Truck Crane's
+*/
+
 Server::Server()
 {
     if(db.isConnected())
@@ -30,16 +39,24 @@ Connections* Server::getConnections()
 {
     return &connections;
 }
+
 void Server::checkContainers()
 {
+    timer.start();
+    currentDate = timer.getDate();
+    currentTime = timer.getTime();
+
     while (!stop)
     {
         cout<<"container check"<<endl;
         this_thread::sleep_for(chrono::seconds(1));
 
         //Logics outline and stuffs to send and let everything move
-        //TODO getting the right time into querries!!
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID ORDER BY arr.date ASC,arr.timeFrom,ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";// AND arr.date = "+ currentDate.c_str() +" AND arr.timeFrom = "+ currentTime;
+        previousDate = currentDate;
+        previousTime = currentTime;
+        currentDate = timer.getDate();
+        currentTime = timer.getTime();
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID  AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         /*
@@ -94,19 +111,21 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="vrachtauto") //TODO
     {
+        //crane ids: 67-86;
         int truckLoc = getTruckStop();
         vector3f truckLocation = truckStops[truckLoc];
-        writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
+        //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
         commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
-        commands.push_back(crane.transfer(containerId,truckLoc,agvID)); //get container from truck to agv
+        commands.push_back(cranes[67+truckLoc].transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
         commands.push_back(JGen.despawnObject(transportId));
     }
 
-    if(vehicle=="trein") //TODO
+    if(vehicle=="trein")
     {
+        //crane ids: 63-66;
         if (!trainSpawned)
         {
-            string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\";";// AND arr.date = "+ currentDate.c_str() +" AND arr.timeFrom = "+ currentTime;
+            string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\" AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\";";
 
             MYSQL_RES* resContainerList = db.select(treinContainers);
             MYSQL_ROW row;
@@ -123,14 +142,15 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             }
             mysql_free_result(resContainerList);
 
-            writeToSim(JGen.spawnObject("Train",containerIds))
+            writeToSim(JGen.spawnObject("Train",containers));
         }
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
-        commands.push_back(crane.transfer(containerId,agvID));
+        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),false));
+        commands.push_back(cranes[63].transfer(containerId,agvID,vector3f(0,0,0)));
     }
     /*
     if(vehicle=="zeeschip") //TODO
     {
+        //crane ids: 53-62;
         //TODO spawn seaship
         commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
@@ -144,6 +164,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="binnenschip") //TODO
     {
+        //crane ids: 0-7;
         //TODO spawn ship
         commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
@@ -156,7 +177,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
     */
     commands.push_back(agvs[agvID].goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
-    commands.push_back(crane.transfer(containerId,24,dump));
+    commands.push_back(cranes[50].transfer(containerId,dump,vector3f(0,0,0)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 

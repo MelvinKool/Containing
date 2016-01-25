@@ -13,7 +13,7 @@ class Transport
     protected:
         vector3f currentLocation = vector3f(0,0,0);
     private:
-        int loaded_Speed, unloaded_Speed;
+        int loaded_Speed, unloaded_Speed,ID;
 };
 
 #endif //TRANSPORT_H
