@@ -80,17 +80,14 @@ class JSONReader{
                 y = position[1].GetDouble();
                 z = position[2].GetDouble();
                 cout << x << " " << y << " " << z << endl;
-                cout << "spawning vehicle ..." << endl;
                 tempVect = vector3f(x,y,z);
                 //generate spawn json
                 //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
                 //JSONGenerator::spawnObject(int, char*, vector3f, vector3f, float, float, float, float, vector3f, bool)
                 if(key == "AGV")
                 {
-                    cout << "AGV" << endl;
                     AGV agv((int)i,x,y,z,server);
                     string agvSpawn = generator.spawnAGV(agv, (int) i, rotationVect);
-                    cout << "agv spawn " << agvSpawn << endl;
                     allSpawnObjects.push_back(agvSpawn);
                 }
                 else{

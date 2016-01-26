@@ -784,10 +784,7 @@ public:
     //!@name Type
     //@{
 
-    Type GetType()  const {
-        //std::cout << "begin" << " flags " << flags_ << " "<< kTypeMask << std::endl;
-        return static_cast<Type>(flags_ & kTypeMask);
-    }
+    Type GetType()  const { return static_cast<Type>(flags_ & kTypeMask); }
     bool IsNull()   const { return flags_ == kNullFlag; }
     bool IsFalse()  const { return flags_ == kFalseFlag; }
     bool IsTrue()   const { return flags_ == kTrueFlag; }
@@ -800,10 +797,7 @@ public:
     bool IsInt64()  const { return (flags_ & kInt64Flag) != 0; }
     bool IsUint64() const { return (flags_ & kUint64Flag) != 0; }
     bool IsDouble() const { return (flags_ & kDoubleFlag) != 0; }
-    bool IsString() const {
-        std::cout << flags_ << " " << kStringFlag << std::endl;
-        return (flags_ & kStringFlag) != 0;
-    }
+    bool IsString() const { return (flags_ & kStringFlag) != 0; }
 
     //@}
 

@@ -77,6 +77,10 @@ public class CommandHandler
             case "spawnTrain":
                 this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
                 break;
+            case "despawnVehicle":
+                int id = jsonObject.getInt("vehicleId");
+                this.objectloader.vehicles.remove(id);
+                break;
         }
     }
     

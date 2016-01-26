@@ -221,7 +221,6 @@ public class Main extends SimpleApplication
                         
                         try 
                         {
-                            //TeleAgv();
                             commandHandler.ParseJSON(readJsonFile());
                         }
                         catch (FileNotFoundException ex) {

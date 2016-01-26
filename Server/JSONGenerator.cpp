@@ -226,24 +226,22 @@ std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 	{
 		/*Document tempDocument;
 		tempDocument.Parse(spawnString.c_str());*/
-		/*Value s;
+		Value s;
 		const char* spawnString_c_str = spawnString.c_str();
 		s.SetString(spawnString_c_str,strlen(spawnString_c_str),allocator);
-		spawnCommandList.PushBack(s, allocator);*/
-		Document tempDocument;
+		spawnCommandList.PushBack(s, allocator);
+		/*Document tempDocument;
 		tempDocument.Parse(spawnString.c_str());
 		rapidjson::Document::AllocatorType& tempDocAllocator = tempDocument.GetAllocator();
 		Value* tempValue = document_to_value(tempDocument, tempDocAllocator);
 		//string toString(*tempValue);
-		spawnCommandList.PushBack(*tempValue, allocator);
+		spawnCommandList.PushBack(*tempValue, allocator);*/
 	}
-	cout << "finaltest" << endl;
 	document.AddMember("objects", spawnCommandList, allocator);
-	for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
+	/*for (rapidjson::Value::MemberIterator itr = document.MemberBegin(); itr != document.MemberEnd(); ++itr) {
 		cout <<"name: " << toString(itr->name) << " value " << toString(itr->value) << endl;
 	  //rtn->AddMember(itr->name, itr->value, alloc);
-    }
-	cout <<" returing..." << endl;
+  }*/
 	return toString(document);
 }
 
