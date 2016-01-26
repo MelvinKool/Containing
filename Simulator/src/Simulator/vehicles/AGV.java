@@ -6,7 +6,6 @@ import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.PlayState;
 import com.jme3.cinematic.events.MotionEvent;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
@@ -22,6 +21,7 @@ public class AGV extends WorldObject
     private List<Vector3f> wayPointList = new ArrayList<>();
     private float duration;
     private float totalDistance;
+    private float agvSpeed;
     private Vector3f vectorZero = new Vector3f(0,0,0);
 
     public Container container;
@@ -31,27 +31,29 @@ public class AGV extends WorldObject
         super(rootNode, assetManager, position, model);
     }
     
-    //public void setPath(List<Vector3f wayPoints>, float distance, float agvSpeed)
     public void setPath(List<Vector3f> wayPoints, float distance)
     {
         if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
         {
             return;
         }
+        if(container != null)
+            agvSpeed = 20;
+        else
+            agvSpeed = 40;
+        
+        System.out.println("speed = " + agvSpeed);
         motionPath = new MotionPath();
         this.wayPointList = wayPoints;
         System.out.println(wayPoints);
         this.totalDistance = distance;
-        this.duration = this.totalDistance;
-        //this.duration = this.totalDistance/agvSpeed;
+        this.duration = this.totalDistance/agvSpeed;
         this.motionPath.setPathSplineType(Spline.SplineType.Linear);
         if(wayPoints.size() > 0)
         {
             motionPath.addWayPoint(node.getWorldTranslation());
             for(Vector3f wayPoint : this.wayPointList)
-            {
                 motionPath.addWayPoint(wayPoint);
-            }
             System.out.println(motionPath.getNbWayPoints());
             startMotionEvent();
         }
@@ -73,13 +75,18 @@ public class AGV extends WorldObject
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex)
     {
+        this.node.setLocalTranslation(motionPath.getWayPoint(wayPointIndex));
+        this.node.lookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
         this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
-        if(wayPointList.size() == 0)
+        if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
-            this.container.operationDone();
+            if(this.container != null)
+            {
+                this.container.operationDone();
+            }
             this.motionEvent = null;
             this.motionPath = null;
-        }            
+        }           
     }
 	
     public void attachContainer(Container container) 

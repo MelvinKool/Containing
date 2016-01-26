@@ -67,7 +67,6 @@ public class Main extends SimpleApplication
         
         //create a train of 80 carts long.
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
-        
         initWorld();
         initLight();
         initInputs();
@@ -80,7 +79,6 @@ public class Main extends SimpleApplication
             connection = new Connection(worldObjects, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
-
     }
     
     public String readJsonFile() throws FileNotFoundException, IOException{
@@ -215,14 +213,16 @@ public class Main extends SimpleApplication
                         break;
                     case "zp":
 //                      cont.node.move(0,0,5);
-                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 11}");
+                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}");
                             
                         break;
                     case "zm":
+                        Container container = worldObjects.addContainer(1, commandHandler);
+                        
                         try 
                         {
                             //TeleAgv();
-                            commandHandler.queueCommand(readJsonFile());
+                            commandHandler.ParseJSON(readJsonFile());
                         }
                         catch (FileNotFoundException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,6 +230,7 @@ public class Main extends SimpleApplication
                         catch (IOException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        worldObjects.agvs.get(1).attachContainer(container);
                         break;
                     }
                 }
