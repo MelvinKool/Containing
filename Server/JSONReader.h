@@ -93,7 +93,8 @@ class JSONReader{
                 else{
                     //this is a crane
                     cout << "crane" << endl;
-                    Crane crane();
+                    //Crane::Crane(int id,float x,float y,float z,Server* ser)
+                    Crane crane((int) i, );
 
                 }
                 //simulator.writeToSim(final_JSON_string);

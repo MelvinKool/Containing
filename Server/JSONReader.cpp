@@ -23,19 +23,21 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     }
     Document document;
     document.Parse(transportJSON.c_str());
+    //vector with all objects to spawn
+    std::vector<std::string> allObjectsStrVector;
     //`JSONReader::loadVehicle(char const*, rapidjson::GenericDocument<rapidjson::UTF8<char>,
     //rapidjson::MemoryPoolAllocator<rapidjssimulator.writeToSim(genJSON);on::CrtAllocator>, rapidjson::CrtAllocator>&,
     //Connections&, std::vector<Crane, std::allocator<Crane> >&)'
     //loadVehicle("FreightShip", document,*simulator,freightShipCranes);
     //loadVehicle("Storage", document,*simulator,storageCranes);
     std::vector<std::string> seaShipCraneObjects = loadVehicle("SeaShip", document,allObjects.seaShipCranes);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), seaShipCraneObjects.begin(), seaShipCraneObjects.end() );
     //loadVehicle("Train", document,*simulator,trainCranes);
     std::vector<std::string> agvObjects = loadVehicle("AGV", document, allObjects.agvs);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), agvObjects.begin(), agvObjects.end() );
     //loadVehicle("TruckCrane", document,*simulator,truckCranes);
     //concentrate vectors
-    std::vector<std::string> allObjectsStrVector;
     //allObjectsStrVector.push_back(testJSON);
-    allObjectsStrVector.insert( allObjectsStrVector.end(), agvObjects.begin(), agvObjects.end() );
     JSONGenerator generator;
     string allObjectsJSON = generator.spawnObjects(allObjectsStrVector);
     //server->writeToSim();
