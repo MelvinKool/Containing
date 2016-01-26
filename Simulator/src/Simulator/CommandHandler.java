@@ -32,7 +32,7 @@ public class CommandHandler
     }
     
     public void executeCommand(JSONObject jsonObject) {
-        String command = jsonObject.getString("Command");
+         String command = jsonObject.getString("Command");
         int vehicleId;
         AGV agv = null;
         switch(command)
@@ -65,9 +65,6 @@ public class CommandHandler
                     Locations.add(new Vector3f(x,y,z));
                 }
                 totalDistance = (float)jsonObject.getDouble("totalDistance");
-                //MELVIN EIGENLIJK HEB IK OOK SNELHEID NODIG
-                //speed = (float)jsonObject.getDouble("agvSpeed");
-                //Prevent trying to move vehicles which dont exist.
                 agv.setPath(Locations, totalDistance);
                 //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance, speed);
                 break;

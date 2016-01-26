@@ -39,7 +39,6 @@ public class Main extends SimpleApplication
     //private Node dockCraneNode;
     //private List<Container> containers;
     private Connection connection;
-    private List<Vector3f> locations = new ArrayList<>();
     private ObjectLoader worldObjects;
     private CommandHandler commandHandler;
 
@@ -67,7 +66,6 @@ public class Main extends SimpleApplication
         
         //create a train of 80 carts long.
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
-        
         initWorld();
         initLight();
         initInputs();
@@ -80,7 +78,6 @@ public class Main extends SimpleApplication
             connection = new Connection(worldObjects, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
-
     }
     
     public String readJsonFile() throws FileNotFoundException, IOException{
@@ -100,23 +97,7 @@ public class Main extends SimpleApplication
         }
         return temp;
     }
-    
-    public void TeleAgv(){
-        //worldObjects.agvs.get(2).node.move(0,0,9.75f);
-//        locations.add(new Vector3f(113.75f, 0.0f, -63.75f));
-//        locations.add(new Vector3f(38.75f, 0.0f, -63.75f));
-//        locations.add(new Vector3f(38.75f, 0.0f, -49.5f));
-//        locations.add(new Vector3f(100.00f, 0.0f, -49.5f));
-        locations.add(new Vector3f(100f, 0.0f, -50f));
-        locations.add(new Vector3f(100f, 0.0f, -60f));
-//        locations.add(new Vector3f(90f, 0.0f, -40f));
-//        locations.add(new Vector3f(80f, 0.0f, -40f));
-//        System.out.println(locations);
-    }
-    public void MoveAgv(){
-        //worldObjects.agvs.get(2).setPath(locations,2000f);
-    }
-    
+       
     boolean test = false; //TODO: remove this line
     @Override
     public void simpleUpdate(float tpf)
@@ -202,27 +183,21 @@ public class Main extends SimpleApplication
 //                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
                         break;
                     case "xp":
-//                        cont.node.move(5,0,0);
-//                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
+                        
                         break;
                     case "xm":
-                        //cont.node.move(-5,0,0);
-                        if(!locations.isEmpty())
-                        {
-                            MoveAgv();
-                        }
-//                        cont.node.move(-5,0,0);
+                       
                         break;
                     case "zp":
-//                      cont.node.move(0,0,5);
-                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 11}");
+                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}");
                             
                         break;
                     case "zm":
+                        Container container = worldObjects.addContainer(1, commandHandler);
+                        
                         try 
                         {
-                            //TeleAgv();
-                            commandHandler.queueCommand(readJsonFile());
+                            commandHandler.ParseJSON(readJsonFile());
                         }
                         catch (FileNotFoundException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,6 +205,7 @@ public class Main extends SimpleApplication
                         catch (IOException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        worldObjects.agvs.get(1).attachContainer(container);
                         break;
                     }
                 }
