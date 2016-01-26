@@ -30,9 +30,15 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     //Connections&, std::vector<Crane, std::allocator<Crane> >&)'
     //loadVehicle("FreightShip", document,*simulator,freightShipCranes);
     //loadVehicle("Storage", document,*simulator,storageCranes);
-    std::vector<std::string> seaShipCraneObjects = loadVehicle("SeaShip", document,allObjects.seaShipCranes);
+    std::vector<std::string> seaShipCraneObjects = loadVehicle("SeaShip", document,allObjects.allCranes);
     allObjectsStrVector.insert( allObjectsStrVector.end(), seaShipCraneObjects.begin(), seaShipCraneObjects.end() );
+    //add the cranes to the crane spawnstrings vector
+    //allCranesVector.insert(allCranesVector.end(), seaShipCraneObjects.begin(), seaShipCraneObjects.end());
     //loadVehicle("Train", document,*simulator,trainCranes);
+    //insert all cranes
+
+    //add all cranes to the spawnstrings vector
+    //add all agvs to the spawnstrings vector
     std::vector<std::string> agvObjects = loadVehicle("AGV", document, allObjects.agvs);
     allObjectsStrVector.insert( allObjectsStrVector.end(), agvObjects.begin(), agvObjects.end() );
     //loadVehicle("TruckCrane", document,*simulator,truckCranes);

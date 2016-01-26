@@ -22,7 +22,7 @@ class Crane : public Transport
         int ID;
         Server* server;
     public:
-        Crane(int id,float x,float y,float z,Server* ser);
+        Crane(const char* craneType, int id,float x,float y,float z,Server* ser);
 };
 
 #endif

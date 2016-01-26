@@ -84,18 +84,22 @@ class JSONReader{
                 //generate spawn json
                 //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
                 //JSONGenerator::spawnObject(int, char*, vector3f, vector3f, float, float, float, float, vector3f, bool)
+                int vehicleId = transportVector.size();
                 if(key == "AGV")
                 {
-                    AGV agv((int)i,x,y,z,server);
-                    string agvSpawn = generator.spawnAGV(agv, (int) i, rotationVect);
+                    AGV agv(vehicleId,x,y,z,server);
+                    string agvSpawn = generator.spawnAGV(agv, vehicleId, rotationVect);
                     allSpawnObjects.push_back(agvSpawn);
+                    transportVector.push_back(agv);
                 }
                 else{
                     //this is a crane
                     cout << "crane" << endl;
                     //Crane::Crane(int id,float x,float y,float z,Server* ser)
-                    Crane crane((int) i, );
-
+                    Crane crane(key, vehicleId,x,y,z,server);
+                    string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
+                    allSpawnObjects.push_back(craneSpawn);
+                    transportVector.push_back(crane);
                 }
                 //simulator.writeToSim(final_JSON_string);
                 //spawn objects in simulator

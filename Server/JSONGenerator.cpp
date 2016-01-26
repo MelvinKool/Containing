@@ -149,11 +149,13 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 		);
 	return object;
 	*/
+
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",craneId, allocator);
+	cout << "type" << crane.vehicleType << endl;
 	Value s;
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
@@ -177,6 +179,8 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 				.PushBack(crane.currentGrabber.position.getY(), allocator)
 				.PushBack(crane.currentGrabber.position.getZ(),allocator);
 	grabber.AddMember("position", grabberPositon, allocator);
+	grabber.AddMember("speed",crane.currentGrabber.speed,allocator);
+	grabber.AddMember("y_offset",crane.currentGrabber.y_offset,allocator);
 	grabber.AddMember("has_holder",crane.currentGrabber.has_holder, allocator);
 	document.AddMember("grabber", grabber, allocator);
 	return toString(document);
