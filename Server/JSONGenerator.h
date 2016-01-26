@@ -33,12 +33,9 @@ class JSONGenerator
     static std::string toString(T &jsonValue){
     	rapidjson::StringBuffer strbuf;
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-        cout << "blah" << endl;
     	jsonValue.Accept(writer);
-        cout << "foo" << endl;
     	string stupidRapidJSONString = strbuf.GetString();
-        cout << "test" << endl;
-        stupidRapidJSONString.erase(std::remove(stupidRapidJSONString.begin(), stupidRapidJSONString.end(), '\\'), stupidRapidJSONString.end());
+        //stupidRapidJSONString.erase(std::remove(stupidRapidJSONString.begin(), stupidRapidJSONString.end(), '\\'), stupidRapidJSONString.end());
         return stupidRapidJSONString;
     }
     //std::string toString(rapidjson::Value *jsonValue);
