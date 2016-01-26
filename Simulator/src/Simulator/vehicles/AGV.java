@@ -38,7 +38,7 @@ public class AGV extends WorldObject
             return;
         }
         if(container != null)
-            agvSpeed = 20;
+            agvSpeed = 200;
         else
             agvSpeed = 40;
         
@@ -91,12 +91,8 @@ public class AGV extends WorldObject
 	
     public void attachContainer(Container container) 
     {
-        Vector3f pos = container.node.getWorldTranslation();
-        Quaternion rot = container.node.getWorldRotation();
-        this.node.attachChild(container.node);
-        container.node.setLocalTranslation(this.node.worldToLocal(pos, null));
-        this.node.attachChild(container.node);
         this.container = container;
-        this.container.setVehicle(this);
+        this.node.attachChild(container.node);
+        this.container.node.setLocalTranslation(0, 1.2f, 0);
     }
 }
