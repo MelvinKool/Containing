@@ -40,6 +40,17 @@ Connections* Server::getConnections()
     return &connections;
 }
 
+void Server::startRunning()
+{
+    t1 = thread( [this] { this->checkContainers(); } );
+}
+
+void Server::stopRunning()
+{
+    stop = true;
+    t1.join();
+}
+
 void Server::checkContainers()
 {
     timer.start();
@@ -216,11 +227,6 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
     */
-}
-
-void Server::stopRunning()
-{
-    stop = true;
 }
 
 int Server::getFreeAGV()

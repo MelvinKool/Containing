@@ -19,6 +19,7 @@ class Server
         Server();
         void writeToSim(std::string message);
         void checkContainers();
+        void startRunning();
         void stopRunning();
         Connections* getConnections();
 
@@ -43,6 +44,7 @@ class Server
         Connections connections;
         HttpServer httpserver;
         Timer timer;
+        thread t1;
 
         bool stop = false,trainSpawned =false;
         std::vector<vector3f> truckStops;

@@ -7,18 +7,12 @@
 
 using namespace std;
 
-void containers(Server* ser)
-{
-    ser->checkContainers();
-}
-
 int main(int argc, char* argv[])
 {
     cout << endl << "Containing Server." << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
     Server* server = new Server();
     //server->crane = Crane(12,0.0,0.0,0.0,server);
-    thread t1(containers,server);
 
     while(true)
     {
@@ -30,7 +24,6 @@ int main(int argc, char* argv[])
 
     cout << "Closing..." << endl;
     server->stopRunning();
-    t1.join();
     delete server;
     return 0;
 }
