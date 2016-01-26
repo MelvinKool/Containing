@@ -22,8 +22,8 @@ Server::Server()
     connections.initConnections(allObjects,this);
     connections.acceptClients();
     httpserver.init(connections);
-    pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");
-    pathFinderUnloaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsUnloadedAGV.csv");
+    pathFinderLoaded = ShortestPathDijkstra("./Files/RouteFiles/LoadedRoutes.csv");
+    pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
     for (int stops = 1; stops < 21; stops++)
     {
         truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,25.0));
@@ -56,7 +56,7 @@ void Server::checkContainers()
         previousTime = currentTime;
         currentDate = timer.getDate();
         currentTime = timer.getTime();
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID  AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";// AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         /*
@@ -88,7 +88,7 @@ void Server::checkContainers()
             }
             catch (string error)
             {
-                //cout<<error<<endl;
+                cout<<error<<endl;
             }
         }
         mysql_free_result(res2);
@@ -115,7 +115,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         vector3f truckLocation = truckStops[truckLoc];
         //TODO void expression?!?
         //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
-        commands.push_back(agvs[agvID].goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
         commands.push_back(cranes[67+truckLoc].transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
         commands.push_back(JGen.despawnObject(transportId));
     }
@@ -131,20 +131,13 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             MYSQL_ROW row;
             while((row = mysql_fetch_row(resContainerList)) != NULL)
             {
-                try
-                {
-                    containers.push_back(atoi(row[0]));
-                }
-                catch (string error)
-                {
-                    //cout<<error<<endl;
-                }
+                containers.push_back(atoi(row[0]));
             }
             mysql_free_result(resContainerList);
 
             writeToSim(JGen.spawnObject("Train",containers));
         }
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),false));
         commands.push_back(cranes[63].transfer(containerId,agvID,vector3f(0,0,0)));
     }
     /*
@@ -152,7 +145,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     {
         //crane ids: 53-62;
         //TODO spawn seaship
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
         /*
         if(crane.currentRowContainerCount()==0)
@@ -166,7 +159,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     {
         //crane ids: 0-7;
         //TODO spawn ship
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
         /*
         if(crane.currentRowContainerCount()==0)
@@ -176,7 +169,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
     }
     */
-    commands.push_back(agvs[agvID].goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
+    commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
     commands.push_back(cranes[50].transfer(containerId,dump,vector3f(0,0,0)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
@@ -189,12 +182,12 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     agvID = getFreeAGV();
 
     //crane.goTo(vector3f(x,y,z)); //crane at container dump
-    commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),false)); // send agv to dump row
+    commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false)); // send agv to dump row
     commands.push_back(crane.transfer(containerId,agvID)); //transfer container from dump to agv
     if(vehicle=="trein") //TODO
     {
         //TODO spawn train //-1 if no container present
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,train)); //transfer container from agv to train
     }
@@ -202,7 +195,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     if(vehicle=="vrachtauto") //TRUCK YEAH!! //TODO
     {
         //TODO spawn truck
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,truck)); //transfer container from agv to truck
     }
@@ -211,7 +204,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     {
         //TODO spawn seaship
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
 
@@ -219,7 +212,7 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     {
         //TODO spawn ship
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
-        commands.push_back(agvs[agvID].goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         commands.push_back(crane.transfer(containerId,ship)); //transfer container from agv to ship
     }
     */
@@ -257,7 +250,7 @@ int Server::getFreeAGV()
         double distance = -1;
         while (distance < 0)
         {
-            AGV agv = agvs[e];
+            AGV agv = allObjects.agvs[e];
             if (agv.getWorkingState()) //if agv is bussy, dont even try to give it a new order
             {
                 if (e > 98)

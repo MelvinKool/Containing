@@ -27,7 +27,6 @@ class Server
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
         Crane cranes[87];
-        AGV agvs[100];
         float x = 0,y = 0,z = 0;
         int dump = 2,train = 6,truck = 7,ship = 8;
 

@@ -30,15 +30,16 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
-
+    cout<<"File opened"<<endl;
 	if(loadRoutes.is_open())
     {
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;
+        cout<<"starting while loop"<<endl;
 		while(loadRoutes >> from >> to >> laden)
 		{
-			//cout << "from: " << from << " to: " << to << " distance: " << distance << endl;
+			cout << "from: " << from << " to: " << to << endl;
 			distanceBetween = distance(from,to);
 			Place * fromPlace = new Place(from);
 			Place * toPlace = new Place(to);
