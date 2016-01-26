@@ -74,7 +74,7 @@ public class AGV extends WorldObject
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex)
     {
         this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
-        if(wayPointList.size() == 0)
+        if(this.motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
             this.container.operationDone();
             this.motionEvent = null;
@@ -91,5 +91,6 @@ public class AGV extends WorldObject
         this.node.attachChild(container.node);
         this.container = container;
         this.container.setVehicle(this);
+        this.container.operationDone();
     }
 }

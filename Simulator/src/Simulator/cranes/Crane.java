@@ -253,6 +253,7 @@ public class Crane extends WorldObject {
         this.cmd = Cmd.RESET;
         this.grabber.resetPosition(this);
         this.targetContainer.operationDone();
+        this.targetContainer = null;
     }
     
     /**

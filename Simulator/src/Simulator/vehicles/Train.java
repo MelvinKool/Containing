@@ -71,7 +71,7 @@ public class Train
     
     private void initTrainCarts(int length, AssetManager assetManager, Spatial trainCartModel) 
     {
-        Vector3f position = Vector3f.ZERO;
+        Vector3f position = new Vector3f(0, 0, 0);
         
         for (int i = 0; i < length; i++) {
             position = position.set(0.0f, 0.0f, -((this.locomotive.getPosition().x + 18.45f) * i) - 13.21f);

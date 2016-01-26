@@ -22,13 +22,19 @@ public class CommandHandler
     public void setContainerCommands(JSONObject commands) {
         int containerId = commands.getInt("container");
         Container container = this.objectloader.containers.get(containerId);
-        List<JSONObject> commandList = (List<JSONObject>) commands.getJSONArray("commands").iterator();
-        container.setCommands(commandList);        
+        JSONArray commandArr = commands.getJSONArray("commands");
+        List<JSONObject> commandList = new ArrayList<>();
+        for (int i = 0; i < commandArr.length(); i++) {
+            commandList.add(commandArr.getJSONObject(i));
+        }
+        container.setCommands(commandList);  
+        container.operationDone();
     }
     
     public void executeCommand(JSONObject jsonObject) {
-         String command = jsonObject.getString("Command");
+        String command = jsonObject.getString("Command");
         int vehicleId;
+        AGV agv = null;
         switch(command)
         {
             case "containerCommands":
@@ -37,6 +43,15 @@ public class CommandHandler
             case "moveTo":
                 vehicleId = jsonObject.getInt("vehicleId");
                 JSONArray route = jsonObject.getJSONArray("Route");
+                agv = objectloader.agvs.get(vehicleId);
+                if (agv == null) {
+                    return;
+                }
+                if (jsonObject.has("container")) {
+                    int containerId = jsonObject.getInt("container");
+                    Container container = this.objectloader.containers.get(containerId);
+                    agv.container = container;
+                }
                 List Locations = new ArrayList<>();
                 float x,y,z;
                 float totalDistance;
@@ -53,19 +68,13 @@ public class CommandHandler
                 //MELVIN EIGENLIJK HEB IK OOK SNELHEID NODIG
                 //speed = (float)jsonObject.getDouble("agvSpeed");
                 //Prevent trying to move vehicles which dont exist.
-                if(objectloader.agvs.get(vehicleId) == null)
-                {
-                    System.out.println("vehicleID equals null");
-                    break;
-                }
-                else
-                    objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
-                    //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance, speed);
+                agv.setPath(Locations, totalDistance);
+                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance, speed);
                 break;
             case "agvAttachContainer":
                 int agvId = jsonObject.getInt("agvId");
                 int containerId = jsonObject.getInt("containerId");
-                AGV agv = this.objectloader.agvs.get(agvId);
+                agv = this.objectloader.agvs.get(agvId);
                 Container cont = this.objectloader.containers.get(containerId);
                 agv.attachContainer(cont);
                 break;
@@ -73,7 +82,7 @@ public class CommandHandler
                 this.craneMoveContainer(jsonObject);
                 break;
             case "spawnObjects":
-            this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
+                this.objectloader.spawnObjects(jsonObject.getJSONArray("objects"));
                 break;
             case "spawnTruck":
                 this.spawnTruck(jsonObject);
@@ -107,17 +116,24 @@ public class CommandHandler
 
     private void craneMoveContainer(JSONObject jsonObject)
     {
+        Vector3f targetVec = null;
         int craneId = jsonObject.getInt("craneId");
         int containerId = jsonObject.getInt("containerId");
         Crane crane = this.objectloader.cranes.get(craneId);
         Container container = this.objectloader.containers.get(containerId);
-        JSONArray target = jsonObject.getJSONArray("target");
-        int sortFieldId = jsonObject.getInt("sortField");
-        int x = target.getInt(0);
-        int y = target.getInt(1);
-        int z = target.getInt(2);
-        Vector3f targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
-        
+        Object target = jsonObject.get("target");
+        try
+        {
+            JSONArray targetIndex = (JSONArray) target;
+            int sortFieldId = jsonObject.getInt("sortField");
+            int x = targetIndex.getInt(0);
+            int y = targetIndex.getInt(1);
+            int z = targetIndex.getInt(2);
+            targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
+        } catch (ClassCastException ex) {
+            int agvId = (int) target;
+            targetVec = this.objectloader.agvs.get(agvId).getPosition();
+        }        
         crane.moveContainer(container, targetVec);
     }
 
