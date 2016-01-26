@@ -1,5 +1,5 @@
 #include "server.h"
-
+#include "connections.h"
 #include <iostream>
 
 using namespace std;
@@ -10,7 +10,10 @@ Server::Server()
     {
         xmlParser.readXML(db);
     }
-    connections.initConnections(allObjects);
+    cout << "4" << endl;
+    connections.initConnections(allObjects,this);
+    cout << "3" << endl;
+    //connections.initConnections(allObjects);
     connections.acceptClients();
     httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/ObjectsJSON/pathsLoadedAGV.csv");

@@ -27,7 +27,7 @@ public class CommandHandler
     }
     
     public void executeCommand(JSONObject jsonObject) {
-        String command = jsonObject.getString("Command");
+         String command = jsonObject.getString("Command");
         int vehicleId;
         switch(command)
         {
@@ -35,13 +35,12 @@ public class CommandHandler
                 this.setContainerCommands(jsonObject);
                 break;
             case "moveTo":
-                //code for parsing moveto
-                //get the vehicle ID
                 vehicleId = jsonObject.getInt("vehicleId");
-                //get the route node
                 JSONArray route = jsonObject.getJSONArray("Route");
                 List Locations = new ArrayList<>();
                 float x,y,z;
+                float totalDistance;
+                //float speed;
                 for(Object coordinate : route)
                 {
                     JSONArray coord = (JSONArray)coordinate;
@@ -50,10 +49,18 @@ public class CommandHandler
                     z = (float)coord.getDouble(2);
                     Locations.add(new Vector3f(x,y,z));
                 }
-                float totalDistance = (float)jsonObject.getDouble("totalDistance");
-                System.out.println("totaldistance = "+ totalDistance);
-                System.out.println("Locations list: "+Locations);
-                objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                totalDistance = (float)jsonObject.getDouble("totalDistance");
+                //MELVIN EIGENLIJK HEB IK OOK SNELHEID NODIG
+                //speed = (float)jsonObject.getDouble("agvSpeed");
+                //Prevent trying to move vehicles which dont exist.
+                if(objectloader.agvs.get(vehicleId) == null)
+                {
+                    System.out.println("vehicleID equals null");
+                    break;
+                }
+                else
+                    objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance);
+                    //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance, speed);
                 break;
             case "agvAttachContainer":
                 int agvId = jsonObject.getInt("agvId");
@@ -128,7 +135,8 @@ public class CommandHandler
         this.commandQueue.add(input);
     }
     
-    public void executeQueued() {
+    public void executeQueued()
+    {
         if (!this.commandQueue.isEmpty())
         {
             for(; 0 < commandQueue.size(); )

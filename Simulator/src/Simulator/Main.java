@@ -84,7 +84,7 @@ public class Main extends SimpleApplication
     }
     
     public String readJsonFile() throws FileNotFoundException, IOException{
-        BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Klaas\\Documents\\GitHub\\Containing\\Simulator\\assets\\data\\spawns.json"));
+        BufferedReader br = new BufferedReader(new FileReader("assets\\data\\spawns.json"));
         String temp = "";
         try {
             StringBuilder sb = new StringBuilder();
