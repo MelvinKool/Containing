@@ -28,7 +28,7 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     //Connections&, std::vector<Crane, std::allocator<Crane> >&)'
     //loadVehicle("FreightShip", document,*simulator,freightShipCranes);
     //loadVehicle("Storage", document,*simulator,storageCranes);
-    //loadVehicle("SeaShip", document,*simulator,seaShipCranes);
+    std::vector<std::string> seaShipCraneObjects = loadVehicle("SeaShip", document,allObjects.seaShipCranes);
     //loadVehicle("Train", document,*simulator,trainCranes);
     std::vector<std::string> agvObjects = loadVehicle("AGV", document, allObjects.agvs);
     //loadVehicle("TruckCrane", document,*simulator,truckCranes);

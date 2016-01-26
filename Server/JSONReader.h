@@ -93,11 +93,8 @@ class JSONReader{
                 else{
                     //this is a crane
                     cout << "crane" << endl;
-                    /*Crane crane((int)i, key.c_str(), tempVect, rotationVect,
-                            speed,holderSpeed,grabberSpeed, grabber_y_offset,
-                            grabberPos, has_holder);
-                    string craneSpawn = generator.spawnCrane(crane, (int) i,rotationVect);//identity???
-                    allSpawnObjects.push_back(agvSpawn);*/
+                    Crane crane();
+
                 }
                 //simulator.writeToSim(final_JSON_string);
                 //spawn objects in simulator

@@ -117,8 +117,16 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	while(current != place1)
 	{
 		route.insert(route.begin(),current->name);
-		current = current->previous;
-		//route = current->name + ", " + route;
+		Place* previous = nullptr;
+		previous = current->previous;
+		if(previous != nullptr){
+			current = previous;
+		}
+		else{
+			//do something if there is an error
+			cout << "ERROR ERROR ERROR" << endl;
+			break;
+		}
 	}
 	//route += place2->name;
 	vector<vector3f> vector3fRoute = vectorStringToVectorVector3f(route);

@@ -2,7 +2,6 @@
 #include "server.h"
 
 using namespace std;
-
 Crane::Crane(int id,float x,float y,float z,Server* ser)
 {
     //set movement speeds?
