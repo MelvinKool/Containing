@@ -10,9 +10,7 @@ using namespace std;
 
 ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
-	cout << "initialyzing began" << endl;
 	initRoutes(fPath);
-	cout << "initialyzing done " << endl;
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
@@ -30,16 +28,14 @@ ShortestPathDijkstra::~ShortestPathDijkstra()
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
-    cout<<"File opened"<<endl;
 	if(loadRoutes.is_open())
     {
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;
-        cout<<"starting while loop"<<endl;
-		while(loadRoutes >> from >> to >> laden)
+		int speed;
+		while(loadRoutes >> from >> to >> laden >> speed)
 		{
-			cout << "from: " << from << " to: " << to << endl;
 			distanceBetween = distance(from,to);
 			Place * fromPlace = new Place(from);
 			Place * toPlace = new Place(to);
@@ -117,8 +113,17 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	//trace back the route
 	while(current != place1)
 	{
-		route.insert(route.begin(),current->name);
-		current = current->previous;
+ 		route.insert(route.begin(),current->name);
+		Place* previous = nullptr;
+		previous = current->previous;
+		if(previous != nullptr){
+			current = previous;
+		}
+		else{
+			//do something if there is an error
+			throw string("Could not trace back path");
+			break;
+		}
 		//route = current->name + ", " + route;
 	}
 	//route += place2->name;
