@@ -26,16 +26,18 @@ class Server
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
-        Crane crane;
+        Crane cranes[87];
         AGV agvs[100];
         float x = 0,y = 0,z = 0;
         int dump = 2,train = 6,truck = 7,ship = 8;
+
     private:
         void processLeavingContainer(MYSQL_ROW &row);
         void processArrivingContainer(MYSQL_ROW &row);
         int getFreeAGV();
-        vector3f getTruckStop();
-        std::string spawnObject(std::string type,vector3f location);
+        int getTruckStop();
+        int getTransportID();
+        void spawnObject(std::string type,vector3f location, int contID);
 
         Database db;
         XmlParser xmlParser;
@@ -43,9 +45,9 @@ class Server
         HttpServer httpserver;
         Timer timer;
 
-        bool stop = false;
+        bool stop = false,trainSpawned =false;
         std::vector<vector3f> truckStops;
-        std::string vehicle = "";
+        std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
         int containerId = -1,agvID = 0;
         std::vector<std::string> commands;
 };
