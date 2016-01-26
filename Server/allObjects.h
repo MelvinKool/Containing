@@ -4,7 +4,7 @@
 #include "crane.h"
 #include <vector>
 
-class AllObject
+class AllObjects
 {
 private:
 public:

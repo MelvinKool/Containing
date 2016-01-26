@@ -5,7 +5,7 @@
 #include <string>
 #include <thread>
 #include "socket.h"
-#include "allObject.h"
+#include "allObjects.h"
 
 //class Server;
 
@@ -15,7 +15,7 @@ class Connections
     public:
         Connections(){}
         ~Connections();
-        void initConnections(AllObject allObjects);
+        void initConnections(AllObjects& allObjects, Server* server);
         void acceptClients();
         void writeToSim(std::string message);
         std::string getDataForApp();
@@ -33,6 +33,7 @@ class Connections
             std::thread* worker;
         };
         ServerSocket* socket;
+        Server* server;
         Client* simulator = nullptr;
         bool stop = false;
         std::vector<Client> clients;
@@ -41,7 +42,7 @@ class Connections
         int getFreeClientNumber();
         std::thread* newClientThread(int number);
         std::string dataForApp = "0,0,0,0,0,0,0";
-        AllObject allObjects;
+        AllObjects allObjects;
 };
 
 #endif //CONNECTIONS_H

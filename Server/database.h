@@ -25,7 +25,7 @@ class Database
         std::string password = "e0d2c603414413df6b6d15dcb4f7c1fb";
         std::string dbName = "containing";
         bool connected = false;
-        
+
         bool createAllTables();
         bool dropAllTables();
 };
