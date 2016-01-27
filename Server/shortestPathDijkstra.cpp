@@ -16,12 +16,12 @@ ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 ShortestPathDijkstra::~ShortestPathDijkstra()
 {
 	//delete every item in places
-	for(pair<const string,Place*> &place : places)
-	{
+	//for(pair<const string,Place*> &place : places)
+	//{
 		//Place *p = place.second;
-		delete place.second;
-		place.second = nullptr;
-	}
+	//	delete place.second;
+	//	place.second = nullptr;
+	//}
 }
 
 
