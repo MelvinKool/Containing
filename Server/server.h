@@ -21,7 +21,6 @@ class Server
         void checkContainers();
         void startRunning();
         void stopRunning();
-        Connections* getConnections();
 
         AllObjects allObjects;
         JSONGenerator JGen;
@@ -47,6 +46,5 @@ class Server
         std::vector<vector3f> truckStops;
         std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
         int containerId = -1,agvID = 0;
-        std::vector<std::string> commands;
 };
 #endif

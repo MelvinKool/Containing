@@ -14,6 +14,8 @@ AGV::AGV(int id,float x,float y,float z,Server* ser)
 
 string AGV::goTo(vector3f destination,bool loaded)
 {
+    //cout << "org: " << currentLocation.toString() << endl;
+    //cout << "dest: " << destination.toString() << endl;
     pair<double,vector<vector3f>> route;
     if (loaded)
     {

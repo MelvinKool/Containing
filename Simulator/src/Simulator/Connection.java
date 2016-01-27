@@ -32,7 +32,7 @@ public class Connection extends Thread implements Runnable
         this.objectLoader = objectLoader;
         this.commandHandler = commandHandler;
         this.connected = false;
-        this.lastAppDataSent = 0L;
+        this.lastAppDataSent = System.currentTimeMillis();
         this.start();
     }
     

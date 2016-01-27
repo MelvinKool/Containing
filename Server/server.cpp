@@ -19,7 +19,7 @@ Server::Server()
     {
         xmlParser.readXML(db);
     }
-    connections.initConnections(allObjects,this);
+    connections.initConnections(this);
     connections.acceptClients();
     httpserver.init(connections);
     pathFinderLoaded = ShortestPathDijkstra("./Files/RouteFiles/LoadedRoutes.csv");
@@ -33,11 +33,6 @@ Server::Server()
 void Server::writeToSim(string message)
 {
     connections.writeToSim(message);
-}
-
-Connections* Server::getConnections()
-{
-    return &connections;
 }
 
 void Server::startRunning()
@@ -77,7 +72,7 @@ void Server::checkContainers()
         previousTime = currentTime;
         currentDate = timer.getDate();
         currentTime = timer.getTime();
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";// AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         /*
@@ -128,6 +123,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     agvID = getFreeAGV();
     int transportId = getTransportID();
     vector<int> containers;
+    vector<string> commands;
 
     if(vehicle=="vrachtauto") //TODO
     {
@@ -136,7 +132,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         vector3f truckLocation = truckStops[truckLoc];
         //TODO void expression?!?
         //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.0),false));
         //commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
         commands.push_back(JGen.despawnObject(transportId));
     }
