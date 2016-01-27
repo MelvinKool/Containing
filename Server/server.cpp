@@ -51,7 +51,7 @@ void Server::stopRunning()
 {
     if (stop)
     {
-        
+
     }
     else
     {
@@ -136,7 +136,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         //TODO void expression?!?
         //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),truckLocation.getY(),-25.0),false));
-        commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
+        //commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID,vector3f(0,0,0))); //get container from truck to agv
         commands.push_back(JGen.despawnObject(transportId));
     }
 
@@ -158,7 +158,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             writeToSim(JGen.spawnObject("Train",containers));
         }
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false));
-        commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID,vector3f(0,0,0)));
+        //commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID,vector3f(0,0,0)));
     }
     /*
     if(vehicle=="zeeschip") //TODO
@@ -190,7 +190,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
     */
     commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
-    commands.push_back(allObjects.storageCranes.at(41).transfer(containerId,142,vector3f(0,0,0)));
+    //commands.push_back(allObjects.storageCranes.at(41).transfer(containerId,142,vector3f(0,0,0)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 

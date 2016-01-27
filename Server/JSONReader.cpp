@@ -30,6 +30,14 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     //Connections&, std::vector<Crane, std::allocator<Crane> >&)'
     //loadVehicle("FreightShip", document,*simulator,freightShipCranes);
     //loadVehicle("Storage", document,*simulator,storageCranes);
+    std::vector<std::string> storageCraneObjects = loadCranes("Storage", document,allObjects.allCranes);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), storageCraneObjects.begin(), storageCraneObjects.end() );
+    std::vector<std::string> truckCraneObjects = loadCranes("TruckCrane", document,allObjects.allCranes);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), truckCraneObjects.begin(), truckCraneObjects.end() );
+    std::vector<std::string> trainCraneObjects = loadCranes("Train", document,allObjects.allCranes);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), trainCraneObjects.begin(), trainCraneObjects.end() );
+    std::vector<std::string> freightShipCraneObjects = loadCranes("FreightShip", document,allObjects.allCranes);
+    allObjectsStrVector.insert( allObjectsStrVector.end(), freightShipCraneObjects.begin(), freightShipCraneObjects.end() );
     std::vector<std::string> seaShipCraneObjects = loadCranes("SeaShip", document,allObjects.allCranes);
     allObjectsStrVector.insert( allObjectsStrVector.end(), seaShipCraneObjects.begin(), seaShipCraneObjects.end() );
     //add the cranes to the crane spawnstrings vector

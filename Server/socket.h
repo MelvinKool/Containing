@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <iostream>
 
-#define bufsize 16384
+#define bufsize 65536
 
 class ClientSocket
 {

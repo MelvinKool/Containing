@@ -268,7 +268,8 @@ public class ObjectLoader
         
         for(int i = 0; i < objects.length(); i++)
         {
-            this.spawnObject(objects.getJSONObject(i));
+            JSONObject objectObject = new JSONObject(objects.getString(i));
+            this.spawnObject(objectObject);
         }
         
         this.craneNode.attachChild(this.dockCraneNode);
