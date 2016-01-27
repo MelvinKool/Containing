@@ -45,10 +45,16 @@ rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & 
   }
 }
 
-//generates JSON for doing a container transfer between two vehicles
-string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int destAGV)
 {
-	//{'Command': 'craneMoveContainer', 'craneId': 8, 'containerId': 4, 'target': [51.25, 1.0, -73.5]}
+    //{'Command': 'craneMoveContainer', 'craneId': 157, 'containerId': 1, 'target': 89}
+    return "";
+}
+
+//generates JSON for doing a container transfer between two vehicles
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect)
+{
+	//{'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 1, 'sortField': 22, 'target': [0,0,0]}
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -83,33 +89,6 @@ string JSONGenerator::spawnObject(string type,vector3f location,vector<int> cont
 	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
     return "";
 }
-
-//templates???
-//used for spawning trucks ships and tranes
-/*string JSONGenerator::spawnObject(Transport& transport)//rotation???
-{
-	// document is the root of a json message
-	rapidjson::Document document = createJSONDocument();
-	// must pass an allocator when the object may need to allocate memory
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command", "spawnObject", allocator);
-	document.AddMember("objectId",objectId, allocator);
-	Value s;
-	s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
-	document.AddMember("vehicleType", s, allocator);
-	document.AddMember("maximumSpeed", maximumSpeed, allocator);
-	rapidjson::Value spawnLocation(rapidjson::kObjectType);
-	spawnLocation.AddMember("X",coordinate.getX(),allocator);
-	spawnLocation.AddMember("Y",coordinate.getY(),allocator);
-	spawnLocation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnLocation",spawnLocation,allocator);
-	rapidjson::Value spawnRotation(rapidjson::kObjectType);
-	spawnRotation.AddMember("X",coordinate.getX(),allocator);
-	spawnRotation.AddMember("Y",coordinate.getY(),allocator);
-	spawnRotation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnRotation",spawnRotation,allocator);
-	return toString(document);
-}*/
 
 //JSON for crane
 //PUT THOSE OBJECTS IN CRANE CLASS

@@ -114,7 +114,6 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         //tempVect = vector3f(x,y,z);
         //generate spawn json
         int vehicleId = indexStart + craneVector.size();
-        cout << vehicleId << endl;
         Crane crane(key, vehicleId,x,y,z,server);
         string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
         allSpawnObjects.push_back(craneSpawn);
