@@ -18,19 +18,16 @@ class JSONGenerator
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
     std::string craneTransferContainer(int craneId, int containerId, vector3f targetVect);
     std::string agvAttachContainer(int agvId, int containerId);
-    //std::string spawnObject(int objectId, char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
-    std::string spawnObject(string type,std::vector<int> contID){};
-    std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID);
-    std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed);
-    std::string spawnObject(int objectId, const char* vehicleType, vector3f coordinate, vector3f rotation, float maximumSpeed, float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder);
-    std::string despawnObject(int transportID){};
-    std::string spawnObject(Transport& transport);//rotation???
+    std::string despawnObject(int transportID){}; //TODO
+    std::string spawnObject(string type,std::vector<int> contID){}; //TODO
+    std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID); //TODO
     std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
     std::string spawnAGV(AGV& agv, int agvId, vector3f rotation);
     std::string spawnObjects(std::vector<std::string>& spawnStrings);
     std::string generateCommandList(int containerId, std::vector<std::string>& commandList);
     template <class T>
-    static std::string toString(T &jsonValue){
+    static std::string toString(T &jsonValue)
+    {
     	rapidjson::StringBuffer strbuf;
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     	jsonValue.Accept(writer);

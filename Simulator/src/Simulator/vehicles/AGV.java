@@ -32,7 +32,6 @@ public class AGV extends WorldObject
         super(rootNode, assetManager, position, model);
     }
     
-    //public void setPath(List<Vector3f wayPoints>, float distance, float agvSpeed)
     public void setPath(List<Vector3f> wayPoints, float distance)
     {
         if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
@@ -40,9 +39,9 @@ public class AGV extends WorldObject
             return;
         }
         if(container != null)
-            agvSpeed = 20;
+            agvSpeed = 200;
         else
-            agvSpeed = 40;
+            agvSpeed = 400;
         
         System.out.println("speed = " + agvSpeed);
         motionPath = new MotionPath();

@@ -12,8 +12,6 @@ Timer::Timer()
     this->hour   = 0;
     this->minute = 0;
 
-    this->stop = false;
-
     std::cout << "Set time multiplier: ";
     std::string temp;
     getline(std::cin, temp);
@@ -22,12 +20,16 @@ Timer::Timer()
 
 Timer::~Timer()
 {
-    this->stop = true;
-    this->t_tick->join();
+    if(this->stop == false)
+    {
+        this->stop = true;
+        this->t_tick->join();
+    }
 }
 
 void Timer::start()
 {
+    this->stop = false;
     this->t_tick = new std::thread([this] {tick();});
 }
 
