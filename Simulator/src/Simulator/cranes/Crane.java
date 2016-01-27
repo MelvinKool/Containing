@@ -14,6 +14,9 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -23,7 +26,6 @@ import java.util.logging.Logger;
 public class Crane extends WorldObject {
 
     private enum Cmd { GRABBING, PUTTING, GRABBER, RESET, Nothing  };
-
     
     public Vector3f defaultPos;
     public Vector3f motionTarget;
@@ -39,14 +41,17 @@ public class Crane extends WorldObject {
     private float speed;
     private boolean holderDone;
     private boolean craneDone;
+    private List<SimpleEntry> commandQueue;
     protected boolean hasHolder;
     
     public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model, String craneType, float speed) {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
-        this.speed = speed;
+        this.speed = speed * 4; //TODO: test * 2
         this.hasHolder = true;
+        this.commandQueue = new ArrayList<>();
+        this.containerTarget = null;
     }
     
     /**
@@ -121,8 +126,21 @@ public class Crane extends WorldObject {
      */
     public void moveContainer(Container container, Vector3f target) 
     {
-        this.containerTarget = target;
-        this.grabContainer(container);        
+        if (this.containerTarget == null) {
+            this.containerTarget = target;
+            this.grabContainer(container);     
+        } else {
+            this.commandQueue.add(new SimpleEntry<>(container, target));
+        }
+    }
+    
+    public void executeQueued() {
+        if (!this.commandQueue.isEmpty() && this.targetContainer == null) {
+            SimpleEntry command = this.commandQueue.remove(0);
+            Container container = (Container) command.getKey();
+            this.containerTarget = (Vector3f) command.getValue();
+            this.grabContainer(container);
+        }
     }
     
     /**
@@ -251,7 +269,7 @@ public class Crane extends WorldObject {
     private void delayDetachContainer() 
     {        
         this.cmd = Cmd.RESET;
-        this.grabber.resetPosition(this);
+//        this.grabber.resetPosition(this);
         this.targetContainer.operationDone();
         this.targetContainer = null;
     }
@@ -262,8 +280,8 @@ public class Crane extends WorldObject {
     private void grabbermotionDone() 
     {
         if (this.cmd != Cmd.GRABBER && this.cmd != Cmd.PUTTING && this.cmd != Cmd.RESET) 
-        {
-            
+        { // attach container
+            this.grabber.fixPositionToTarget();
             this.grabber.attachContainer(this.targetContainer);
             // Asynchronously wait before attaching container so that we don't block execution
             new Thread(new Runnable(){
@@ -280,12 +298,13 @@ public class Crane extends WorldObject {
                     }
             }).start();
         } else if (this.cmd == Cmd.GRABBER) 
-        {
+        { // lower container
             this.putContainer(this.containerTarget);
             System.out.println("putting");
             this.cmd = Cmd.PUTTING;
         } else if (this.cmd == Cmd.PUTTING) 
-        {
+        { // detach container
+            this.grabber.fixPositionToTarget();
             System.out.println("detach");
             Vector3f pos = targetContainer.node.getWorldTranslation();
             Quaternion rot = targetContainer.node.getWorldRotation();
@@ -307,7 +326,7 @@ public class Crane extends WorldObject {
                     }
             }).start();
         } else if (this.cmd == Cmd.RESET) 
-        {
+        { // end
             System.out.println("reset");
             this.cmd = Cmd.Nothing;
             this.grabber.motionPath = null;

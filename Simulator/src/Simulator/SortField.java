@@ -39,10 +39,10 @@ public class SortField
             throw new IndexOutOfBoundsException("SortfieldIndexBounds: " + this.maxIndex);
         }
         
-        xPos = x * this.containerSize.x + this.position.x;
+        xPos = x * this.containerSize.x + this.position.x + (this.containerSize.x / 2);
         yPos = y * this.containerSize.y + this.position.y;
-        zPos = z * this.containerSize.z + this.position.z;
+        zPos = z * this.containerSize.z + this.position.z + (this.containerSize.z / 2);
         
-        return new Vector3f(xPos, yPos, zPos);
+        return new Vector3f(xPos, yPos, -zPos);
     }
 }

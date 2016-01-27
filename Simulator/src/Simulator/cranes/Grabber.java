@@ -57,6 +57,10 @@ public class Grabber extends WorldObject {
         return new Vector3f(0.0f, pos.y + this.yOffset, 0.0f);
     }
     
+    public void fixPositionToTarget() {
+        this.setPosition(this.motionTarget);
+    }
+    
     /**
      * set a target to move to
      * @param target

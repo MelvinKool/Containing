@@ -19,6 +19,7 @@ class Server
         Server();
         void writeToSim(std::string message);
         void checkContainers();
+        void startRunning();
         void stopRunning();
         Connections* getConnections();
 
@@ -26,10 +27,6 @@ class Server
         JSONGenerator JGen;
         ShortestPathDijkstra pathFinderLoaded;
         ShortestPathDijkstra pathFinderUnloaded;
-        Crane cranes[87];
-        AGV agvs[100];
-        float x = 0,y = 0,z = 0;
-        int dump = 2,train = 6,truck = 7,ship = 8;
 
     private:
         void processLeavingContainer(MYSQL_ROW &row);
@@ -44,8 +41,9 @@ class Server
         Connections connections;
         HttpServer httpserver;
         Timer timer;
+        thread t1;
 
-        bool stop = false,trainSpawned =false;
+        bool stop=true,trainSpawned=false;
         std::vector<vector3f> truckStops;
         std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
         int containerId = -1,agvID = 0;

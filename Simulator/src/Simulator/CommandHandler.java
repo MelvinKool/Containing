@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class CommandHandler
 {
     ObjectLoader objectloader;
-    private List<String> commandQueue;
+    private List<JSONObject> commandQueue;
     
     public CommandHandler(ObjectLoader objectloader)
     {
@@ -83,7 +83,7 @@ public class CommandHandler
                 this.spawnTruck(jsonObject);
                 break;
             case "spawnTrain":
-                this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
+                this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnSeaShip":
                 this.objectloader.spawnShip(jsonObject.getJSONArray("containers"));
@@ -95,10 +95,9 @@ public class CommandHandler
         }
     }
     
-    public void ParseJSON(String json)
+    public JSONObject ParseJSON(String json)
     {
-        JSONObject jsonObject = new JSONObject(json);
-        this.executeCommand(jsonObject);
+        return new JSONObject(json);
     }
 
     private void craneMoveContainer(JSONObject jsonObject)
@@ -119,7 +118,7 @@ public class CommandHandler
             targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
         } catch (ClassCastException ex) {
             int agvId = (int) target;
-            targetVec = this.objectloader.agvs.get(agvId).getPosition();
+            targetVec = this.objectloader.agvs.get(agvId).getPosition().add(0.0f, 1.2f, 0.0f);
         }        
         crane.moveContainer(container, targetVec);
     }
@@ -137,7 +136,7 @@ public class CommandHandler
         this.objectloader.spawnTruck(id, container, position);
     }
 
-    public void queueCommand(String input)
+    public void queueCommand(JSONObject input)
     {
         this.commandQueue.add(input);
     }
@@ -148,7 +147,7 @@ public class CommandHandler
         {
             for(; 0 < commandQueue.size(); )
             {
-                this.ParseJSON(commandQueue.get(0));
+                this.executeCommand(commandQueue.get(0));
                 this.commandQueue.remove(0);
             }
         }

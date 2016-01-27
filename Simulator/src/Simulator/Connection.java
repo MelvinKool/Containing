@@ -145,7 +145,8 @@ public class Connection
                         break;
                     }
                     System.out.println(input);
-                    commandHandler.queueCommand(input);
+                    commandHandler.queueCommand(
+                                commandHandler.ParseJSON(input));
                 }
             }
             catch(Exception e){}

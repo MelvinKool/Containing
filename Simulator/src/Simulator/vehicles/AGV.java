@@ -73,8 +73,8 @@ public class AGV extends WorldObject
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex)
     {
         this.node.setLocalTranslation(motionPath.getWayPoint(wayPointIndex));
-        this.node.lookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
-        this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
+        this.node.lookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
+        this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
         if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
             if(this.container != null)
@@ -91,5 +91,6 @@ public class AGV extends WorldObject
         this.container = container;
         this.node.attachChild(container.node);
         this.container.node.setLocalTranslation(0, 1.2f, 0);
+        this.container.operationDone();
     }
 }
