@@ -51,7 +51,7 @@ void Server::stopRunning()
     else
     {
         stop = true;
-        //timer.stop();
+        timer.stop();
         t1.join();
     }
 }
