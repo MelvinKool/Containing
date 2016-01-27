@@ -113,6 +113,11 @@ public class Main extends SimpleApplication
         }
         
         this.commandHandler.executeQueued();
+        
+        for (Crane crane : this.worldObjects.cranes.values()) {
+            crane.executeQueued();
+            
+        }
     }
 
     @Override
@@ -189,7 +194,8 @@ public class Main extends SimpleApplication
                        
                         break;
                     case "zp":
-                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}");
+                        commandHandler.queueCommand(commandHandler.ParseJSON(
+                                "{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));
                             
                         break;
                     case "zm":

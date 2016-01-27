@@ -219,15 +219,10 @@ public class ObjectLoader {
         return false;
     }
     
-    public void spawnTrain(JSONArray containers) {
+    public void spawnTrain(JSONArray containers, CommandHandler commandHandler) {
         this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
         for (Object containerId : containers) {
-            this.train.addContainer(new Container(
-                    this.rootNode,
-                    this.assetManager,
-                    new Vector3f(0, 0, 0),
-                    this.getContainerModel(),
-                    null));            
+            this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
         this.train.moveIn();
     }
