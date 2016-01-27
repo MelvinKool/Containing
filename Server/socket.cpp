@@ -38,11 +38,12 @@ void ClientSocket::write(string message)
 {
     int count = message.size();
     /* if you want to send a larger message than bufsize*/
-    /*char buffer[count + 1];
+    char buffer[count];
     strcpy(buffer, message.c_str());
-    buffer[count + 1] = '\n';
-    send(sock, buffer, count, 0);*/
-    if(count <= bufsize-1)
+    buffer[count++] = '\n';
+    send(sock, buffer, count, 0);
+    cout << buffer << endl;
+    /*if(count <= bufsize-1)
     {
         char buffer[bufsize];
         strcpy(buffer, message.c_str());
@@ -52,7 +53,7 @@ void ClientSocket::write(string message)
     else
     {
         cout << "ClientSocket::write - message to large to send." << endl;
-    }
+    }*/
 }
 
 ServerSocket::ServerSocket(int port)
