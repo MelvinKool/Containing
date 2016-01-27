@@ -1,15 +1,18 @@
 package Simulator;
-
 import java.net.*;
 import java.io.*;
+import java.util.Random;
 
 public class Connection
 {
+    private String ip = "localhost";
+
     private class SimSocket extends Socket
     {
         private DataInputStream in;
         private OutputStream out;
         private final int bufsize = 4096;
+        private SocketAddress socket = new InetSocketAddress(ip, 1337);
         
         public SimSocket(InetAddress ip, int port) throws Exception
         {
@@ -31,19 +34,20 @@ public class Connection
         }
     }
     
-    
     private boolean shouldStop = false;
     private SimSocket simSocket;
     private ObjectLoader objectLoader;
+    private CommandHandler commandHandler;
     
     private Thread tConnection;
     private Thread tRead;
     private Thread tCheck;
+    private Thread tDataForApp;
     
-    
-    public Connection(ObjectLoader objectLoader) throws Exception
+    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
     {
         this.objectLoader = objectLoader;
+        this.commandHandler = commandHandler;
         tConnection = initTConnection();
         tConnection.start();
     }
@@ -102,14 +106,17 @@ public class Connection
                     
                     tRead = initTRead();
                     tCheck = initTCheck();
+                    tDataForApp = initTDataFotApp();
                     
                     tRead.start();
                     tCheck.start();
+                    tDataForApp.start();
                     
                     try
                     {
                         tCheck.join();
                         tRead.stop();
+                        tDataForApp.stop();
                     }
                     catch(Exception e){}
                 }
@@ -129,7 +136,6 @@ public class Connection
         {
             try
             {
-                CommandHandler commandHandler = new CommandHandler(objectLoader);
                 while(!shouldStop)
                 {
                     String input = read();
@@ -139,7 +145,7 @@ public class Connection
                         break;
                     }
                     System.out.println(input);
-                    commandHandler.ParseJSON(input);
+                    commandHandler.queueCommand(input);
                 }
             }
             catch(Exception e){}
@@ -165,9 +171,69 @@ public class Connection
         }});
     }
     
+    private Thread initTDataFotApp()
+    {
+        return new Thread(new Runnable() { @Override public void run() 
+        {
+            try 
+            {
+                while (!shouldStop) 
+                {
+                    Random random = new Random();
+                    
+                    int zeeschip    = 10 + random.nextInt(20);
+                    int binnenschip = 10 + random.nextInt(20);
+                    int agv         = 10 + random.nextInt(20);
+                    int trein       = 10 + random.nextInt(20);
+                    int vrachtauto  = 10 + random.nextInt(20);
+                    int opslag      = 10 + random.nextInt(20);
+                    int diversen    = 10 + random.nextInt(20);
+                    /*
+                    for (Map.Entry pair : objectLoader.containers.entrySet()) {
+                        System.out.println(pair.getKey() + " = " + pair.getValue());
+                        
+                        if(pair.getValue() instanceof Ship){
+                            zeeschip++;
+                        }
+                        //else if(pair.getValue() instanceof Ship){
+                        //    
+                        //}
+                        else if(pair.getValue() instanceof AGV){
+                            agv++;
+                        }
+                        else if(pair.getValue() instanceof Train){
+                            trein++;
+                        }
+                        else if(pair.getValue() instanceof FreightTruck){
+                            vrachtauto++;
+                        }
+                        //else if(pair.getValue() instanceof ){
+                        //    opslag
+                        //}
+                        else{
+                            diversen++;
+                        }
+                    }
+                    */
+                    String result = "dataforapp/"+
+                                    zeeschip+","+
+                                    binnenschip+","+
+                                    agv+","+
+                                    trein+","+
+                                    vrachtauto+","+
+                                    opslag+","+
+                                    diversen;
+                    write(result);
+                    Thread.sleep(3000);
+                }
+            } 
+            catch (Exception e){}
+        }});
+    }
+    
     private void initSocket()
     {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName("localhost"), 1337); }
+        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
         catch(Exception e) { simSocket = null; }
     }
 }

@@ -12,25 +12,18 @@
         <script src="Main.js"></script>
 
         <style>
+            html{
+                height: 100%;
+            }
             body{
                 background-color: #CCCCCC;
-            }
-            #chartCanvas{
-                padding: 0;
-                margin: auto;
-                display: block;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
+                margin: 10px;
+                height: 97%;
             }
         </style>
     </head>
 
     <body onLoad="main()">
-        <canvas id="chartCanvas">
-            Your current webbrowser does not support HTML5. Update or change your webbrowser.
-        </canvas>
+        <canvas id="chartCanvas">Canvas is not supported in your current browser.</canvas>
     </body>
 </html>

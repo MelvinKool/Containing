@@ -4,12 +4,15 @@ using namespace std;
 
 AGV::AGV(int id,float x,float y,float z,Server* ser)
 {
+    loaded_Speed = 20;
+    unloaded_Speed = 40;
+    vehicleType = "AGV";
     currentLocation = vector3f(x,y,z);
     ID = id;
     server = ser;
 }
 
-void AGV::goTo(vector3f destination)
+string AGV::goTo(vector3f destination,bool loaded)
 {
     pair<double,vector<vector3f>> route;
     if (loaded)
@@ -18,24 +21,12 @@ void AGV::goTo(vector3f destination)
     }
     else
     {
-        route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
+         route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
     }
-    string jsonCommand = server->JGen.moveTo(ID,route.second,route.first);
-    server->writeToSim(jsonCommand);
-    bizzy = true;
-}
-
-void AGV::arrived()
-{
-    bizzy = false;
+    return server->JGen.moveTo(ID,route.second,route.first);
 }
 
 vector3f AGV::getCurrentLocation()
 {
     return currentLocation;
-}
-
-bool AGV::getWorkingState()
-{
-    return bizzy;
 }

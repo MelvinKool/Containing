@@ -32,19 +32,19 @@ public class Grabber extends WorldObject {
     private float yOffset;
     
     public Grabber(Node rootNode, AssetManager assetManager, String craneType, float yOffset, float grabberSpeed) {
-        super(rootNode, assetManager, Vector3f.ZERO, "Models/crane/" + craneType + "/grabbingGear.j3o");
-        this.defaultPos = Vector3f.ZERO;
+        super(rootNode, assetManager, new Vector3f(0,0,0), "Models/crane/" + craneType + "/grabbingGear.j3o");
+        this.defaultPos = new Vector3f(0,0,0);
         this.container = null;
         this.yOffset = yOffset;
         this.speed = grabberSpeed;
         
         this.hookLeft = new Hook(
                 this.node, this.assetManager,
-                Vector3f.ZERO, "Models/crane/" + craneType + "/hookLeft.j3o",
+                new Vector3f(0,0,0), "Models/crane/" + craneType + "/hookLeft.j3o",
                 Hook.LEFT_HOOK);
         this.hookRight = new Hook(
                 this.node, this.assetManager,
-                Vector3f.ZERO, "Models/crane/" + craneType + "/hookRight.j3o",
+                new Vector3f(0,0,0), "Models/crane/" + craneType + "/hookRight.j3o",
                 Hook.RIGHT_HOOK);
     }
     
@@ -92,7 +92,7 @@ public class Grabber extends WorldObject {
 //        Quaternion rot = container.node.getWorldRotation();
 //        container.node.setLocalTranslation(pos);
 //        container.node.setLocalRotation(rot);
-//        //container = null;
+//        container = null;
 //    }
     
     /**

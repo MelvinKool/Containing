@@ -39,6 +39,7 @@ void XmlParser::readXML(Database &db)
 //places data in the database
 bool XmlParser::processData(string &xmlDocPath, Database &db)
 {
+    cout<<"started loading xml into database"<<endl;
     //create xml_document object
     xml_document<> doc;
     ifstream theFile (xmlDocPath.c_str());
@@ -344,8 +345,6 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
         }
     }
     theFile.close();
-    cout << "....XML file done > " << xmlDocPath << endl;
-
     return true;
 }
 
@@ -427,6 +426,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
             }
         }
         input.close();
+        cout<<"check of: \""<<path<<"\" done"<<endl;
     }
     outputFile.close();
     return processData(outFile, db);

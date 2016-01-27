@@ -1,12 +1,15 @@
 #include "connections.h"
-
+#include "JSONReader.h"
 #include <iostream>
+#include "allObjects.h"
 
 using namespace std;
 
-Connections::Connections()
+void Connections::initConnections(AllObjects& allObjects, Server* server)
 {
+    this->allObjects = allObjects;
     this->socket = new ServerSocket(1337);
+    this->server = server;
 }
 
 // Stop all the running threads and delete them, then delete the socket.
@@ -76,7 +79,13 @@ thread* Connections::newClientThread(int number)
             this->simulator = &(this->clients[number]);
             isSim = true;
         }
-
+        //send all simulation objects to the simulator
+        if(isSim){
+            cout << "sending initialization json to simulator..." << endl;
+            JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json", server);
+            jsonReader.loadTransport(allObjects);
+        }
+        //load vehicles
         while(!this->stop)
         {
             string input;
@@ -97,6 +106,11 @@ thread* Connections::newClientThread(int number)
             else if(input == "connection_check")
             {
                 //dont do anything.
+            }
+            else if(input.substr(0, 11) == "dataforapp/")
+            {
+                std::string result = input.erase(0, 11);
+                dataForApp = result;
             }
             else
             {
@@ -132,4 +146,9 @@ void Connections::writeToSim(string message)
             cout << "Could not write to Simulator." << endl;
         }
     }
+}
+
+std::string Connections::getDataForApp()
+{
+    return dataForApp;
 }

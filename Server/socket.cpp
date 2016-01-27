@@ -1,5 +1,7 @@
 #include "socket.h"
 
+using namespace std;
+
 ClientSocket::ClientSocket(string ip, int port)
 {
     sockaddr_in sa;
@@ -35,6 +37,11 @@ string ClientSocket::read()
 void ClientSocket::write(string message)
 {
     int count = message.size();
+    /* if you want to send a larger message than bufsize*/
+    /*char buffer[count + 1];
+    strcpy(buffer, message.c_str());
+    buffer[count + 1] = '\n';
+    send(sock, buffer, count, 0);*/
     if(count <= bufsize-1)
     {
         char buffer[bufsize];

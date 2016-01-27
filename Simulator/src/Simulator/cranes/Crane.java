@@ -39,19 +39,22 @@ public class Crane extends WorldObject {
     private float speed;
     private boolean holderDone;
     private boolean craneDone;
+    protected boolean hasHolder;
     
     public Crane(Node rootNode, AssetManager assetManager, Vector3f position, Vector3f magnetPos, Spatial model, String craneType, float speed) {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
         this.speed = speed;
+        this.hasHolder = true;
     }
     
     /**
      * initialize grabber and grabberholder for this crane
-     * @param position
-     * @param holderSpeed
-     * @param yOffset 
+     * @param position position of grabberHolder in relation to crane
+     * @param grabberSpeed speed of grabber
+     * @param holderSpeed speed of holder
+     * @param yOffset offset to normal position of grabber on the y axis
      */
     public final void initGrabber(Vector3f position, float grabberSpeed, float holderSpeed, float yOffset) {
         this.grabberHolder = new GrabberHolder(this.node, this.assetManager, position, craneType, holderSpeed);
@@ -173,15 +176,15 @@ public class Crane extends WorldObject {
     }
     
     /**
-     * check if crane and grabber are position
+     * check if crane and grabber are in position
      * if that's the case, then move grabber to target
      */
     private void moveGrabberIfReady() 
     {            
-        System.err.println("trymove");
+        System.out.println("trymove");
 
-        if (this.holderDone && this.craneDone) {
-            System.err.println("move");
+        if ((this.holderDone || !this.hasHolder) && this.craneDone) {
+            System.out.println("move");
             this.grabber.grabberMotion.play();
             if (this.cmd == Cmd.GRABBING) {
                 this.cmd = Cmd.Nothing;
@@ -225,17 +228,32 @@ public class Crane extends WorldObject {
         this.grabberHolder.fixPositionToTarget();
     }
     
+    /**
+     * Attach container after delay.
+     * WARNING:
+     * this method is called from a separate thread. This means that it is not
+     * possible to make any modifications to the scene from this method.
+     */
     private void delayAttachContainer() 
     {
         System.out.println("grabbed");
         this.cmd = Cmd.GRABBER;
         this.grabber.resetPosition(this);
+        this.targetContainer.setVehicle(this);
     }
     
+    /**
+     * Detach container after delay.
+     * WARNING:
+     * this method is called from a separate thread. This means that it is not
+     * possible to make any modifications to the scene from this method.
+     */
     private void delayDetachContainer() 
     {        
         this.cmd = Cmd.RESET;
         this.grabber.resetPosition(this);
+        this.targetContainer.operationDone();
+        this.targetContainer = null;
     }
     
     /**
@@ -253,7 +271,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(30000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -264,11 +282,11 @@ public class Crane extends WorldObject {
         } else if (this.cmd == Cmd.GRABBER) 
         {
             this.putContainer(this.containerTarget);
-            System.err.println("putting");
+            System.out.println("putting");
             this.cmd = Cmd.PUTTING;
         } else if (this.cmd == Cmd.PUTTING) 
         {
-            System.err.println("detach");
+            System.out.println("detach");
             Vector3f pos = targetContainer.node.getWorldTranslation();
             Quaternion rot = targetContainer.node.getWorldRotation();
             this.rootNode.attachChild(this.targetContainer.node);
@@ -279,7 +297,8 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(30000);
+                            Thread.sleep(3000
+                                    );
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -289,7 +308,7 @@ public class Crane extends WorldObject {
             }).start();
         } else if (this.cmd == Cmd.RESET) 
         {
-            System.err.println("reset");
+            System.out.println("reset");
             this.cmd = Cmd.Nothing;
             this.grabber.motionPath = null;
             this.targetContainer = null;

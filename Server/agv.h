@@ -7,20 +7,15 @@
 
 class Server;
 
-class AGV : Transport
+class AGV : public Transport
 {
     public:
         AGV(){};
-        void goTo(vector3f destination);
+        std::string goTo(vector3f destination,bool loaded);
         vector3f getCurrentLocation();
-        bool getWorkingState();
-        void arrived();
+        AGV(int id,float x,float y,float z,Server* ser);
     private:
         Server* server;
-        int ID;
-        bool loaded = false,bizzy = false;
-    public:
-        AGV(int id,float x,float y,float z,Server* ser);
 };
 
 #endif

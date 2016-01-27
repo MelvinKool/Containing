@@ -19,7 +19,7 @@ import java.util.List;
  * @author erwin
  */
 class GrabberHolder extends WorldObject {
-public Vector3f motionTarget;
+    public Vector3f motionTarget;
     public Vector3f defaultPos;
     public MotionEvent grabberHolderMotion;
     public String craneType;
@@ -48,7 +48,7 @@ public Vector3f motionTarget;
     
     /**
      * motionPaths are not as accurate as we like so when done, this method is
-     * called to fix the model's position to the actual target position
+     * called to fix the model's position to the actual target positions
      */
     public void fixPositionToTarget() {
         this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));

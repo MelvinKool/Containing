@@ -6,12 +6,17 @@
 
 class Server;
 
-class Crane : Transport
+class Crane : public Transport
 {
     public:
         Crane(){};
-        void goTo(vector3f destination);
-        void transfer(int containerID,int originID,int destID);
+        std::string transfer(int containerID,int destID,vector3f dest);
+        struct grabber {
+            //grabber() : () {}
+            float holderSpeed = 0, speed = 0, y_offset = 0;
+            bool has_holder = false;
+            vector3f position = vector3f(0,0,0);
+        } currentGrabber;
     private:
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
         int ID;

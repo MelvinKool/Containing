@@ -1,11 +1,11 @@
 SOURCES=main.cpp server.cpp connections.cpp socket.cpp xmlparser.cpp \
 database.cpp JSONGenerator.cpp httpserver.cpp vector3f.cpp shortestPathDijkstra.cpp \
-transport.cpp agv.cpp crane.cpp
+transport.cpp agv.cpp crane.cpp JSONReader.cpp Timer.cpp
 # container.cpp  transfer.cpp
 
 #============================================
 CC=g++ -std=c++11
-CFLAGS=-c -Wall $(shell mysql_config --cflags)
+CFLAGS=-c $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
