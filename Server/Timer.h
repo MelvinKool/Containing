@@ -20,7 +20,7 @@ private:
     int hour;
     int minute;
     std::thread* t_tick;
-    bool stop;
+    bool stop = true;
     std::mutex mtx;
     int multiplier;
 

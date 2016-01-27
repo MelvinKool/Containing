@@ -39,8 +39,7 @@ public class Main extends SimpleApplication
     //private Node dockCraneNode;
     //private List<Container> containers;
     private Connection connection;
-    private List<Vector3f> locations = new ArrayList<>();
-    private ObjectLoader worldObjects;
+    private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
 
     private Train train; // TODO: this is test code
@@ -54,9 +53,10 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
+        this.speed = 1;
         //long start = System.currentTimeMillis();
-        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager);
-        this.commandHandler = new CommandHandler(this.worldObjects);
+        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
+        this.commandHandler = new CommandHandler(this.objectLoader);
         //long end = System.currentTimeMillis();
 
         //System.out.println(end - start);
@@ -66,8 +66,7 @@ public class Main extends SimpleApplication
         cam.setFrustumFar(3000);
         
         //create a train of 80 carts long.
-        this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
-        
+        this.train = new Train(80, this.rootNode, this.assetManager, this.objectLoader.getLocomotiveModel(), this.objectLoader.getTrainCartModel());
         initWorld();
         initLight();
         initInputs();
@@ -77,10 +76,9 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection(worldObjects, commandHandler);
+            connection = new Connection(objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
-
     }
     
     public String readJsonFile() throws FileNotFoundException, IOException{
@@ -100,23 +98,7 @@ public class Main extends SimpleApplication
         }
         return temp;
     }
-    
-    public void TeleAgv(){
-        //worldObjects.agvs.get(2).node.move(0,0,9.75f);
-//        locations.add(new Vector3f(113.75f, 0.0f, -63.75f));
-//        locations.add(new Vector3f(38.75f, 0.0f, -63.75f));
-//        locations.add(new Vector3f(38.75f, 0.0f, -49.5f));
-//        locations.add(new Vector3f(100.00f, 0.0f, -49.5f));
-        locations.add(new Vector3f(100f, 0.0f, -50f));
-        locations.add(new Vector3f(100f, 0.0f, -60f));
-//        locations.add(new Vector3f(90f, 0.0f, -40f));
-//        locations.add(new Vector3f(80f, 0.0f, -40f));
-//        System.out.println(locations);
-    }
-    public void MoveAgv(){
-        //worldObjects.agvs.get(2).setPath(locations,2000f);
-    }
-    
+       
     boolean test = false; //TODO: remove this line
     @Override
     public void simpleUpdate(float tpf)
@@ -132,6 +114,10 @@ public class Main extends SimpleApplication
         }
         
         this.commandHandler.executeQueued();
+        
+        for (Crane crane : this.objectLoader.cranes.values()) {
+            crane.executeQueued();
+        }
     }
 
     @Override
@@ -153,7 +139,7 @@ public class Main extends SimpleApplication
 //        float dist;
 //        float minDist = -1;
         Crane nCrane = null;
-//        for (Crane crane : this.worldObjects.cranes.values())
+//        for (Crane crane : this.objectLoader.cranes.values())
 //        {
 //            dist = obj.getLocalTranslation().distance(crane.getPosition());
 //            if (dist < minDist || minDist == -1)
@@ -202,27 +188,22 @@ public class Main extends SimpleApplication
 //                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
                         break;
                     case "xp":
-//                        cont.node.move(5,0,0);
-//                        System.out.println(worldObjects.agvs.get(2).node.getLocalTranslation());
+                        
                         break;
                     case "xm":
-                        //cont.node.move(-5,0,0);
-                        if(!locations.isEmpty())
-                        {
-                            MoveAgv();
-                        }
-//                        cont.node.move(-5,0,0);
+                       
                         break;
                     case "zp":
-//                      cont.node.move(0,0,5);
-                        commandHandler.queueCommand("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 11}");
+                        commandHandler.queueCommand(commandHandler.ParseJSON("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));
                             
                         break;
                     case "zm":
+                        Container container = objectLoader.addContainer(1, commandHandler);
+                        
+                        
                         try 
                         {
-                            //TeleAgv();
-                            commandHandler.queueCommand(readJsonFile());
+                            commandHandler.executeCommand(commandHandler.ParseJSON(readJsonFile()));                            
                         }
                         catch (FileNotFoundException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,6 +211,7 @@ public class Main extends SimpleApplication
                         catch (IOException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        objectLoader.agvs.get(1).attachContainer(container);
                         break;
                     }
                 }

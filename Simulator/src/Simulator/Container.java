@@ -32,15 +32,27 @@ public class Container extends WorldObject
      * Called by vehicles when they are done with their command
      */
     public void operationDone() {
-//        JSONObject command = this.commands.remove(0);
-//        this.commandHandler.executeCommand(command);
-//        this.vehicle = null;
+        if (this.commands != null && !this.commands.isEmpty())
+        {    
+            System.out.println("container operation done. container: " + this.containerId);
+            JSONObject command = this.commands.remove(0);
+            this.commandHandler.queueCommand(command);
+            this.vehicle = null;
+        }
     }
     
+    /**
+     * Get vehicle currently carrying this container
+     * @return vehicle
+     */
     public WorldObject getVehicle() {
         return this.vehicle;
     }
     
+    /**
+     * Assign vehicle that is currently carrying container
+     * @param vehicle 
+     */
     public void setVehicle(WorldObject vehicle) {
         this.vehicle = vehicle;
     }

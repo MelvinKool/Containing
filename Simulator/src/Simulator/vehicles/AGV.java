@@ -22,6 +22,7 @@ public class AGV extends WorldObject
     private List<Vector3f> wayPointList = new ArrayList<>();
     private float duration;
     private float totalDistance;
+    private float agvSpeed;
     private Vector3f vectorZero = new Vector3f(0,0,0);
 
     public Container container;
@@ -31,28 +32,26 @@ public class AGV extends WorldObject
         super(rootNode, assetManager, position, model);
     }
     
-    //public void setPath(List<Vector3f wayPoints>, float distance, float agvSpeed)
     public void setPath(List<Vector3f> wayPoints, float distance)
     {
         if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
         {
             return;
         }
+        if(container != null)
+            agvSpeed = 200;
+        else
+            agvSpeed = 400;
         motionPath = new MotionPath();
         this.wayPointList = wayPoints;
-        System.out.println(wayPoints);
         this.totalDistance = distance;
-        this.duration = this.totalDistance;
-        //this.duration = this.totalDistance/agvSpeed;
+        this.duration = this.totalDistance/agvSpeed;
         this.motionPath.setPathSplineType(Spline.SplineType.Linear);
         if(wayPoints.size() > 0)
         {
             motionPath.addWayPoint(node.getWorldTranslation());
             for(Vector3f wayPoint : this.wayPointList)
-            {
                 motionPath.addWayPoint(wayPoint);
-            }
-            System.out.println(motionPath.getNbWayPoints());
             startMotionEvent();
         }
     }
@@ -73,10 +72,15 @@ public class AGV extends WorldObject
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex)
     {
-        this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
-        if(wayPointList.size() == 0)
+        this.node.setLocalTranslation(motionPath.getWayPoint(wayPointIndex));
+        this.node.lookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
+        this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
+        if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
-            this.container.operationDone();
+            if(this.container != null)
+            {
+                this.container.operationDone();
+            }
             this.motionEvent = null;
             this.motionPath = null;
         }            
@@ -84,12 +88,9 @@ public class AGV extends WorldObject
 	
     public void attachContainer(Container container) 
     {
-        Vector3f pos = container.node.getWorldTranslation();
-        Quaternion rot = container.node.getWorldRotation();
-        this.node.attachChild(container.node);
-        container.node.setLocalTranslation(this.node.worldToLocal(pos, null));
-        this.node.attachChild(container.node);
         this.container = container;
-        this.container.setVehicle(this);
+        this.node.attachChild(container.node);
+        this.container.node.setLocalTranslation(0, 1.2f, 0);
+        this.container.operationDone();
     }
 }

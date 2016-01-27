@@ -10,35 +10,32 @@ using namespace std;
 
 ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
-	cout << "initialyzing began" << endl;
 	initRoutes(fPath);
-	cout << "initialyzing done " << endl;
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
 {
 	//delete every item in places
-	for(pair<const string,Place*> &place : places)
-	{
+	//for(pair<const string,Place*> &place : places)
+	//{
 		//Place *p = place.second;
-		delete place.second;
-		place.second = nullptr;
-	}
+	//	delete place.second;
+	//	place.second = nullptr;
+	//}
 }
 
 
 void ShortestPathDijkstra::initRoutes(char* fPath)
 {
 	ifstream loadRoutes(fPath);
-
 	if(loadRoutes.is_open())
     {
 		//init the routes
 		string from, to, laden, teleport;
 		double distanceBetween;
-		while(loadRoutes >> from >> to >> laden)
+		int speed;
+		while(loadRoutes >> from >> to >> laden >> speed)
 		{
-			//cout << "from: " << from << " to: " << to << " distance: " << distance << endl;
 			distanceBetween = distance(from,to);
 			Place * fromPlace = new Place(from);
 			Place * toPlace = new Place(to);
@@ -116,17 +113,17 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	//trace back the route
 	while(current != place1)
 	{
-		route.insert(route.begin(),current->name);
+ 		route.insert(route.begin(),current->name);
 		Place* previous = nullptr;
 		previous = current->previous;
 		if(previous != nullptr){
 			current = previous;
 		}
 		else{
-			//do something if there is an error
-			cout << "ERROR ERROR ERROR" << endl;
+			throw string("Could not trace back path");
 			break;
 		}
+		//route = current->name + ", " + route;
 	}
 	//route += place2->name;
 	vector<vector3f> vector3fRoute = vectorStringToVectorVector3f(route);

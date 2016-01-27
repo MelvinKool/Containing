@@ -79,6 +79,8 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 //generates JSON for spawning an object
 string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
 {
+	// {'cmdt': 2, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2}},
+	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
     return "";
 }
 
@@ -86,8 +88,6 @@ string JSONGenerator::spawnObject(string type,vector3f location,vector<int> cont
 //used for spawning trucks ships and tranes
 /*string JSONGenerator::spawnObject(Transport& transport)//rotation???
 {
-	// {'cmdt': 2, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2}},
-	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
