@@ -42,11 +42,8 @@ public class AGV extends WorldObject
             agvSpeed = 200;
         else
             agvSpeed = 400;
-        
-        System.out.println("speed = " + agvSpeed);
         motionPath = new MotionPath();
         this.wayPointList = wayPoints;
-        System.out.println(wayPoints);
         this.totalDistance = distance;
         this.duration = this.totalDistance/agvSpeed;
         this.motionPath.setPathSplineType(Spline.SplineType.Linear);
@@ -55,7 +52,6 @@ public class AGV extends WorldObject
             motionPath.addWayPoint(node.getWorldTranslation());
             for(Vector3f wayPoint : this.wayPointList)
                 motionPath.addWayPoint(wayPoint);
-            System.out.println(motionPath.getNbWayPoints());
             startMotionEvent();
         }
     }

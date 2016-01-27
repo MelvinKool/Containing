@@ -55,7 +55,6 @@ public class CommandHandler
                 List Locations = new ArrayList<>();
                 float x,y,z;
                 float totalDistance;
-                //float speed;
                 for(Object coordinate : route)
                 {
                     JSONArray coord = (JSONArray)coordinate;
@@ -66,7 +65,6 @@ public class CommandHandler
                 }
                 totalDistance = (float)jsonObject.getDouble("totalDistance");
                 agv.setPath(Locations, totalDistance);
-                //objectloader.agvs.get(vehicleId).setPath(Locations, totalDistance, speed);
                 break;
             case "agvAttachContainer":
                 int agvId = jsonObject.getInt("agvId");
@@ -87,21 +85,13 @@ public class CommandHandler
             case "spawnTrain":
                 this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"));
                 break;
+            case "spawnSeaShip":
+                this.objectloader.spawnShip(jsonObject.getJSONArray("containers"));
+                break;
             case "despawnVehicle":
                 int id = jsonObject.getInt("vehicleId");
                 this.objectloader.vehicles.remove(id);
                 break;
-//            case "teleportObject":
-//                vehicleId = jsonObject.getInt("vehicleId");
-//                float rotation = (float)jsonObject.getDouble("rotation");
-//                JSONObject teleportVector = jsonObject.getJSONObject("teleportLocation");
-//                float telX,telY,telZ;
-//                telX = (float)teleportVector.getDouble("X");
-//                telY = (float)teleportVector.getDouble("Y");
-//                telZ = (float)teleportVector.getDouble("Z");
-//                objectloader.agvs.get(vehicleId).node.rotate(0, rotation*FastMath.DEG_TO_RAD, 0);
-//                objectloader.agvs.get(vehicleId).node.setLocalTranslation(new Vector3f(telX, telY, telZ));                
-//                break;
         }
     }
     

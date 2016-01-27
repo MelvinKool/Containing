@@ -39,7 +39,7 @@ public class Main extends SimpleApplication
     //private Node dockCraneNode;
     //private List<Container> containers;
     private Connection connection;
-    private ObjectLoader worldObjects;
+    private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
 
     private Train train; // TODO: this is test code
@@ -53,9 +53,10 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
+        this.speed = 1;
         //long start = System.currentTimeMillis();
-        this.worldObjects = new ObjectLoader(this.rootNode, this.assetManager);
-        this.commandHandler = new CommandHandler(this.worldObjects);
+        this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
+        this.commandHandler = new CommandHandler(this.objectLoader);
         //long end = System.currentTimeMillis();
 
         //System.out.println(end - start);
@@ -65,7 +66,7 @@ public class Main extends SimpleApplication
         cam.setFrustumFar(3000);
         
         //create a train of 80 carts long.
-        this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
+        this.train = new Train(80, this.rootNode, this.assetManager, this.objectLoader.getLocomotiveModel(), this.objectLoader.getTrainCartModel());
         initWorld();
         initLight();
         initInputs();
@@ -75,7 +76,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection(worldObjects, commandHandler);
+            connection = new Connection(objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
@@ -134,7 +135,7 @@ public class Main extends SimpleApplication
 //        float dist;
 //        float minDist = -1;
         Crane nCrane = null;
-//        for (Crane crane : this.worldObjects.cranes.values())
+//        for (Crane crane : this.objectLoader.cranes.values())
 //        {
 //            dist = obj.getLocalTranslation().distance(crane.getPosition());
 //            if (dist < minDist || minDist == -1)
@@ -193,7 +194,7 @@ public class Main extends SimpleApplication
                             
                         break;
                     case "zm":
-                        Container container = worldObjects.addContainer(1, commandHandler);
+                        Container container = objectLoader.addContainer(1, commandHandler);
                         
                         try 
                         {
@@ -205,7 +206,7 @@ public class Main extends SimpleApplication
                         catch (IOException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        worldObjects.agvs.get(1).attachContainer(container);
+                        objectLoader.agvs.get(1).attachContainer(container);
                         break;
                     }
                 }
