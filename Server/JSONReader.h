@@ -39,74 +39,7 @@ class JSONReader{
 
         /*loads all vehicles with the specified key into a list of json strings*/
         Server* server;
-        template <class Vehicle>
-        std::vector<std::string> loadVehicle(const char* key,rapidjson::Document& document, std::vector<Vehicle>& transportVector){
-            rapidjson::Value& transportJSON = document[key];
-            int count = transportJSON["count"].GetInt();
-            const Value& rotation = transportJSON["rotation"];
-            float rotX, rotY, rotZ;
-            rotX = (float) rotation[0].GetDouble();
-            rotY = (float) rotation[1].GetDouble();
-            rotZ = (float) rotation[2].GetDouble();
-            vector3f rotationVect(rotX,rotY,rotZ);
-            float speed = (float)transportJSON["speed"].GetDouble();
-            Value::ConstMemberIterator itr = transportJSON.FindMember("grabber");
-            float holderSpeed, grabberSpeed, grabber_y_offset;
-            vector3f grabberPos;
-            bool has_holder;
-            if (itr != transportJSON.MemberEnd()){
-                //vehicle has a grabber
-                const Value& grabber = transportJSON["grabber"];
-                holderSpeed = (float) grabber["holderSpeed"].GetDouble();
-                const Value& grabberPosition = grabber["position"];
-                float grabberPosX = (float) grabberPosition[0].GetDouble();
-                float grabberPosY = (float) grabberPosition[1].GetDouble();
-                float grabberPosZ = (float) grabberPosition[2].GetDouble();
-                grabberPos = vector3f(grabberPosX,grabberPosY, grabberPosZ);
-                grabberSpeed = (float) grabber["speed"].GetDouble();
-                grabber_y_offset = (float) grabber["y_offset"].GetDouble();
-                has_holder = grabber["has_holder"].GetBool();
-            }
-            JSONGenerator generator;
-            vector3f tempVect;
-            const Value& positions = transportJSON["positions"];
-            //vector<string> allObjectsJSON;
-            std::vector<std::string> allSpawnObjects;
-            for (rapidjson::SizeType i = 0; i < positions.Size(); i++)
-            {
-                const rapidjson::Value& position = positions[i];
-                float x,y,z;
-                x = position[0].GetDouble();
-                y = position[1].GetDouble();
-                z = position[2].GetDouble();
-                cout << x << " " << y << " " << z << endl;
-                tempVect = vector3f(x,y,z);
-                //generate spawn json
-                //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
-                //JSONGenerator::spawnObject(int, char*, vector3f, vector3f, float, float, float, float, vector3f, bool)
-                int vehicleId = transportVector.size();
-                if(key == "AGV")
-                {
-                    AGV agv(vehicleId,x,y,z,server);
-                    string agvSpawn = generator.spawnAGV(agv, vehicleId, rotationVect);
-                    allSpawnObjects.push_back(agvSpawn);
-                    transportVector.push_back(agv);
-                }
-                else{
-                    //this is a crane
-                    cout << "crane" << endl;
-                    //Crane::Crane(int id,float x,float y,float z,Server* ser)
-                    Crane crane(key, vehicleId,x,y,z,server);
-                    string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
-                    allSpawnObjects.push_back(craneSpawn);
-                    transportVector.push_back(crane);
-                }
-                //simulator.writeToSim(final_JSON_string);
-                //spawn objects in simulator
-                //simulator.writeToSim(genJSON);
-            }
-            return allSpawnObjects;
-        }
-
+        std::vector<std::string> loadCranes(const char* key,rapidjson::Document& document, std::vector<Crane>& craneVector);
+        std::vector<std::string> loadAGVs(rapidjson::Document& document, std::vector<AGV>& AGVVector);
 };
 #endif
