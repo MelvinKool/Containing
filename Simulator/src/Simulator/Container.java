@@ -34,7 +34,7 @@ public class Container extends WorldObject
     public void operationDone() {
         if (this.commands != null && !this.commands.isEmpty())
         {    
-            System.out.println("container operation done. container: " + this.containerId);
+            System.out.println("container operation done.");
             JSONObject command = this.commands.remove(0);
             this.commandHandler.queueCommand(command);
             this.vehicle = null;
