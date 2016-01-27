@@ -2,6 +2,8 @@ package Simulator;
 import java.net.*;
 import java.io.*;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Connection
 {
@@ -109,6 +111,11 @@ public class Connection
                     tDataForApp = initTDataFotApp();
                     
                     tRead.start();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ex) {
+                        //Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     tCheck.start();
                     tDataForApp.start();
                     

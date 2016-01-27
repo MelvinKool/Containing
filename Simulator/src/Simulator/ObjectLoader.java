@@ -268,7 +268,8 @@ public class ObjectLoader
         
         for(int i = 0; i < objects.length(); i++)
         {
-            JSONObject objectObject = new JSONObject(objects.getString(i));
+            String objectString = objects.getString(i);
+            JSONObject objectObject = new JSONObject(objectString);
             this.spawnObject(objectObject);
         }
         

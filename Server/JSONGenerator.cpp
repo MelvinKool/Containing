@@ -159,7 +159,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
-	document.AddMember("speed", crane.unloaded_Speed, allocator);
+	document.AddMember("speed", 0, allocator);
 	rapidjson::Value spawnLocation(rapidjson::kArrayType);
 	spawnLocation.PushBack(crane.currentLocation.getX(), allocator)
 				.PushBack(crane.currentLocation.getY(), allocator)

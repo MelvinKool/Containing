@@ -84,6 +84,7 @@ thread* Connections::newClientThread(int number)
             cout << "sending initialization json to simulator..." << endl;
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json", server);
             jsonReader.loadTransport(allObjects);
+            server->startRunning();
         }
         //load vehicles
         while(!this->stop)
@@ -101,6 +102,7 @@ thread* Connections::newClientThread(int number)
             if(input == "disconnect")
             {
                 cout << clients[number].type + " disconneced." << endl;
+                server->stopRunning();
                 break;
             }
             else if(input == "connection_check")

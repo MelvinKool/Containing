@@ -56,7 +56,8 @@ void Server::stopRunning()
     else
     {
         stop = true;
-        //t1.join();
+        //timer.stop();
+        t1.join();
     }
 }
 
@@ -76,7 +77,7 @@ void Server::checkContainers()
         previousTime = currentTime;
         currentDate = timer.getDate();
         currentTime = timer.getTime();
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";// AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
 
         /*
