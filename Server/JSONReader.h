@@ -89,6 +89,7 @@ class JSONReader{
                     AGV agv((int)i,x,y,z,server);
                     string agvSpawn = generator.spawnAGV(agv, (int) i, rotationVect);
                     allSpawnObjects.push_back(agvSpawn);
+                    transportVector.push_back(agv);
                 }
                 else{
                     //this is a crane
