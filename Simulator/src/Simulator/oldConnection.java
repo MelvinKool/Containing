@@ -3,36 +3,9 @@ import java.net.*;
 import java.io.*;
 import java.util.Random;
 
-public class Connection
+public class oldConnection
 {
     private String ip = "localhost";
-
-    private class SimSocket extends Socket
-    {
-        private DataInputStream in;
-        private OutputStream out;
-        private final int bufsize = 4096;
-        private SocketAddress socket = new InetSocketAddress(ip, 1337);
-        
-        public SimSocket(InetAddress ip, int port) throws Exception
-        {
-            super(ip, port);
-            in = new DataInputStream(getInputStream());
-            out = getOutputStream();
-        }
-        
-        public void write(String message) throws Exception
-        {
-            if(message.length() > bufsize - 1)
-                throw new Exception("SimSocket.write() - message to long.");
-            out.write((message+"\n").getBytes());
-        }
-        
-        public String read() throws Exception
-        {
-            return in.readLine();
-        }
-    }
     
     private boolean shouldStop = false;
     private SimSocket simSocket;
@@ -44,7 +17,7 @@ public class Connection
     private Thread tCheck;
     private Thread tDataForApp;
     
-    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
+    public oldConnection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
     {
         this.objectLoader = objectLoader;
         this.commandHandler = commandHandler;
@@ -234,7 +207,7 @@ public class Connection
     
     private void initSocket()
     {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
+        try                { simSocket = new oldConnection.SimSocket(InetAddress.getByName(ip), 1337); }
         catch(Exception e) { simSocket = null; }
     }
 }

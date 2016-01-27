@@ -87,7 +87,7 @@ class Server(object):
           print 'sending: %s' % json.dumps(command['cmd'])
           self.send_command(command['cmd'])
           commands[i] = None
-      time.sleep(0.1)
+      time.sleep(0.01)
 
   def send_command(self, command):
     self.sim.write('%s\n' % json.dumps(command))

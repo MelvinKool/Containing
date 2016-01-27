@@ -63,6 +63,7 @@ public class Main extends SimpleApplication
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
+        this.setPauseOnLostFocus(false); // don't pause automatically
         
         //create a train of 80 carts long.
         this.train = new Train(80, this.rootNode, this.assetManager, this.worldObjects.getLocomotiveModel(), this.worldObjects.getTrainCartModel());
@@ -75,7 +76,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection(worldObjects, commandHandler);
+            connection = new Connection("localhost", 1337, worldObjects, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
