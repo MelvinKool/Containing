@@ -102,7 +102,6 @@ std::vector<std::string> JSONReader::loadCranes(const char* key,rapidjson::Docum
         x = position[0].GetDouble();
         y = position[1].GetDouble();
         z = position[2].GetDouble();
-        cout << x << " " << y << " " << z << endl;
         tempVect = vector3f(x,y,z);
         //generate spawn json
         //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)
@@ -142,7 +141,6 @@ std::vector<std::string> JSONReader::loadAGVs(rapidjson::Document& document, std
         x = position[0].GetDouble();
         y = position[1].GetDouble();
         z = position[2].GetDouble();
-        cout << x << " " << y << " " << z << endl;
         tempVect = vector3f(x,y,z);
         //generate spawn json
         //JSONGenerator::spawnObject(int, const char*, vector3f&, vector3f&, float&, float&, float&, float&, vector3f&, bool&)

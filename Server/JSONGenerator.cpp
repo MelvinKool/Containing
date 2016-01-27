@@ -155,7 +155,6 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",craneId, allocator);
-	cout << "type" << crane.vehicleType << endl;
 	Value s;
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
