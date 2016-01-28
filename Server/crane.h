@@ -22,7 +22,7 @@ class Crane : public Transport
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
         Server* server;
     public:
-        Crane(const char* craneType, int id,float x,float y,float z,Server* ser);
+        Crane(const char* craneType, int id,float x,float y,float z, float maximumSpeed, Server* ser);
 };
 
 #endif
