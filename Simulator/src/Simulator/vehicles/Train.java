@@ -55,14 +55,13 @@ public class Train
     }
     
     public void addContainer(Container container) {
-        for (int i = 0; i < this.trainCarts.size(); i++) {
-            this.trainCarts.get(i).attachContainer(container);
-        }
+        TrainCart cart = this.getFirstFreeCart();
+        cart.attachContainer(container);
     }
     
     public TrainCart getFirstFreeCart() {
         for (TrainCart cart : this.trainCarts) {
-            if (cart.hasContainer()) {
+            if (!cart.hasContainer()) {
                 return cart;
             }
         }

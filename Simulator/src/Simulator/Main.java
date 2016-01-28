@@ -60,13 +60,11 @@ public class Main extends SimpleApplication
 
         //System.out.println(end - start);
 
-        flyCam.setEnabled(false);
+        flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
         this.setPauseOnLostFocus(false); // don't pause automatically
         
-        //create a train of 80 carts long.
-        this.train = new Train(80, this.rootNode, this.assetManager, this.objectLoader.getLocomotiveModel(), this.objectLoader.getTrainCartModel());
         initWorld();
         initLight();
         initInputs();
@@ -98,15 +96,10 @@ public class Main extends SimpleApplication
         }
         return temp;
     }
-       
-    boolean test = false; //TODO: remove this line
+    
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (this.test == false) {
-            train.moveIn();
-            this.test = true;
-        }
         
         // Destroy train when it says it can (when it's out of map)
         if (this.train != null && this.train.canDestroy) {

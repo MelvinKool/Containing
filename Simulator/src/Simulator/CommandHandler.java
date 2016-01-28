@@ -71,7 +71,7 @@ public class CommandHandler
                 break;
             case "agvAttachContainer":
                 int agvId = jsonObject.getInt("agvId");
-                int containerId = jsonObject.getInt("containerId`");
+                int containerId = jsonObject.getInt("containerId");
                 agv = this.objectloader.agvs.get(agvId);
                 Container cont = this.objectloader.containers.get(containerId);
                 agv.attachContainer(cont);

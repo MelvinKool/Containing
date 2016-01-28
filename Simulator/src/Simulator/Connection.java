@@ -64,12 +64,17 @@ public class Connection extends Thread implements Runnable
         while (this.connected) {
             String data = "";
             JSONObject command = null;
+            
+            this.sendAppData();
+            
             try
             {
                 data = this.socket.read();
                 System.out.println("Received: " + data);
             } 
-            catch (java.net.SocketTimeoutException ex) { }
+            catch (java.net.SocketTimeoutException ex) { 
+                continue;
+            }
             catch (SocketException ex)
             {
                 System.err.println(ex.getMessage());
@@ -87,16 +92,14 @@ public class Connection extends Thread implements Runnable
                 this.commandHandler.queueCommand(command);
             } 
             catch (JSONException ex) { 
-                System.err.println(ex.getMessage());
+                System.err.println(ex.getMessage() + ": " + data);
             }
-            
-            this.sendAppData();
         }
     }
     
     private void sendAppData() {
         if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
-            System.out.println("appdata");
+            System.out.println("sending state to server");
             Random random = new Random();
                     
                     int zeeschip    = 10 + random.nextInt(20);
