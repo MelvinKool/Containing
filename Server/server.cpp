@@ -139,8 +139,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         int truckLoc = getTruckStop();
         vector3f truckLocation = truckStops[truckLoc];
         //TODO void expression?!?
-        //writeToSim(JGen.spawnObject("Truck",truckLocation,containers.push_back(containerId),transportId));
-        cout << "generating route to dest" << endl;
+        writeToSim(JGen.spawnTruck(truckLocation,containerId,transportId));
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false));
         commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID)); //get container from truck to agv
         commands.push_back(JGen.agvAttachContainer(agvID,containerId));
@@ -162,7 +161,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             }
             mysql_free_result(resContainerList);
 
-            writeToSim(JGen.spawnObject("Train",containers));
+            writeToSim(JGen.spawnTrain(containers,-1));
         }
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false));
         commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));

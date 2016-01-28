@@ -246,6 +246,7 @@ public class ObjectLoader
         }
         this.train.moveIn();
     }
+    
     public void spawnShip(JSONArray containers)
     {
         

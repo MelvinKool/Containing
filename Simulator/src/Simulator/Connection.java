@@ -64,29 +64,42 @@ public class Connection extends Thread implements Runnable
         while (this.connected) {
             String data = "";
             JSONObject command = null;
+            
+            this.sendAppData();
+            
             try
             {
                 data = this.socket.read();
                 System.out.println("Received: " + data);
-            } catch (java.net.SocketTimeoutException ex) { 
-            } catch (SocketException ex)
+            } 
+            catch (java.net.SocketTimeoutException ex) { 
+                continue;
+            }
+            catch (SocketException ex)
             {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
                 this.connected = false;
-            } catch (Exception ex) { }
+            } 
+            catch (Exception ex) 
+            {
+                System.err.println(ex.getMessage());
+                this.connected = false;
+            }
+            
             try 
             {
                 command = this.commandHandler.ParseJSON(data);
                 this.commandHandler.queueCommand(command);
-            } catch (JSONException ex) { }
-            
-            this.sendAppData();
+            } 
+            catch (JSONException ex) { 
+                System.err.println(ex.getMessage() + ": " + data);
+            }
         }
     }
     
     private void sendAppData() {
         if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
-            System.out.println("appdata");
+            System.out.println("sending state to server");
             Random random = new Random();
                     
                     int zeeschip    = 10 + random.nextInt(20);
