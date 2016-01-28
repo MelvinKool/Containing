@@ -14,9 +14,6 @@ AGV::AGV(int id,float x,float y,float z,Server* ser)
 
 string AGV::goTo(vector3f destination,bool loaded)
 {
-    //cout << "org: " << currentLocation.toString() << endl;
-    //cout << "dest: " << destination.toString() << endl;
-    cout << "started generating route" << endl;
     pair<double,vector<vector3f>> route;
     if (loaded)
     {
@@ -27,7 +24,6 @@ string AGV::goTo(vector3f destination,bool loaded)
          route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
     }
     cout << route.second.size() << endl;
-    cout << "done generating route" << endl;
     return server->JGen.moveTo(ID,route.second,route.first);
 }
 

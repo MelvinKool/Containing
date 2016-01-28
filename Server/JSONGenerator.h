@@ -24,7 +24,7 @@ class JSONGenerator
     std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID); //TODO
     std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
     std::string spawnTruck(vector3f location, int contID,int truckId);
-    std::string spawnTrain(vector3f location, std::vector<int> contIDs,int trainID);
+    std::string spawnTrain(std::vector<int> contIDs,int trainID);
     std::string spawnShip(vector3f location,std::vector<int> contIDs,int shipID);
     std::string spawnAGV(AGV& agv, int agvId, vector3f rotation);
     std::string spawnObjects(std::vector<std::string>& spawnStrings);
