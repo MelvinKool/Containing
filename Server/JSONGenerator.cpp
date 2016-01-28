@@ -48,7 +48,13 @@ rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & 
 string JSONGenerator::craneTransferContainer(int craneId, int containerId, int destAGV)
 {
     //{'Command': 'craneMoveContainer', 'craneId': 157, 'containerId': 1, 'target': 89}
-    return "";
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "craneMoveContainer", allocator);
+	document.AddMember("craneId", craneId, allocator);
+	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("target", destAGV, allocator);
+    return toString(document);
 }
 
 //generates JSON for doing a container transfer between two vehicles
@@ -82,11 +88,6 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 	return toString(document);
 }
 
-string JSONGenerator::despawnObject(int transportID)
-{
-    return "";
-}
-
 //generates JSON for spawning trains and ships
 //type: "Ship" or "Train"
 string JSONGenerator::spawnShip(vector3f location,vector<int> contIDs,int shipID)
@@ -114,11 +115,11 @@ string JSONGenerator::spawnShip(vector3f location,vector<int> contIDs,int shipID
 //generates JSON for spawning trucks
 string JSONGenerator::spawnTrain(vector<int> contIDs,int trainID)
 {
+	//{'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}
 	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
 	rapidjson::Document document = createJSONDocument();
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command","spawnTrain", allocator);
-	rapidjson::Value position(rapidjson::kArrayType);
 	document.AddMember("id", trainID, allocator);
 	//ship or train???
 	//Value s;
@@ -219,7 +220,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	*/
 
 	// document is the root of a json message
-	rapidjson::Document document;
+	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",craneId, allocator);
@@ -262,7 +263,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
-	rapidjson::Document document;
+	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",agvId, allocator);
@@ -282,6 +283,11 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 				.PushBack(rotation.getZ(),allocator);
 	document.AddMember("rotation",spawnRotation,allocator);
 	return toString(document);
+}
+
+std::string JSONGenerator::despawnObject(int transportID)
+{
+	return "";
 }
 
 //spawn multiple objects with one JSON string
