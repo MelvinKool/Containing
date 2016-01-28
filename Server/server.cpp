@@ -26,7 +26,7 @@ Server::Server()
     pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
     for (int stops = 0; stops < 20; stops++)
     {
-        truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,25));
+        truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,10));
     }
 }
 
@@ -122,7 +122,7 @@ void Server::checkContainers()
         {
             writeToSim(JGen.despawnObject(-1));
         }
-
+        break;
     }
 }
 
@@ -142,7 +142,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         vector3f truckLocation = truckStops[truckLoc];
         //TODO void expression?!?
         writeToSim(JGen.spawnTruck(truckLocation,containerId,transportId));
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false,containerId));
         commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID)); //get container from truck to agv
         commands.push_back(JGen.agvAttachContainer(agvID,containerId));
         commands.push_back(JGen.despawnObject(transportId));
@@ -165,7 +165,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
             writeToSim(JGen.spawnTrain(containers,-1));
         }
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false));
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
         commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
         commands.push_back(JGen.agvAttachContainer(agvID,containerId));
     }
@@ -199,7 +199,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
     */
     int storageLane = 41;
-    commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true)); //move to dump row
+    commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true,-1)); //move to dump row
     commands.push_back(allObjects.storageCranes.at(storageLane).transfer(containerId,storageLane,vector3f(0,0,0)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }

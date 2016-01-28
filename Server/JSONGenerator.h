@@ -15,7 +15,7 @@ using namespace std;
 class JSONGenerator
 {
   public:
-    std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
+    std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance, int containerId);
     std::string craneTransferContainer(int craneId, int containerId, int destAGV); //TODO
     std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect); //TODO
     std::string agvAttachContainer(int agvId, int containerId);

@@ -18,7 +18,7 @@ void XmlParser::readXML(Database &db)
 
         vector<string> xmlDocPaths;
         xmlDocPaths.push_back("../docs/XML/xml1.xml");
-        xmlDocPaths.push_back("../docs/XML/xml2.xml");
+        //xmlDocPaths.push_back("../docs/XML/xml2.xml");
         //xmlDocPaths.push_back("../docs/XML/xml3.xml");
         //xmlDocPaths.push_back("../docs/XML/xml4.xml");
         //xmlDocPaths.push_back("../docs/XML/xml5.xml");

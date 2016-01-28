@@ -11,7 +11,7 @@ class AGV : public Transport
 {
     public:
         AGV(){};
-        std::string goTo(vector3f destination,bool loaded);
+        std::string goTo(vector3f destination,bool loaded,int contID);
         vector3f getCurrentLocation();
         AGV(int id,float x,float y,float z,Server* ser);
     private:

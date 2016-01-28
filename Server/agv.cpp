@@ -12,7 +12,7 @@ AGV::AGV(int id,float x,float y,float z,Server* ser)
     server = ser;
 }
 
-string AGV::goTo(vector3f destination,bool loaded)
+string AGV::goTo(vector3f destination,bool loaded,int contID)
 {
     pair<double,vector<vector3f>> route;
     if (loaded)
@@ -23,8 +23,7 @@ string AGV::goTo(vector3f destination,bool loaded)
     {
          route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
     }
-    cout << route.second.size() << endl;
-    return server->JGen.moveTo(ID,route.second,route.first);
+    return server->JGen.moveTo(ID,route.second,route.first,contID);
 }
 
 vector3f AGV::getCurrentLocation()
