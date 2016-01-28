@@ -25,8 +25,10 @@ public class CommandHandler
         JSONArray commandArr = commands.getJSONArray("commands");
         List<JSONObject> commandList = new ArrayList<>();
         
-        for (int i = 0; i < commandArr.length(); i++) {
-            commandList.add(commandArr.getJSONObject(i));
+        for (int i = 0; i < commandArr.length(); i++) 
+        {
+            JSONObject objectObject = new JSONObject(commandArr.getString(i));
+            commandList.add(objectObject);
         }
         
         container.setCommands(commandList);  
