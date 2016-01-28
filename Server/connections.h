@@ -13,9 +13,9 @@
 class Connections
 {
     public:
-        Connections(){}
+        Connections(){};
         ~Connections();
-        void initConnections(AllObjects& allObjects, Server* server);
+        void initConnections(Server* server);
         void acceptClients();
         void writeToSim(std::string message);
         std::string getDataForApp();
@@ -42,7 +42,6 @@ class Connections
         int getFreeClientNumber();
         std::thread* newClientThread(int number);
         std::string dataForApp = "0,0,0,0,0,0,0";
-        AllObjects allObjects;
 };
 
 #endif //CONNECTIONS_H

@@ -20,17 +20,22 @@ Timer::Timer()
 
 Timer::~Timer()
 {
-    if(this->stop == false)
-    {
-        this->stop = true;
-        this->t_tick->join();
-    }
+    this->stop();
 }
 
 void Timer::start()
 {
-    this->stop = false;
+    this->shouldStop = false;
     this->t_tick = new std::thread([this] {tick();});
+}
+
+void Timer::stop()
+{
+    if(this->shouldStop == false)
+    {
+        this->shouldStop = true;
+        this->t_tick->join();
+    }
 }
 
 std::string Timer::getDate()
@@ -71,7 +76,7 @@ std::string Timer::getTime()
 
 void Timer::tick()
 {
-    while(!this->stop)
+    while(!this->shouldStop)
     {
         this->mtx.lock();
         this->minute += 1 * this->multiplier;

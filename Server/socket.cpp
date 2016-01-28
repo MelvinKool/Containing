@@ -44,7 +44,7 @@ void ClientSocket::write(string message)
         strcpy(buffer, message.c_str());
         buffer[count++] = '\n';
         send(sock, buffer, count, 0);
-        cout << buffer << endl;
+        //cout << buffer << endl;
         /*if(count <= bufsize-1)
         {
             char buffer[bufsize];

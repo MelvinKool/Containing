@@ -16,12 +16,16 @@ class JSONGenerator
 {
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance);
-    std::string craneTransferContainer(int craneId, int containerId, vector3f targetVect);
+    std::string craneTransferContainer(int craneId, int containerId, int destAGV); //TODO
+    std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect); //TODO
     std::string agvAttachContainer(int agvId, int containerId);
-    std::string despawnObject(int transportID){}; //TODO
-    std::string spawnObject(string type,std::vector<int> contID){}; //TODO
+    std::string despawnObject(int transportID); //TODO
+    std::string spawnObject(string type,std::vector<int> contID); //TODO
     std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID); //TODO
     std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
+    std::string spawnTruck(vector3f location, int contID,int truckId);
+    std::string spawnTrain(vector3f location, std::vector<int> contIDs,int trainID);
+    std::string spawnShip(vector3f location,std::vector<int> contIDs,int shipID);
     std::string spawnAGV(AGV& agv, int agvId, vector3f rotation);
     std::string spawnObjects(std::vector<std::string>& spawnStrings);
     std::string generateCommandList(int containerId, std::vector<std::string>& commandList);

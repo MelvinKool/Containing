@@ -25,7 +25,11 @@ float vector3f::getZ()
     return z;
 }
 
-string vector3f::toString(){
-    string vector3fString = to_string(getX()) + "," + to_string(getY()) + ","+ to_string(getZ());
+string vector3f::toString()
+{
+    string x = to_string(getX());
+    string y = to_string(getY());
+    string z = to_string(getZ());
+    string vector3fString = x.substr(0,(x.length()-4)) + "," + y.substr(0,(y.length()-4)) + ","+ z.substr(0,(z.length()-4));
     return vector3fString;
 }

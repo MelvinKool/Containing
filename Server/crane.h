@@ -10,7 +10,8 @@ class Crane : public Transport
 {
     public:
         Crane(){};
-        std::string transfer(int containerID,int destID,vector3f dest);
+        std::string transfer(int containerID,int destID);
+        std::string transfer(int containerID,int destID,vector3f location);
         struct grabber {
             //grabber() : () {}
             float holderSpeed = 0, speed = 0, y_offset = 0;
@@ -19,7 +20,6 @@ class Crane : public Transport
         } currentGrabber;
     private:
         double secureTime, unsecureTime, liftTime, lowerTime, transferSpeed;
-        int ID;
         Server* server;
     public:
         Crane(const char* craneType, int id,float x,float y,float z,Server* ser);

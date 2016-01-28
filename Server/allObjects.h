@@ -6,10 +6,9 @@
 
 class AllObjects
 {
-private:
 public:
-    //std::vector<Crane> freightShipCranes, storageCranes, seaShipCranes, trainCranes, truckCranes;
-    std::vector<Crane> allCranes;
+    std::vector<Crane> freightShipCranes, storageCranes, seaShipCranes, trainCranes, truckCranes;
+    //std::vector<Crane> allCranes;
     std::vector<AGV> agvs;
 private:
     //common object methods here
