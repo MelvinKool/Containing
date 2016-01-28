@@ -116,6 +116,7 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         int vehicleId = indexStart + craneVector.size();
         Crane crane(key, vehicleId,x,y,z,server);
         string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
+        craneSpawn = "{" + craneSpawn + "}";
         allSpawnObjects.push_back(craneSpawn);
         craneVector.push_back(crane);
         //simulator.writeToSim(final_JSON_string);
@@ -154,6 +155,8 @@ vector<string> JSONReader::loadAGVs(Document& document, vector<AGV>& AGVVector){
         int vehicleId = AGVVector.size();
         AGV agv(vehicleId,x,y,z,server);
         string agvSpawn = generator.spawnAGV(agv, vehicleId, rotationVect);
+        //put this in a json object
+        agvSpawn = "{" + agvSpawn + "}";
         allSpawnObjects.push_back(agvSpawn);
         AGVVector.push_back(agv);
         //simulator.writeToSim(final_JSON_string);

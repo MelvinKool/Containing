@@ -217,7 +217,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	*/
 
 	// document is the root of a json message
-	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document document;
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",craneId, allocator);
@@ -260,7 +260,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
-	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document document;
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("id",agvId, allocator);
