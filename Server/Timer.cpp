@@ -101,7 +101,7 @@ void Timer::tick()
             }
         }
         this->mtx.unlock();
-        //std::cout << this->getDate()+" "+this->getTime() << std::endl;
+        std::cout << this->getDate()+" "+this->getTime() << std::endl;
         sleep(1);
     }
 }
