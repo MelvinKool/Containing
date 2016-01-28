@@ -24,9 +24,11 @@ public class CommandHandler
         Container container = this.objectloader.containers.get(containerId);
         JSONArray commandArr = commands.getJSONArray("commands");
         List<JSONObject> commandList = new ArrayList<>();
+        
         for (int i = 0; i < commandArr.length(); i++) {
             commandList.add(commandArr.getJSONObject(i));
         }
+        
         container.setCommands(commandList);  
         container.operationDone();
     }
@@ -35,6 +37,7 @@ public class CommandHandler
          String command = jsonObject.getString("Command");
         int vehicleId;
         AGV agv = null;
+        
         switch(command)
         {
             case "containerCommands":
@@ -68,7 +71,7 @@ public class CommandHandler
                 break;
             case "agvAttachContainer":
                 int agvId = jsonObject.getInt("agvId");
-                int containerId = jsonObject.getInt("containerId");
+                int containerId = jsonObject.getInt("containerId`");
                 agv = this.objectloader.agvs.get(agvId);
                 Container cont = this.objectloader.containers.get(containerId);
                 agv.attachContainer(cont);

@@ -68,17 +68,27 @@ public class Connection extends Thread implements Runnable
             {
                 data = this.socket.read();
                 System.out.println("Received: " + data);
-            } catch (java.net.SocketTimeoutException ex) { 
-            } catch (SocketException ex)
+            } 
+            catch (java.net.SocketTimeoutException ex) { }
+            catch (SocketException ex)
             {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
                 this.connected = false;
-            } catch (Exception ex) { }
+            } 
+            catch (Exception ex) 
+            {
+                System.err.println(ex.getMessage());
+                this.connected = false;
+            }
+            
             try 
             {
                 command = this.commandHandler.ParseJSON(data);
                 this.commandHandler.queueCommand(command);
-            } catch (JSONException ex) { }
+            } 
+            catch (JSONException ex) { 
+                System.err.println(ex.getMessage());
+            }
             
             this.sendAppData();
         }
