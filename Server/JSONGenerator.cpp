@@ -68,6 +68,7 @@ string JSONGenerator::craneTransferContainer(int craneId, int containerId, int s
 	document.AddMember("Command", "craneMoveContainer", allocator);
 	document.AddMember("craneId", craneId, allocator);
 	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("sortField",sortFieldID, allocator);
 	rapidjson::Value target(rapidjson::kArrayType);
 	target.PushBack(targetVect.getX(), allocator).PushBack(targetVect.getY(), allocator).PushBack(targetVect.getZ(),allocator);
 	document.AddMember("target", target, allocator);
@@ -228,7 +229,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
-	document.AddMember("speed", 0, allocator);
+	document.AddMember("speed", crane.unloaded_Speed, allocator);
 	rapidjson::Value spawnLocation(rapidjson::kArrayType);
 	spawnLocation.PushBack(crane.currentLocation.getX(), allocator)
 				.PushBack(crane.currentLocation.getY(), allocator)
@@ -287,7 +288,12 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 
 std::string JSONGenerator::despawnObject(int transportID)
 {
-	return "";
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "despawnVehicle", allocator);
+	document.AddMember("vehicleId", transportID, allocator);
+	return toString(document);
 }
 
 //spawn multiple objects with one JSON string

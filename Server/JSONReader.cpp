@@ -114,7 +114,20 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         //tempVect = vector3f(x,y,z);
         //generate spawn json
         int vehicleId = indexStart + craneVector.size();
-        Crane crane(key, vehicleId,x,y,z,server);
+        Crane crane(key, vehicleId,x,y,z,speed, server);
+        /*
+        struct grabber {
+            //grabber() : () {}
+            float holderSpeed = 0, speed = 0, y_offset = 0;
+            bool has_holder = false;
+            vector3f position = vector3f(0,0,0);
+        } currentGrabber;
+        */
+        crane.currentGrabber.holderSpeed = holderSpeed;
+        crane.currentGrabber.speed = grabberSpeed;
+        crane.currentGrabber.y_offset = grabber_y_offset;
+        crane.currentGrabber.has_holder = has_holder;
+        crane.currentGrabber.position = grabberPos;
         string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
         allSpawnObjects.push_back(craneSpawn);
         craneVector.push_back(crane);
