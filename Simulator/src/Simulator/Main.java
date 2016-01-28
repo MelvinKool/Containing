@@ -74,7 +74,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection("localhost", 1337, this.objectLoader, commandHandler);
+            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }

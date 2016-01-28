@@ -26,7 +26,7 @@ Server::Server()
     pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
     for (int stops = 0; stops < 20; stops++)
     {
-        truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,-24.50));
+        truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,25));
     }
 }
 
@@ -113,6 +113,8 @@ void Server::checkContainers()
                 {
                     cout<<error<<endl;
                 }
+                catch (...)
+                {}
             }
         }
         mysql_free_result(res2);
