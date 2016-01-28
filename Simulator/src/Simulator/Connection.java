@@ -1,186 +1,93 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Simulator;
-import java.net.*;
-import java.io.*;
+
+import java.net.SocketException;
+import java.nio.channels.Selector;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Connection
+/**
+ *
+ * @author erwin
+ */
+public class Connection extends Thread implements Runnable
 {
-    private String ip = "localhost";
-
-    private class SimSocket extends Socket
-    {
-        private DataInputStream in;
-        private OutputStream out;
-        private final int bufsize = 4096;
-        private SocketAddress socket = new InetSocketAddress(ip, 1337);
-        
-        public SimSocket(InetAddress ip, int port) throws Exception
-        {
-            super(ip, port);
-            in = new DataInputStream(getInputStream());
-            out = getOutputStream();
-        }
-        
-        public void write(String message) throws Exception
-        {
-            if(message.length() > bufsize - 1)
-                throw new Exception("SimSocket.write() - message to long.");
-            out.write((message+"\n").getBytes());
-        }
-        
-        public String read() throws Exception
-        {
-            return in.readLine();
-        }
-    }
-    
-    private boolean shouldStop = false;
-    private SimSocket simSocket;
+    private long lastAppDataSent;
+    private SimSocket socket;
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
+    private String address;
+    private int port;
+    private boolean connected;
     
-    private Thread tConnection;
-    private Thread tRead;
-    private Thread tCheck;
-    private Thread tDataForApp;
-    
-    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
-    {
+    public Connection(String address, int port, ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception {
+        this.address = address;
+        this.port = port;
         this.objectLoader = objectLoader;
         this.commandHandler = commandHandler;
-        tConnection = initTConnection();
-        tConnection.start();
+        this.connected = false;
+        this.lastAppDataSent = System.currentTimeMillis();
+        this.start();
     }
     
-    public void stop()
-    {
-        try
-        {
-            shouldStop = true;
-            if(simSocket != null)
-            {
-                simSocket.write("disconnect");
-                tConnection.join();
-                simSocket.close();
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println("Connection.stop() - Cannot close connection.");
-        }
-        finally
-        {
-            simSocket = null;
-        }
-    }
-    
-    private String read() throws Exception
-    {
-        return simSocket.read();
-    }
-    
-    private void write(String message) throws Exception
-    {
-        if(simSocket != null)
-            simSocket.write(message);
-        else
-            throw new Exception("Connection.write() - simSocket = null");
-    }
-    
-    private Thread initTConnection()
-    {
-        return new Thread(new Runnable() { @Override public void run()
-        {
-            while(!shouldStop)
-            {
-                initSocket();
-                if(simSocket != null)
-                {
-                    try { write("Simulator"); }
-                    catch(Exception e)
-                    {
-                        try                 { simSocket.close(); }
-                        catch(Exception ex) {}
-                        finally             { simSocket = null; continue; }
-                    }
-                    
-                    tRead = initTRead();
-                    tCheck = initTCheck();
-                    tDataForApp = initTDataFotApp();
-                    
-                    tRead.start();
-                    tCheck.start();
-                    tDataForApp.start();
-                    
-                    try
-                    {
-                        tCheck.join();
-                        tRead.stop();
-                        tDataForApp.stop();
-                    }
-                    catch(Exception e){}
-                }
-                else
-                {
-                    System.out.println("Cannot get connection, trying again in 5s");
-                    try { Thread.sleep(5000); }
-                    catch(Exception e) {}
-                }
-            }
-        }});
-    }
-    
-    private Thread initTRead()
-    {
-        return new Thread(new Runnable() { @Override public void run()
-        {
+    @Override
+    public void run() {
+        while (true) {
             try
             {
-                while(!shouldStop)
-                {
-                    String input = read();
-                    if(input.contentEquals("disconnect"))
-                    {
-                        System.out.println("Disconnected from server.");
-                        break;
-                    }
-                    System.out.println(input);
-                    commandHandler.queueCommand(
-                                commandHandler.ParseJSON(input));
-                }
+                this.socket = new SimSocket(this.address, this.port);
+                this.socket.write("Simulator");
+                this.connected = true;
+                this.communicate();
+            } catch (Exception ex)
+            {
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             }
-            catch(Exception e){}
-        }});
+            try
+            {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex)
+            {
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
-    private Thread initTCheck()
-    {
-        return new Thread(new Runnable() { @Override public void run() 
-        {
+    public void communicate() {
+        Selector select = null;
+        while (this.connected) {
+            String data = "";
+            JSONObject command = null;
+            try
+            {
+                data = this.socket.read();
+                System.out.println("Received: " + data);
+            } catch (java.net.SocketTimeoutException ex) { 
+            } catch (SocketException ex)
+            {
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                this.connected = false;
+            } catch (Exception ex) { }
             try 
             {
-                while (!shouldStop) 
-                {   
-                    write("connection_check");
-                    Thread.sleep(1000);
-                }
-            } 
-            catch (Exception e) 
-            {
-                System.out.println("Connection lost");
-            }
-        }});
+                command = this.commandHandler.ParseJSON(data);
+                this.commandHandler.queueCommand(command);
+            } catch (JSONException ex) { }
+            
+            this.sendAppData();
+        }
     }
     
-    private Thread initTDataFotApp()
-    {
-        return new Thread(new Runnable() { @Override public void run() 
-        {
-            try 
-            {
-                while (!shouldStop) 
-                {
-                    Random random = new Random();
+    private void sendAppData() {
+        if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
+            System.out.println("appdata");
+            Random random = new Random();
                     
                     int zeeschip    = 10 + random.nextInt(20);
                     int binnenschip = 10 + random.nextInt(20);
@@ -224,17 +131,14 @@ public class Connection
                                     vrachtauto+","+
                                     opslag+","+
                                     diversen;
-                    write(result);
-                    Thread.sleep(3000);
-                }
-            } 
-            catch (Exception e){}
-        }});
-    }
-    
-    private void initSocket()
-    {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
-        catch(Exception e) { simSocket = null; }
+            try
+            {
+                this.socket.write(result);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.lastAppDataSent = System.currentTimeMillis();
+        }
     }
 }

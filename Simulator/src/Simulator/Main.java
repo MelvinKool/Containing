@@ -53,7 +53,6 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        this.speed = 1;
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
@@ -61,9 +60,10 @@ public class Main extends SimpleApplication
 
         //System.out.println(end - start);
 
-        flyCam.setEnabled(true);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
+        this.setPauseOnLostFocus(false); // don't pause automatically
         
         //create a train of 80 carts long.
         this.train = new Train(80, this.rootNode, this.assetManager, this.objectLoader.getLocomotiveModel(), this.objectLoader.getTrainCartModel());
@@ -76,7 +76,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection(objectLoader, commandHandler);
+            connection = new Connection("localhost", 1337, this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
@@ -117,6 +117,7 @@ public class Main extends SimpleApplication
         
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
+            
         }
     }
 

@@ -269,9 +269,12 @@ public class Crane extends WorldObject {
     private void delayDetachContainer() 
     {        
         this.cmd = Cmd.RESET;
-//        this.grabber.resetPosition(this);
         this.targetContainer.operationDone();
         this.targetContainer = null;
+        if (this.commandQueue.isEmpty()) 
+        {
+            this.grabber.resetPosition(this);
+        }
     }
     
     /**

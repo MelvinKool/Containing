@@ -45,10 +45,16 @@ rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & 
   }
 }
 
-//generates JSON for doing a container transfer between two vehicles
-string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int destAGV)
 {
-	//{'Command': 'craneMoveContainer', 'craneId': 8, 'containerId': 4, 'target': [51.25, 1.0, -73.5]}
+    //{'Command': 'craneMoveContainer', 'craneId': 157, 'containerId': 1, 'target': 89}
+    return "";
+}
+
+//generates JSON for doing a container transfer between two vehicles
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect)
+{
+	//{'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 1, 'sortField': 22, 'target': [0,0,0]}
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -219,7 +225,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
 	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
-	document.AddMember("speed", crane.unloaded_Speed, allocator);
+	document.AddMember("speed", 0, allocator);
 	rapidjson::Value spawnLocation(rapidjson::kArrayType);
 	spawnLocation.PushBack(crane.currentLocation.getX(), allocator)
 				.PushBack(crane.currentLocation.getY(), allocator)

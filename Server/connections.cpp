@@ -5,9 +5,8 @@
 
 using namespace std;
 
-void Connections::initConnections(AllObjects& allObjects, Server* server)
+void Connections::initConnections(Server* server)
 {
-    this->allObjects = allObjects;
     this->socket = new ServerSocket(1337);
     this->server = server;
 }
@@ -21,7 +20,7 @@ Connections::~Connections()
 
     for(uint i = 0; i < clients.size(); i++)
     {
-        clients[i].socket->write("disconnect");
+        //clients[i].socket->write("disconnect");
         clients[i].worker->join();
         delete clients[i].worker;
     }
@@ -83,7 +82,8 @@ thread* Connections::newClientThread(int number)
         if(isSim){
             cout << "sending initialization json to simulator..." << endl;
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json", server);
-            jsonReader.loadTransport(allObjects);
+            jsonReader.loadTransport(server->allObjects);
+            server->startRunning();
         }
         //load vehicles
         while(!this->stop)
@@ -101,6 +101,7 @@ thread* Connections::newClientThread(int number)
             if(input == "disconnect")
             {
                 cout << clients[number].type + " disconneced." << endl;
+                server->stopRunning();
                 break;
             }
             else if(input == "connection_check")

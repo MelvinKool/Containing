@@ -10,6 +10,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     system("clear");
+    cout << endl;
     cout << " ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗██╗███╗   ██╗ ██████╗ " << endl;
     cout << "██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██║████╗  ██║██║████╗  ██║██╔════╝ " << endl;
     cout << "██║     ██║   ██║██╔██╗ ██║   ██║   ███████║██║██╔██╗ ██║██║██╔██╗ ██║██║  ███╗" << endl;
@@ -19,7 +20,6 @@ int main(int argc, char* argv[])
 
     cout << "Type 'exit' to close the application." << endl << endl;
     Server* server = new Server();
-    //server->crane = Crane(12,0.0,0.0,0.0,server);
 
     while(true)
     {
