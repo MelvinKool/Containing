@@ -6,12 +6,6 @@
 
 Timer::Timer()
 {
-    this->year   = 2004;
-    this->month  = 12;
-    this->day    = 1;
-    this->hour   = 0;
-    this->minute = 0;
-
     std::cout << "Set time multiplier: ";
     std::string temp;
     getline(std::cin, temp);
@@ -25,6 +19,12 @@ Timer::~Timer()
 
 void Timer::start()
 {
+    this->year   = 2004;
+    this->month  = 12;
+    this->day    = 1;
+    this->hour   = 0;
+    this->minute = 0;
+
     this->shouldStop = false;
     this->t_tick = new std::thread([this] {tick();});
 }
