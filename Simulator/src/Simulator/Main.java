@@ -63,7 +63,7 @@ public class Main extends SimpleApplication
         flyCam.setEnabled(true);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
-        this.setPauseOnLostFocus(false); // don't pause automatically
+        this.setPauseOnLostFocus(false); // don't pause automatically on lost focus
         
         initWorld();
         initLight();
@@ -74,7 +74,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
+            connection = new Connection("localhost", 1337, this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }

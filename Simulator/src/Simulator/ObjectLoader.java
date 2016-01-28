@@ -73,6 +73,7 @@ public class ObjectLoader
     public Container addContainer(int containerId, CommandHandler commandHandler) 
     {
         Container containerAdd = new Container(
+                    containerId,
                     this.rootNode,
                     this.assetManager,
                     new Vector3f(0, 0, 0),
@@ -269,7 +270,7 @@ public class ObjectLoader
         
         for(int i = 0; i < objects.length(); i++)
         {
-            JSONObject objectObject = new JSONObject(objects.getString(i));
+            JSONObject objectObject = new JSONObject(objects.getString(i)); // TODO: fix json in server
             this.spawnObject(objectObject);
         }
         

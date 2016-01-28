@@ -47,14 +47,14 @@ public class Connection extends Thread implements Runnable
                 this.communicate();
             } catch (Exception ex)
             {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
             try
             {
                 Thread.sleep(5000);
             } catch (InterruptedException ex)
             {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex.getMessage());
             }
         }
     }
