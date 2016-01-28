@@ -76,13 +76,73 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 	return toString(document);
 }
 
-//generates JSON for spawning an object
-string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
+//generates JSON for spawning trains and ships
+//type: "Ship" or "Train"
+string JSONGenerator::spawnShip(vector3f location,vector<int> contIDs,int shipID)
 {
-	// {'cmdt': 2, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2}},
-	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
-    return "";
+	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnShip", allocator);
+	rapidjson::Value position(rapidjson::kArrayType);
+	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
+	document.AddMember("position",position,allocator);
+	document.AddMember("id", shipID, allocator);
+	//ship or train???
+	//Value s;
+	//s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIDs)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
+    return toString(document);
 }
+
+//generates JSON for spawning trucks
+string JSONGenerator::spawnTrain(vector3f location, vector<int> contIDs,int trainID)
+{
+	//{'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}
+	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnTrain", allocator);
+	rapidjson::Value position(rapidjson::kArrayType);
+	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
+	document.AddMember("position",position,allocator);
+	document.AddMember("id", trainID, allocator);
+	//ship or train???
+	//Value s;
+	//s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIDs)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
+	return toString(document);
+}
+
+//generates JSON for spawning trucks
+string JSONGenerator::spawnTruck(vector3f location, int contID,int truckId)
+{
+	//{'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}
+	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnTruck", allocator);
+	rapidjson::Value position(rapidjson::kArrayType);
+	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
+	document.AddMember("position",position,allocator);
+	document.AddMember("id", truckId, allocator);
+	//ship or train???
+	//Value s;
+	//s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
+	document.AddMember("container", contID, allocator);
+	return toString(document);
+}
+
 
 //templates???
 //used for spawning trucks ships and tranes
