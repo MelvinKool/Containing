@@ -82,6 +82,15 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 	return toString(document);
 }
 
+string JSONGenerator::despawnObject(int transportID)
+{
+    return "";
+}
+
+string JSONGenerator::spawnObject(string type,std::vector<int> contID)
+{
+    return "";
+}
 //generates JSON for spawning an object
 string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
 {
