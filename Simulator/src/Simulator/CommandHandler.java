@@ -146,7 +146,6 @@ public class CommandHandler
             case "seaShip" : 
                 break;
             case "bargeShip" : 
-                
                 break;
             case "truck" : 
                 WorldObject truck = this.objectloader.vehicles.remove(vehicleId);

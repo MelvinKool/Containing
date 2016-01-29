@@ -4,15 +4,6 @@
 #include <fstream>
 using namespace std;
 
-/*
-    OBJECT-ID's:
-    0-7     FreightShip Crane's
-    8-52    Storage Crane's
-    53-62   SeaShip Crane's
-    63-66   Train Crane's
-    67-86   Truck Crane's
-*/
-
 Server::Server()
 {
     if(db.isConnected())
@@ -134,7 +125,6 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="vrachtauto") //TODO
     {
-        //crane ids: 67-86;
         int truckLoc = getTruckStop();
         vector3f truckLocation = truckStops[truckLoc];
         //TODO void expression?!?
@@ -142,12 +132,11 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false,containerId));
         commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID)); //get container from truck to agv
         commands.push_back(JGen.agvAttachContainer(agvID,containerId));
-        commands.push_back(JGen.despawnObject(transportId, "truck"));
+        commands.push_back(JGen.despawnObject(transportId,"truck"));
     }
 
     if(vehicle=="trein")
     {
-        //crane ids: 63-66;
         if (!trainSpawned)
         {
             string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\" AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\";";
@@ -169,6 +158,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         containerCount++;
         if (containerCount>containersPerCrane)
         {
+            containerCount = 0;
             trainCraneId++;
             if (trainCraneId >= 4)
             {
@@ -180,9 +170,10 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
             commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
-            commands.push_back(JGen.despawnObject(-1, "train"));
+            commands.push_back(JGen.despawnObject(-1,"train"));
             trainSpawned = false;
             trainCraneId = 0;
+            containerCount = 0;
         }
         else
         {
@@ -191,24 +182,27 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
         }
     }
-    /*
+
     if(vehicle=="zeeschip") //TODO
     {
-        //crane ids: 53-62;
+        return;
+        /*
         //TODO spawn seaship
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
-        /*
+
         if(crane.currentRowContainerCount()==0)
         {
             //crane to new row?
             //or do this at first line of code
         }
+        */
     }
 
     if(vehicle=="binnenschip") //TODO
     {
-        //crane ids: 0-7;
+        return;
+        /*
         //TODO spawn ship
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
@@ -218,11 +212,12 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             //crane to new row?
             //or do this at first line of code
         }
+        */
     }
-    */
+
     vector<int> storageLane = getStorageLaneSpot();
-    int storageLaneID = 30;//storageLane.at(1);
-    commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true,-1)); //move to dump row
+    int storageLaneID = storageLane.at(1);
+    commands.push_back(allObjects.agvs.at(agvID).goTo(allObjects.parkingSpots[6*storageLaneID],true,-1)); //move to dump row
     commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.at(0),0,storageLane.at(2))));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
@@ -233,17 +228,11 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
     containerId = atoi(row[0]);
     vehicle = row[1];
     agvID = getFreeAGV();
+    vector<string> commands;
 
     //crane.goTo(vector3f(x,y,z)); //crane at container dump
     commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false)); // send agv to dump row
     commands.push_back(crane.transfer(containerId,agvID)); //transfer container from dump to agv
-    if(vehicle=="trein") //TODO
-    {
-        //TODO spawn train //-1 if no container present
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
-        //crane.goTo(vector3f(x,y,z)); //move crane to load location
-        commands.push_back(crane.transfer(containerId,train)); //transfer container from agv to train
-    }
 
     if(vehicle=="vrachtauto") //TRUCK YEAH!! //TODO
     {
@@ -251,6 +240,14 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
         //crane.goTo(vector3f(x,y,z)); //move crane to load location
         commands.push_back(crane.transfer(containerId,truck)); //transfer container from agv to truck
+    }
+    /*
+    if(vehicle=="trein") //TODO
+    {
+        //TODO spawn train //-1 if no container present
+        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),true)); //send agv with current container to unloading position
+        //crane.goTo(vector3f(x,y,z)); //move crane to load location
+        commands.push_back(crane.transfer(containerId,train)); //transfer container from agv to train
     }
 
     if(vehicle=="zeeschip") //TODO

@@ -17,11 +17,11 @@ class JSONGenerator
   public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance, int containerId);
     std::string craneTransferContainer(int craneId, int containerId, int destAGV);
-    std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect); //TODO
+    std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect);
     std::string agvAttachContainer(int agvId, int containerId);
-    std::string despawnObject(int transportID, const char*); //TODO
-    std::string spawnObject(string type,std::vector<int> contID); //TODO
-    std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID); //TODO
+    std::string despawnObject(int transportID, const char* vehicleType);
+    std::string spawnObject(string type,std::vector<int> contID);
+    std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID);
     std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
     std::string spawnTruck(vector3f location, int contID,int truckId);
     std::string spawnTrain(std::vector<int> contIDs,int trainID);

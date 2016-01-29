@@ -35,7 +35,7 @@ public class SortField
         float yPos;
         float zPos;
         
-        if (x > this.maxIndex.x || y > this.maxIndex.y || z > this.maxIndex.y) {
+        if (x > this.maxIndex.x || y > this.maxIndex.y || z > this.maxIndex.z) {
             throw new IndexOutOfBoundsException("SortfieldIndexBounds: " + this.maxIndex);
         }
         
