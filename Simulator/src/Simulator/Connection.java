@@ -73,7 +73,7 @@ public class Connection extends Thread implements Runnable
             try
             {
                 data = this.socket.read();
-                System.out.println("Received: " + data);
+                //System.out.println("Received: " + data);
             } 
             catch (java.net.SocketTimeoutException ex) { 
                 continue;

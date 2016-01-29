@@ -37,7 +37,7 @@ public class Container extends WorldObject
         System.out.println(stackTraceElements[2]);
         if (this.commands != null && !this.commands.isEmpty())
         {    
-            System.out.println("container operation done.");
+            System.out.println("container operationdone if.");
             JSONObject command = this.commands.remove(0);
             if ("despawnVehicle".equals(command.getString("Command"))) 
             {
@@ -46,6 +46,7 @@ public class Container extends WorldObject
             this.commandHandler.queueCommand(command);
             this.vehicle = null;
         }
+        System.out.println("Container operation done done");
     }
     
     /**

@@ -91,13 +91,35 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 
 //generates JSON for spawning trains and ships
 //type: "Ship" or "Train"
-string JSONGenerator::spawnShip(vector3f location,vector<int> contIDs,int shipID)
+string JSONGenerator::spawnSeaShip(vector<int> contIDs,int shipID)
 {
 	//{'Command': 'spawnShip', 'containers': [i for i in range(5, 40)]}
 	//"{"Command" : "spawnShip", "position", [15.0,0.0,13.75], "id",1, "containers", [1,2,3,4,5,6,7]}"
 	rapidjson::Document document = createJSONDocument();
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command","spawnShip", allocator);
+	document.AddMember("Command","spawnSeaShip", allocator);
+	document.AddMember("id", shipID, allocator);
+	//ship or train???
+	//Value s;
+	//s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIDs)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
+    return toString(document);
+}
+
+//generates JSON for spawning trains and ships
+//type: "Ship" or "Train"
+string JSONGenerator::spawnBargeShip(vector3f location,vector<int> contIDs,int shipID)
+{
+	//{'Command': 'spawnShip', 'containers': [i for i in range(5, 40)]}
+	//"{"Command" : "spawnShip", "position", [15.0,0.0,13.75], "id",1, "containers", [1,2,3,4,5,6,7]}"
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnBargeShip", allocator);
 	rapidjson::Value position(rapidjson::kArrayType);
 	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
 	document.AddMember("position",position,allocator);
@@ -287,7 +309,7 @@ string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
-string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
+std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType, int containerId)
 {
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -297,6 +319,7 @@ string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
 	s.SetString(vehicleType,strlen(vehicleType),allocator);
 	document.AddMember("vehicleType",s,allocator);
 	document.AddMember("vehicleId", transportID, allocator);
+	document.AddMember("containerId", containerId, allocator);
 	return toString(document);
 }
 
