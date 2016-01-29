@@ -59,7 +59,7 @@ public class Main extends SimpleApplication
         this.speed = 15;
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
-        this.speed = 10;
+        this.speed = 10; // ?
         //System.out.println(end - start);
 
         flyCam.setEnabled(true);
@@ -128,7 +128,7 @@ public class Main extends SimpleApplication
     public void destroy()
     {
         super.destroy();
-        if(connection != null) connection.stop();
+        if(connection != null) connection.interrupt();
     }
 
    public Crane getNearestCrane(Node obj){

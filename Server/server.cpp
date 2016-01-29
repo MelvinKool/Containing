@@ -142,7 +142,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false,containerId));
         commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID)); //get container from truck to agv
         commands.push_back(JGen.agvAttachContainer(agvID,containerId));
-        commands.push_back(JGen.despawnObject(transportId));
+        commands.push_back(JGen.despawnObject(transportId, "truck"));
     }
 
     if(vehicle=="trein")
@@ -180,7 +180,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
             commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
-            commands.push_back(JGen.despawnObject(-1));
+            commands.push_back(JGen.despawnObject(-1, "train"));
             trainSpawned = false;
             trainCraneId = 0;
         }

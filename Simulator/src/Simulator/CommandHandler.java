@@ -112,7 +112,7 @@ public class CommandHandler
             case "despawnVehicle":
                 int id = jsonObject.getInt("vehicleId");
                 String vehicleType = jsonObject.getString("vehicleType");
-                despawnObjects(vehicleType,id);
+                despawnObjects(vehicleType, id);
                 break;
         }
     }

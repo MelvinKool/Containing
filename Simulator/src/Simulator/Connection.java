@@ -38,7 +38,7 @@ public class Connection extends Thread implements Runnable
     
     @Override
     public void run() {
-        while (true) {
+        while (!this.isInterrupted()) {
             try
             {
                 this.socket = new SimSocket(this.address, this.port);
@@ -48,6 +48,7 @@ public class Connection extends Thread implements Runnable
             } catch (Exception ex)
             {
                 System.err.println(ex.getMessage());
+                this.connected = false;
             }
             try
             {
@@ -55,13 +56,15 @@ public class Connection extends Thread implements Runnable
             } catch (InterruptedException ex)
             {
                 System.err.println(ex.getMessage());
+                this.connected = false;
+                break;
             }
         }
     }
     
     public void communicate() {
         Selector select = null;
-        while (this.connected) {
+        while (this.connected && !this.isInterrupted()) {
             String data = "";
             JSONObject command = null;
             
