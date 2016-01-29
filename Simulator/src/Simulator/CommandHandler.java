@@ -124,6 +124,7 @@ public class CommandHandler
     
     private void despawnObjects(String vehicleType, int vehicleId)
     {
+        List<Container> attachedContainers;
         switch(vehicleType)
         {
             case "AGV" : 
@@ -134,7 +135,7 @@ public class CommandHandler
                 }
                 objectloader.train.node.removeFromParent();
                 for(WorldObject traincart: objectloader.train.trainCarts){
-                    List<Container> attachedContainers = getAttachedContainers(traincart);
+                    attachedContainers = getAttachedContainers(traincart);
                     for(Container container : attachedContainers)
                     {
                         container.operationDone();
@@ -144,13 +145,15 @@ public class CommandHandler
             case "seaShip" : 
                 break;
             case "bargeShip" : 
+                
                 break;
             case "truck" : 
                 FreightTruck truck = (FreightTruck) this.objectloader.vehicles.remove(vehicleId);
                 truck.node.removeFromParent();
-                List<Container> containers = getAttachedContainers(truck);
-                for(Container attachedContainer : containers){
-                    attachedContainer.operationDone();
+                attachedContainers = getAttachedContainers(truck);
+                for(Container container : attachedContainers)
+                {
+                    container.operationDone();
                 }
                 break;
         };

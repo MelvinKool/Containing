@@ -39,9 +39,9 @@ public class AGV extends WorldObject
             return;
         }
         if(container != null)
-            agvSpeed = 20;
+            agvSpeed = 200;
         else
-            agvSpeed = 40;
+            agvSpeed = 400;
         motionPath = new MotionPath();
         this.wayPointList = wayPoints;
         this.totalDistance = distance;
