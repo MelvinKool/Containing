@@ -7,6 +7,7 @@ import Simulator.cranes.TrainCrane;
 import Simulator.cranes.TruckCrane;
 import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Ship;
 import Simulator.vehicles.Train;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
@@ -49,7 +50,10 @@ public class ObjectLoader
     public HashMap<Integer, Container> containers = new HashMap<>();
     public HashMap<Integer, WorldObject> vehicles = new HashMap<>();
     public JSONArray spawnObjectList;
-    private Train train;
+    public Train train;
+    public Ship seaShip;
+    public Ship bargeShip;
+    
 
     public ObjectLoader(Node rootNode, AssetManager assetManager)
     {
@@ -245,12 +249,7 @@ public class ObjectLoader
         {
             this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
-        this.train.moveIn();
-    }
-    
-    public void spawnShip(JSONArray containers)
-    {
-        
+        //this.train.moveIn();
     }
     
     public void spawnTruck(int id, Container container, Vector3f position)
@@ -259,6 +258,25 @@ public class ObjectLoader
         frtruck.attachContainer(container);
         this.vehicles.put(id, frtruck);
     }
+    
+   public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
+   {
+        this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
+        for(Object containerId : containers)
+         {
+             this.seaShip.addContainer(this.addContainer((int)containerId, commandHandler));
+         }
+   }
+   
+   public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
+   {
+        this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
+        for(Object containerId : containers)
+         {
+             this.bargeShip.addContainer(this.addContainer((int)containerId, commandHandler));
+         }
+   }
+
 
     /**
      * get spawn information from file and spawn objects

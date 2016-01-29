@@ -6,6 +6,7 @@ import Simulator.vehicles.FreightTruck;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -103,15 +104,15 @@ public class CommandHandler
                 this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnSeaShip":
-                this.objectloader.spawnShip(jsonObject.getJSONArray("containers"));
+                this.objectloader.spawnSeaShip(jsonObject.getJSONArray("containers"), this);
+                break;
+            case "spawnBargeShip":
+                this.objectloader.spawnBargeShip(jsonObject.getJSONArray("containers"), this);
                 break;
             case "despawnVehicle":
                 int id = jsonObject.getInt("vehicleId");
-                containerId = jsonObject.getInt("container");
-                Container container = this.objectloader.containers.get(containerId);
-                FreightTruck truck = (FreightTruck) this.objectloader.vehicles.remove(id);
-                truck.node.removeFromParent();
-                container.operationDone();
+                String vehicleType = jsonObject.getString("vehicleType");
+                despawnObjects(vehicleType,id);
                 break;
         }
     }
@@ -120,7 +121,53 @@ public class CommandHandler
     {
         return new JSONObject(json);
     }
-
+    
+    private void despawnObjects(String vehicleType, int vehicleId)
+    {
+        switch(vehicleType)
+        {
+            case "AGV" : 
+                break;
+            case "train" : 
+                for(int i = 0; i < objectloader.train.trainCarts.size(); i++){
+                    objectloader.train.trainCarts.remove(i);
+                }
+                objectloader.train.node.removeFromParent();
+                for(WorldObject traincart: objectloader.train.trainCarts){
+                    List<Container> attachedContainers = getAttachedContainers(traincart);
+                    for(Container container : attachedContainers)
+                    {
+                        container.operationDone();
+                    }
+                }
+                break;
+            case "seaShip" : 
+                break;
+            case "bargeShip" : 
+                break;
+            case "truck" : 
+                FreightTruck truck = (FreightTruck) this.objectloader.vehicles.remove(vehicleId);
+                truck.node.removeFromParent();
+                List<Container> containers = getAttachedContainers(truck);
+                for(Container attachedContainer : containers){
+                    attachedContainer.operationDone();
+                }
+                break;
+        };
+    }
+    
+    private List<Container> getAttachedContainers(WorldObject vehicleObject){
+        List<Container> containerList = new ArrayList<Container>();
+        for(Map.Entry<Integer,Container> containerPair :  this.objectloader.containers.entrySet()){
+            Container container = containerPair.getValue();
+            //check if this container is attached to the vehicle
+            if(container.getVehicle() == vehicleObject){
+                //despawn vehicle and container
+                containerList.add(container);
+            }
+        }
+        return containerList;
+    }
     private void craneMoveContainer(JSONObject jsonObject)
     {
         Vector3f targetVec = null;

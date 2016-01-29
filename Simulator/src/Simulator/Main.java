@@ -57,7 +57,7 @@ public class Main extends SimpleApplication
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
         //long end = System.currentTimeMillis();
-
+        this.speed = 10;
         //System.out.println(end - start);
 
         flyCam.setEnabled(true);
