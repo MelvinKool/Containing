@@ -144,6 +144,7 @@ public class CommandHandler
 //                    }
 //                }
                 objectloader.train.moveOut();
+                callingContainer.operationDone();
                 break;
             case "seaShip" : 
                 break;
