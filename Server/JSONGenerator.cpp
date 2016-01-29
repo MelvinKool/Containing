@@ -93,7 +93,8 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 //type: "Ship" or "Train"
 string JSONGenerator::spawnShip(vector3f location,vector<int> contIDs,int shipID)
 {
-	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
+	//{'Command': 'spawnShip', 'containers': [i for i in range(5, 40)]}
+	"{"Command" : "spawnShip", "position", [15.0,0.0,13.75], "id",1, "containers", [1,2,3,4,5,6,7]}"
 	rapidjson::Document document = createJSONDocument();
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command","spawnShip", allocator);
@@ -286,12 +287,15 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
-std::string JSONGenerator::despawnObject(int transportID)
+std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
 {
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command", "despawnVehicle", allocator);
+	Value s;
+	s.SetString(vehicleType,strlen(vehicleType),allocator);
+	document.AddMember("vehicleType",s,allocator);
 	document.AddMember("vehicleId", transportID, allocator);
 	return toString(document);
 }
