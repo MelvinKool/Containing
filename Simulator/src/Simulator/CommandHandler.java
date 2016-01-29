@@ -130,17 +130,18 @@ public class CommandHandler
             case "AGV" : 
                 break;
             case "train" : 
-                for(int i = 0; i < objectloader.train.trainCarts.size(); i++){
-                    objectloader.train.trainCarts.remove(i);
-                }
-                objectloader.train.node.removeFromParent();
-                for(WorldObject traincart: objectloader.train.trainCarts){
-                    attachedContainers = getAttachedContainers(traincart);
-                    for(Container container : attachedContainers)
-                    {
-                        container.operationDone();
-                    }
-                }
+//                for(int i = 0; i < objectloader.train.trainCarts.size(); i++){
+//                    objectloader.train.trainCarts.remove(i);
+//                }
+//                objectloader.train.node.removeFromParent();
+//                for(WorldObject traincart: objectloader.train.trainCarts){
+//                    attachedContainers = getAttachedContainers(traincart);
+//                    for(Container container : attachedContainers)
+//                    {
+//                        container.operationDone();
+//                    }
+//                }
+                objectloader.train.moveOut();
                 break;
             case "seaShip" : 
                 break;

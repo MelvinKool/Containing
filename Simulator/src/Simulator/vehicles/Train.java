@@ -77,7 +77,7 @@ public class Train
             this.trainCarts.add(new TrainCart(this.node, assetManager, position, trainCartModel.clone()));
         }
     }
-    /*
+    
     private void moveTo(Vector3f target) 
     {
         float distance = FastMath.abs(target.x - this.node.getLocalTranslation().x);
@@ -97,9 +97,9 @@ public class Train
         this.moveTo(new Vector3f(1715.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
     
-    public void moveIn() 
-    {
-        this.moveTo(new Vector3f(45.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
-    }
- */   
+//    public void moveIn() 
+//    {
+//        this.moveTo(new Vector3f(45.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
+//    }
+    
 }
