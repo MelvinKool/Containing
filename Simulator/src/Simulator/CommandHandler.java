@@ -111,8 +111,9 @@ public class CommandHandler
                 break;
             case "despawnVehicle":
                 int id = jsonObject.getInt("vehicleId");
+                containerId = jsonObject.getInt("container");
                 String vehicleType = jsonObject.getString("vehicleType");
-                despawnObjects(vehicleType, id);
+                despawnObjects(vehicleType, id, containerId);
                 break;
         }
     }
@@ -122,9 +123,10 @@ public class CommandHandler
         return new JSONObject(json);
     }
     
-    private void despawnObjects(String vehicleType, int vehicleId)
+    private void despawnObjects(String vehicleType, int vehicleId, int containerId)
     {
         List<Container> attachedContainers;
+        Container callingContainer = this.objectloader.containers.get(containerId);
         switch(vehicleType)
         {
             case "AGV" : 
@@ -150,11 +152,7 @@ public class CommandHandler
             case "truck" : 
                 WorldObject truck = this.objectloader.vehicles.remove(vehicleId);
                 truck.node.removeFromParent();
-                attachedContainers = getAttachedContainers(truck);
-                for(Container container : attachedContainers)
-                {
-                    container.operationDone();
-                }
+                callingContainer.operationDone();
                 break;
         };
     }
@@ -163,6 +161,7 @@ public class CommandHandler
         List<Container> containerList = new ArrayList<>();
         for(Container container :  this.objectloader.containers.values()){
             //check if this container is attached to the vehicle
+            System.out.println(container.getVehicle() + " == " + vehicleObject);
             if(container.getVehicle() == vehicleObject){
                 //despawn vehicle and container
                 containerList.add(container);

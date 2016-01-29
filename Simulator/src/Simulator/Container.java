@@ -39,6 +39,10 @@ public class Container extends WorldObject
         {    
             System.out.println("container operation done.");
             JSONObject command = this.commands.remove(0);
+            if ("despawnVehicle".equals(command.getString("Command"))) 
+            {
+                command.put("container", this.containerId);
+            }
             this.commandHandler.queueCommand(command);
             this.vehicle = null;
         }
