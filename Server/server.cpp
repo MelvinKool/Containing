@@ -190,12 +190,6 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         //TODO spawn seaship
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
-
-        if(crane.currentRowContainerCount()==0)
-        {
-            //crane to new row?
-            //or do this at first line of code
-        }
         */
     }
 
@@ -206,12 +200,6 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         //TODO spawn ship
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
         commands.push_back(crane.transfer(containerId,agvID));
-        /*
-        if(crane.currentRowContainerCount()==0)
-        {
-            //crane to new row?
-            //or do this at first line of code
-        }
         */
     }
 
@@ -363,24 +351,24 @@ int Server::getTransportID()
 vector<int> Server::getStorageLaneSpot()
 {
     static int x=0,y=0,z=0;
-    if (x>4)
+    if (y>43)
     {
-        x=0;
+        y=0;
 
-        if (z>40)
+        if (x>4)
         {
-            z=0;
+            x=0;
 
-            if (y>40)
-                y=0;
+            if (z>40)
+                z=0;
             else
-                y++;
+                z++;
         }
         else
-            z++;
+            x++;
     }
     else
-        x++;
+        y++;
 
     vector<int> result;
     result.push_back(x);

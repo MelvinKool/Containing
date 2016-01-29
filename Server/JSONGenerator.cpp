@@ -297,7 +297,7 @@ std::string JSONGenerator::despawnObject(int transportID, const char* vehicleTyp
 	s.SetString(vehicleType,strlen(vehicleType),allocator);
 	document.AddMember("vehicleType",s,allocator);
 	document.AddMember("vehicleId", transportID, allocator);
-	document.AddMember("containerId", containerToReadyId, allocator);
+	document.AddMember("containerId", containerId, allocator);
 	return toString(document);
 }
 
