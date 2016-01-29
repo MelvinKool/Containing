@@ -56,7 +56,7 @@ public class Main extends SimpleApplication
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.speed = 15;
+        //this.speed = 15;
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
         this.speed = 10; // ?
@@ -104,8 +104,9 @@ public class Main extends SimpleApplication
     {
         
         // Destroy train when it says it can (when it's out of map)
-        if (this.train != null && this.train.canDestroy) {
-            this.train = null;
+        if (this.objectLoader.train != null && this.objectLoader.train.canDestroy) {
+            this.objectLoader.train.node.removeFromParent();
+            this.objectLoader.train = null;
         }
         
         this.commandHandler.executeQueued();
