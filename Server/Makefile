@@ -4,7 +4,7 @@ transport.cpp agv.cpp crane.cpp JSONReader.cpp Timer.cpp
 # container.cpp  transfer.cpp
 
 #============================================
-CC=g++-5 -std=c++11
+CC=g++ -std=c++11
 CFLAGS=-c $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)
