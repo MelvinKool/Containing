@@ -94,7 +94,7 @@ public class Train
     
     public void moveOut() 
     {
-        this.moveTo(new Vector3f(1715.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
+        this.moveTo(new Vector3f(1720.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
     
 //    public void moveIn() 

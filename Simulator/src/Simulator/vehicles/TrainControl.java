@@ -38,11 +38,12 @@ public class TrainControl extends AbstractControl implements Cloneable
             }
         }
         
-        if (this.train.locomotive.node.getWorldTranslation().x > this.disappearX &&
+        if (this.train.locomotive.node.getWorldTranslation().x >= this.disappearX &&
                 this.train.locomotive.node.getCullHint() != Spatial.CullHint.Always)
         {
             this.train.locomotive.node.setCullHint(Spatial.CullHint.Always);
             this.train.canDestroy = true;
+            System.out.println("train can be destroyed");
         } else if (this.train.locomotive.node.getWorldTranslation().x < this.disappearX &&
                 this.train.locomotive.node.getCullHint() != Spatial.CullHint.Inherit)
         {

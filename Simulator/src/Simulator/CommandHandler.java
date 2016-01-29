@@ -162,8 +162,7 @@ public class CommandHandler
     
     private List<Container> getAttachedContainers(WorldObject vehicleObject){
         List<Container> containerList = new ArrayList<Container>();
-        for(Map.Entry<Integer,Container> containerPair :  this.objectloader.containers.entrySet()){
-            Container container = containerPair.getValue();
+        for(Container container :  this.objectloader.containers.values()){
             //check if this container is attached to the vehicle
             if(container.getVehicle() == vehicleObject){
                 //despawn vehicle and container
