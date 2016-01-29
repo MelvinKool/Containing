@@ -56,10 +56,9 @@ public class Main extends SimpleApplication
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
-        //this.speed = 15;
+        this.speed = 15;
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
-        this.speed = 10; // ?
         //System.out.println(end - start);
 
         flyCam.setEnabled(true);
@@ -76,7 +75,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection("192.168.1.16", 1337, this.objectLoader, commandHandler);
+            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }

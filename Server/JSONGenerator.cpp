@@ -136,7 +136,7 @@ string JSONGenerator::spawnTrain(vector<int> contIDs,int trainID)
 }
 
 //generates JSON for spawning trucks
-string JSONGenerator::spawnTruck(vector3f location, int contID,int truckId)
+string JSONGenerator::spawnTruck(vector3f location, int contID, int truckId)
 {
 	//{'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}
 	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
@@ -262,7 +262,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 //(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
 //float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
 //vector3f rotation???
-std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
+string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -287,7 +287,7 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
-std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
+string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
 {
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -301,7 +301,7 @@ std::string JSONGenerator::despawnObject(int transportID, const char* vehicleTyp
 }
 
 //spawn multiple objects with one JSON string
-std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
+string JSONGenerator::spawnObjects(vector<string>& spawnStrings)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -347,7 +347,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	document.AddMember("Command", "moveAGV", allocator);
 	document.AddMember("vehicleId", vehicleId, allocator);
 	document.AddMember("container",containerId, allocator);
-	// create a rapidjson array type with similar syntax to std::vector
+	// create a rapidjson array type with similar syntax to vector
 	// chain methods as rapidjson provides a fluent interface when modifying its objects
 	document.AddMember("totalDistance", totalDistance, allocator);
 	rapidjson::Value route(rapidjson::kArrayType);
@@ -363,7 +363,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(document);
 }
 
-std::string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
+string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -381,7 +381,7 @@ std::string JSONGenerator::generateCommandList(int containerId, vector<string>& 
 	return toString(document);
 }
 
-/*std::string toCommandString(string commandString, int vehicleId){
+/*string toCommandString(string commandString, int vehicleId){
 	int bufSize = commandString.length() + 50;
 	char buffer[bufSize];
 	int strLen = snprintf(buffer,bufSize, "{'cmdt': %d, 'cmd': %s}");
