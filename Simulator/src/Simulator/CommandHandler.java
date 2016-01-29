@@ -112,7 +112,8 @@ public class CommandHandler
             case "despawnVehicle":
                 int id = jsonObject.getInt("vehicleId");
                 String vehicleType = jsonObject.getString("vehicleType");
-                despawnObjects(vehicleType, id);
+                containerId = jsonObject.getInt("containerId");
+                despawnObjects(vehicleType, id,containerId);
                 break;
         }
     }
@@ -122,7 +123,7 @@ public class CommandHandler
         return new JSONObject(json);
     }
     
-    private void despawnObjects(String vehicleType, int vehicleId)
+    private void despawnObjects(String vehicleType, int vehicleId, int containerId)
     {
         List<Container> attachedContainers;
         switch(vehicleType)
@@ -130,33 +131,39 @@ public class CommandHandler
             case "AGV" : 
                 break;
             case "train" : 
-//                for(int i = 0; i < objectloader.train.trainCarts.size(); i++){
-//                    objectloader.train.trainCarts.remove(i);
-//                }
-//                objectloader.train.node.removeFromParent();
-//                for(WorldObject traincart: objectloader.train.trainCarts){
-//                    attachedContainers = getAttachedContainers(traincart);
-//                    for(Container container : attachedContainers)
-//                    {
-//                        container.operationDone();
-//                    }
-//                }
-                objectloader.train.moveOut();
+                for(WorldObject traincart: objectloader.train.trainCarts){
+                    attachedContainers = getAttachedContainers(traincart);
+                    for(Container container : attachedContainers)
+                    {
+                        container.operationDone();
+                    }
+                }
+                for(int i = 0; i < objectloader.train.trainCarts.size(); i++){
+                    objectloader.train.trainCarts.remove(i);
+                }
+                objectloader.train.node.removeFromParent();
+//                objectloader.train.moveOut();
                 break;
             case "seaShip" : 
                 break;
             case "bargeShip" : 
                 break;
             case "truck" : 
-                FreightTruck truck = (FreightTruck) this.objectloader.vehicles.remove(vehicleId);
+                FreightTruck truck = (FreightTruck) this.objectloader.vehicles.get(vehicleId);
+                
+//                attachedContainers = getAttachedContainers(truck);
+//                for(Container container : attachedContainers)
+//                {
+//                    System.out.println("operation done???");
+//                    container.operationDone();
+//                }
+                this.objectloader.vehicles.remove(vehicleId);
                 truck.node.removeFromParent();
-                attachedContainers = getAttachedContainers(truck);
-                for(Container container : attachedContainers)
-                {
-                    container.operationDone();
-                }
                 break;
         };
+        //container operation done call because we can
+        Container container = objectloader.containers.get(containerId);
+        container.operationDone();
     }
     
     private List<Container> getAttachedContainers(WorldObject vehicleObject){

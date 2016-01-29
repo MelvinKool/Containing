@@ -287,7 +287,7 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
-std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType)
+std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType, int containerToReadyId)
 {
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -297,6 +297,7 @@ std::string JSONGenerator::despawnObject(int transportID, const char* vehicleTyp
 	s.SetString(vehicleType,strlen(vehicleType),allocator);
 	document.AddMember("vehicleType",s,allocator);
 	document.AddMember("vehicleId", transportID, allocator);
+	document.AddMember("containerId", containerToReadyId, allocator);
 	return toString(document);
 }
 

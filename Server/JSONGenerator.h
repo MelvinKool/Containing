@@ -19,7 +19,7 @@ class JSONGenerator
     std::string craneTransferContainer(int craneId, int containerId, int destAGV);
     std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect); //TODO
     std::string agvAttachContainer(int agvId, int containerId);
-    std::string despawnObject(int transportID, const char*); //TODO
+    std::string despawnObject(int transportID, const char*, int); //TODO
     std::string spawnObject(string type,std::vector<int> contID); //TODO
     std::string spawnObject(string type,vector3f location,std::vector<int> contID,int transportID); //TODO
     std::string spawnCrane(Crane& crane, int craneId,vector3f rotation);
