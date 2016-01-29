@@ -4,7 +4,12 @@ transport.cpp agv.cpp crane.cpp JSONReader.cpp Timer.cpp
 # container.cpp  transfer.cpp
 
 #============================================
-CC=g++ -std=c++11
+ifeq ($(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5),0)
+  CC=g++-5 -std=c++11
+else
+  CC=g++ -std=c++11
+endif
+
 CFLAGS=-c $(shell mysql_config --cflags)
 LDFLAGS=-pthread
 OBJECTS=$(SOURCES:.cpp=.o)

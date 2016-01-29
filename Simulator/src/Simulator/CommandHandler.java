@@ -149,6 +149,7 @@ public class CommandHandler
             case "bargeShip" : 
                 break;
             case "truck" : 
+<<<<<<< HEAD
                 FreightTruck truck = (FreightTruck) this.objectloader.vehicles.get(vehicleId);
                 
 //                attachedContainers = getAttachedContainers(truck);
@@ -158,6 +159,9 @@ public class CommandHandler
 //                    container.operationDone();
 //                }
                 this.objectloader.vehicles.remove(vehicleId);
+=======
+                WorldObject truck = this.objectloader.vehicles.remove(vehicleId);
+>>>>>>> f250ebd88761be1bf94d63433f2dc4f45801ed08
                 truck.node.removeFromParent();
                 break;
         };
@@ -167,7 +171,7 @@ public class CommandHandler
     }
     
     private List<Container> getAttachedContainers(WorldObject vehicleObject){
-        List<Container> containerList = new ArrayList<Container>();
+        List<Container> containerList = new ArrayList<>();
         for(Container container :  this.objectloader.containers.values()){
             //check if this container is attached to the vehicle
             if(container.getVehicle() == vehicleObject){
