@@ -34,6 +34,8 @@ class Server
         int getTruckStop();
         int getTransportID();
         void spawnObject(std::string type,vector3f location, int contID);
+        std::vector<int> getStorageLaneSpot();
+        void loadParkingLots();
 
         Database db;
         XmlParser xmlParser;
@@ -45,6 +47,6 @@ class Server
         bool stop=true,trainSpawned=false;
         std::vector<vector3f> truckStops;
         std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
-        int containerId = -1,agvID = 0;
+        int containerId=-1,agvID=0,laatsteTreinContainer=-1,containersPerCrane=0,containerCount=0,trainCraneId=0;
 };
 #endif

@@ -64,7 +64,7 @@ std::string Timer::getTime()
     {
         ss << 0;
     }
-    ss << this->hour << ":";
+    ss << this->hour << ".";
     if(this->minute < 10)
     {
         ss << 0;

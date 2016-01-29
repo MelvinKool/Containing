@@ -245,7 +245,7 @@ public class ObjectLoader
         {
             this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
-        this.train.moveIn();
+        //this.train.moveIn();
     }
     
     public void spawnShip(JSONArray containers)

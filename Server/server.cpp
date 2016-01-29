@@ -1,7 +1,7 @@
 #include "server.h"
 #include "connections.h"
 #include <iostream>
-
+#include <fstream>
 using namespace std;
 
 /*
@@ -28,6 +28,7 @@ Server::Server()
     {
         truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,10));
     }
+    loadParkingLots();
 }
 
 void Server::writeToSim(string message)
@@ -72,10 +73,11 @@ void Server::checkContainers()
         currentDate = timer.getDate();
         currentTime = timer.getTime();
         //SQL for current containers
-        //string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
-        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";
-        string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID ORDER BY ship.sort;";// AND dep.date = "+ currentDate +" AND dep.timeFrom = "+ currentTime;
+        string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
+        //string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";
+        string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID AND dep.date <= \""+currentDate+"\" AND dep.date >= \""+previousDate+"\" AND dep.timeFrom <= \""+currentTime+"\" AND dep.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort;";
 
+        //cout << arrivals << endl; //TODO:remove()
         /*
         //process leaving containers
         MYSQL_RES* res1 = db.select(departures);
@@ -118,11 +120,6 @@ void Server::checkContainers()
             }
         }
         mysql_free_result(res2);
-        if (trainSpawned)
-        {
-            writeToSim(JGen.despawnObject(-1));
-        }
-        break;
     }
 }
 
@@ -153,7 +150,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         //crane ids: 63-66;
         if (!trainSpawned)
         {
-            string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\" AND arr.date <= \""+currentDate+"\" AND arr.date > \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom > \""+previousTime+"\";";
+            string treinContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"trein\" AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\";";
 
             MYSQL_RES* resContainerList = db.select(treinContainers);
             MYSQL_ROW row;
@@ -163,11 +160,36 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             }
             mysql_free_result(resContainerList);
 
+            containersPerCrane = containers.size()/4;
+
             writeToSim(JGen.spawnTrain(containers,-1));
+            laatsteTreinContainer = containers.at(containers.size()-1);
+            trainSpawned = true;
         }
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
-        commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
-        commands.push_back(JGen.agvAttachContainer(agvID,containerId));
+        containerCount++;
+        if (containerCount>containersPerCrane)
+        {
+            trainCraneId++;
+            if (trainCraneId >= 4)
+            {
+                trainCraneId = 0;
+            }
+        }
+        if (containerId==laatsteTreinContainer)
+        {
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
+            commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
+            commands.push_back(JGen.agvAttachContainer(agvID,containerId));
+            commands.push_back(JGen.despawnObject(-1));
+            trainSpawned = false;
+            trainCraneId = 0;
+        }
+        else
+        {
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
+            commands.push_back(allObjects.trainCranes.at(trainCraneId).transfer(containerId,agvID));
+            commands.push_back(JGen.agvAttachContainer(agvID,containerId));
+        }
     }
     /*
     if(vehicle=="zeeschip") //TODO
@@ -198,9 +220,10 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
     }
     */
-    int storageLane = 41;
+    vector<int> storageLane = getStorageLaneSpot();
+    int storageLaneID = 30;//storageLane.at(1);
     commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(875.25,0.0,-73.5),true,-1)); //move to dump row
-    commands.push_back(allObjects.storageCranes.at(storageLane).transfer(containerId,storageLane,vector3f(0,0,0)));
+    commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.at(0),0,storageLane.at(2))));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 
@@ -252,13 +275,10 @@ int Server::getFreeAGV()
 {
     static int i = -1;
     if (i > 98)
-    {
         i = 0;
-    }
     else
-    {
         i++;
-    }
+
     return i;
 
     /* this would work if server knows which AGV are idling
@@ -329,13 +349,9 @@ int Server::getTruckStop()
     static int i = -1;
 
     if (i > 19)
-    {
         i = 0;
-    }
     else
-    {
         i++;
-    }
 
     return i;
 }
@@ -345,4 +361,47 @@ int Server::getTransportID()
     static int i = -1;
     i++;
     return i;
+}
+
+vector<int> Server::getStorageLaneSpot()
+{
+    static int x=0,y=0,z=0;
+    if (x>4)
+    {
+        x=0;
+
+        if (z>40)
+        {
+            z=0;
+
+            if (y>40)
+                y=0;
+            else
+                y++;
+        }
+        else
+            z++;
+    }
+    else
+        x++;
+
+    vector<int> result;
+    result.push_back(x);
+    result.push_back(y);
+    result.push_back(z);
+    return result;
+}
+
+void Server::loadParkingLots()
+{
+    ifstream agvStream("./Files/ObjectsJSON/AllAGVlocations.txt");
+    string parkingLot = "";
+    for(int i = 0; i < sizeof(allObjects.parkingSpots); i++)
+    {
+        if(agvStream >> parkingLot)
+        {
+            vector3f tempVector3f(parkingLot);
+            allObjects.parkingSpots[i] = tempVector3f;
+        }
+    }
 }

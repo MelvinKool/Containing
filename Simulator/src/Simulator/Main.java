@@ -56,6 +56,8 @@ public class Main extends SimpleApplication
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
+        this.speed = 15;
+        this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
 
         //System.out.println(end - start);

@@ -42,7 +42,7 @@ public class Train
         
         rootNode.attachChild(this.node);
         this.trainControl = new TrainControl(this);
-        this.node.setLocalTranslation(1715.0f, 0.0f, -724.5f);
+        this.node.setLocalTranslation(45.0f, 0.0f, -724.5f);
         this.node.rotate(0.0f, verticalRotation, 0.0f);
         this.node.addControl(this.trainControl);
     }
@@ -77,7 +77,7 @@ public class Train
             this.trainCarts.add(new TrainCart(this.node, assetManager, position, trainCartModel.clone()));
         }
     }
-    
+    /*
     private void moveTo(Vector3f target) 
     {
         float distance = FastMath.abs(target.x - this.node.getLocalTranslation().x);
@@ -101,5 +101,5 @@ public class Train
     {
         this.moveTo(new Vector3f(45.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
-    
+ */   
 }
