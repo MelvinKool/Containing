@@ -250,7 +250,9 @@ public class ObjectLoader
             this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
         //this.train.moveIn();
+
     }
+
     
     public void spawnTruck(int id, Container container, Vector3f position)
     {
