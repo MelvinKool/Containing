@@ -149,7 +149,7 @@ public class CommandHandler
                 
                 break;
             case "truck" : 
-                FreightTruck truck = (FreightTruck) this.objectloader.vehicles.remove(vehicleId);
+                WorldObject truck = this.objectloader.vehicles.remove(vehicleId);
                 truck.node.removeFromParent();
                 attachedContainers = getAttachedContainers(truck);
                 for(Container container : attachedContainers)
@@ -161,7 +161,7 @@ public class CommandHandler
     }
     
     private List<Container> getAttachedContainers(WorldObject vehicleObject){
-        List<Container> containerList = new ArrayList<Container>();
+        List<Container> containerList = new ArrayList<>();
         for(Container container :  this.objectloader.containers.values()){
             //check if this container is attached to the vehicle
             if(container.getVehicle() == vehicleObject){
