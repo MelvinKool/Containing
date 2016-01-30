@@ -16,6 +16,12 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=$(shell mysql_config --libs)
 
+#for debugging
+debugger=gdb
+#for memory leaks test
+deleaker=valgrind
+deleakflags=--leak-check=full --show-leak-kinds=all
+
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
@@ -34,3 +40,9 @@ run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
 force: clean $(EXECUTABLE)
+
+debug: $(EXECUTABLE)
+	$(debugger) ./$(EXECUTABLE)
+
+leaktest:$(EXECUTABLE)
+	$(deleaker) $(deleakflags) ./$(EXECUTABLE)

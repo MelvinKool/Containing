@@ -13,8 +13,6 @@ Server::Server()
     connections.initConnections(this);
     connections.acceptClients();
     httpserver.init(connections);
-    pathFinderLoaded = ShortestPathDijkstra("./Files/RouteFiles/LoadedRoutes.csv");
-    pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
     for (int stops = 0; stops < 20; stops++)
     {
         truckStops.push_back(vector3f(835.25+(7.5*stops),0.0,10));

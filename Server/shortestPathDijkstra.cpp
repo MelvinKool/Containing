@@ -10,18 +10,19 @@ using namespace std;
 
 ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
+	loadedPath = fPath;
 	initRoutes(fPath);
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
 {
+	amountCalls++;
 	//delete every item in places
-	//for(pair<const string,Place*> &place : places)
-	//{
-		//Place *p = place.second;
-	//	delete place.second;
-	//	place.second = nullptr;
-	//}
+	for(pair<const string,Place*> &place : places)
+	{
+		delete place.second;
+		place.second = nullptr;
+	}
 }
 
 

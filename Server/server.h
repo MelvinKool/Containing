@@ -24,8 +24,8 @@ class Server
 
         AllObjects allObjects;
         JSONGenerator JGen;
-        ShortestPathDijkstra pathFinderLoaded;
-        ShortestPathDijkstra pathFinderUnloaded;
+        ShortestPathDijkstra pathFinderLoaded = ShortestPathDijkstra("./Files/RouteFiles/LoadedRoutes.csv");
+        ShortestPathDijkstra pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
 
     private:
         void processLeavingContainer(MYSQL_ROW &row);
