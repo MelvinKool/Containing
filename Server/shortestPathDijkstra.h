@@ -29,6 +29,8 @@ private:
 	};
 	//31.25,0,-681.50
 	//1600.25,0,-675.25
+    int amountCalls = 0;
+    char* loadedPath = "";
 	static constexpr double faraway = std::numeric_limits<double>::max();
 	std::map<std::string, Place*> places;
 	Place* getPlace(std::string name);
