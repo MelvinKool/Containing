@@ -43,6 +43,10 @@ public class AGV extends WorldObject
         {
             return;
         }
+        if (this.trainParkingSpot != null) {
+            this.trainParking.setSpot(this.trainParkingSpot.getKey(), true);
+            this.trainParkingSpot = null;
+        }
         if(container != null)
             agvSpeed = 200;
         else
@@ -56,9 +60,11 @@ public class AGV extends WorldObject
         {
             motionPath.addWayPoint(node.getWorldTranslation());
             for(Vector3f wayPoint : this.wayPointList) {
-                if (this.trainParking.getPosition() == wayPoint){
+                
+                // If end waypoint is train then queue in line 
+                if (this.trainParking.getPosition().equals(wayPoint)) {
                     SimpleEntry<Integer, Vector3f> spot = this.trainParking.getFirstFreeSpot();
-                    wayPoint = spot.getValue();
+                    wayPoint = spot.getValue().clone();
                     this.trainParking.setSpot(spot.getKey(), false);
                     this.trainParkingSpot = spot;
                 }
@@ -91,7 +97,6 @@ public class AGV extends WorldObject
         if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
             if (this.trainParkingSpot != null && motionControl.getPath().getWayPoint(wayPointIndex).equals(this.trainParkingSpot.getValue())) {
-                this.trainParking.setSpot(this.trainParkingSpot.getKey(), true);
                 this.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
             }
             if(this.container != null)

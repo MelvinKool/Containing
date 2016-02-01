@@ -21,8 +21,9 @@ string AGV::goTo(vector3f destination,bool loaded,int contID)
     }
     else
     {
-         route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
+        route = server->pathFinderUnloaded.route(currentLocation.toString(),destination.toString());
     }
+    currentLocation = destination;
     return server->JGen.moveTo(ID,route.second,route.first,contID);
 }
 

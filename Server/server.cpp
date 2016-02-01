@@ -165,8 +165,8 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
         if (containerId==laatsteTreinContainer)
         {
-            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
-            commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(58.00,0.0,-720.0),false,containerId));
+            commands.push_back(allObjects.trainCranes.at(3).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "train",containerId));
             trainSpawned = false;
@@ -175,7 +175,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
         else
         {
-            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(250.0,0.0,-723.0),false,containerId));
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(58.00,0.0,-720.0),false,containerId));
             commands.push_back(allObjects.trainCranes.at(trainCraneId).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
         }

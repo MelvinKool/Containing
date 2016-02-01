@@ -63,7 +63,6 @@ public class Connection extends Thread implements Runnable
     }
     
     public void communicate() {
-        Selector select = null;
         while (this.connected && !this.isInterrupted()) {
             String data = "";
             JSONObject command = null;

@@ -51,7 +51,6 @@ public class CommandHandler
         int containerId;
         AGV agv = null;
         
-        System.out.println(jsonObject);
         
         switch(command)
         {
@@ -107,6 +106,7 @@ public class CommandHandler
                 this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnSeaShip":
+                System.out.println("ship");
                 this.objectloader.spawnSeaShip(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnBargeShip":
@@ -146,6 +146,7 @@ public class CommandHandler
 //                        container.operationDone();
 //                    }
 //                }
+                System.out.println(callingContainer);
                 objectloader.train.moveOut();
                 callingContainer.operationDone();
                 break;
@@ -192,7 +193,7 @@ public class CommandHandler
         } catch (ClassCastException ex) {
             int agvId = (int) target;
             targetVec = this.objectloader.agvs.get(agvId).getPosition().add(0.0f, 1.2f, 0.0f);
-        }        
+        }
         crane.moveContainer(container, targetVec);
     }
 

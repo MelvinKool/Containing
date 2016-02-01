@@ -48,7 +48,7 @@ public class Crane extends WorldObject {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
-        this.speed = speed * 10; //TODO: test * 2
+        this.speed = speed;
         this.hasHolder = true;
         this.commandQueue = new ArrayList<>();
         this.containerTarget = null;

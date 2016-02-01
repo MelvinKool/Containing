@@ -35,20 +35,19 @@ public class TrainParking
         int spot = 0;
         Vector3f spotPos = this.position.clone();
         
-        for (int checkSpot : this.spots.keySet()) {
-            if (this.spots.get(checkSpot)) {
-                spot = checkSpot;
+        for (int i = 0; i < this.spots.size(); i++) {
+            if (this.spots.get(i)) {
+                spot = i;
                 break;
             }
         }
         
-        spotPos.add(agvLength * spot, 0.0f, 0.0f);
-        
-        return new SimpleEntry<>(spot, spotPos);
+        return new SimpleEntry<>(spot, spotPos.add(agvLength * spot, 0.0f, 0.0f));
     }
     
     public void setSpot(int spot, boolean free) {
         this.spots.put(spot, free);
+        //System.out.println(spots);
     }
     
     public Vector3f getPosition() {

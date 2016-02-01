@@ -123,7 +123,7 @@ public class ObjectLoader
     private void initTrainParking() {
         Vector3f agvSize = new Vector3f();
         ((BoundingBox) this.container.getWorldBound()).getExtent(agvSize);
-        this.trainParking = new TrainParking(new Vector3f(250.0f, 0.0f, -720.0f), agvSize.x, 50);
+        this.trainParking = new TrainParking(new Vector3f(58.0f, 0.0f, -720.0f), 18, 50);
     }
     
     /**
