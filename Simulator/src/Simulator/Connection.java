@@ -8,6 +8,7 @@ import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Ship;
 import Simulator.vehicles.Train;
+import Simulator.vehicles.TrainCart;
 import java.net.SocketException;
 import java.nio.channels.Selector;
 import java.util.Map;
@@ -120,25 +121,32 @@ public class Connection extends Thread implements Runnable
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
                         System.out.println(pair.getKey() + " = " + pair.getValue());
                         
-                        if(pair.getValue() instanceof Ship){
+                        if(((Container)pair.getValue()).getVehicle() instanceof Ship){
+                            System.out.println("ship");
                             zeeschip++;
                         }
                         //else if(pair.getValue() instanceof Ship){
                         //    
                         //}
-                        else if(pair.getValue() instanceof AGV){
+                        else if(((Container)pair.getValue()).getVehicle() instanceof AGV){
+                            System.out.println("agv");
                             agv++;
                         }
-                        else if(pair.getValue() instanceof Train){
+                        else if(((Container)pair.getValue()).getVehicle() instanceof TrainCart){
+                            
+                            System.out.println("traincart");
                             trein++;
                         }
-                        else if(pair.getValue() instanceof FreightTruck){
+                        else if(((Container)pair.getValue()).getVehicle() instanceof FreightTruck){
+                            
+                            System.out.println("truck");
                             vrachtauto++;
                         }
                         else if(pair.getValue() instanceof SortField){
                             opslag++;
                         }
                         else{
+                            System.out.println("overig");
                             diversen++;
                         }
                     }

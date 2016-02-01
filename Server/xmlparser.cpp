@@ -22,8 +22,8 @@ void XmlParser::readXML(Database &db)
         xmlDocPaths.push_back("../docs/XML/xml3.xml");
         xmlDocPaths.push_back("../docs/XML/xml4.xml");
         xmlDocPaths.push_back("../docs/XML/xml5.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml6.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml7.xml");
+        xmlDocPaths.push_back("../docs/XML/xml6.xml");
+        xmlDocPaths.push_back("../docs/XML/xml7.xml");
 
         if(checkData(xmlDocPaths, db))
         {
