@@ -1,6 +1,7 @@
 package Simulator.vehicles;
 
 import Simulator.Container;
+import Simulator.TrainParking;
 import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
@@ -12,6 +13,7 @@ import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +28,13 @@ public class AGV extends WorldObject
     private Vector3f vectorZero = new Vector3f(0,0,0);
 
     public Container container;
+    private TrainParking trainParking;
+    private SimpleEntry<Integer, Vector3f> trainParkingSpot = null;
 
-    public AGV(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model)
+    public AGV(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, TrainParking trainParking)
     {
         super(rootNode, assetManager, position, model);
+        this.trainParking = trainParking;
     }
     
     public void setPath(List<Vector3f> wayPoints, float distance)
@@ -50,8 +55,16 @@ public class AGV extends WorldObject
         if(wayPoints.size() > 0)
         {
             motionPath.addWayPoint(node.getWorldTranslation());
-            for(Vector3f wayPoint : this.wayPointList)
+            for(Vector3f wayPoint : this.wayPointList) {
+                if (this.trainParking.getPosition() == wayPoint){
+                    SimpleEntry<Integer, Vector3f> spot = this.trainParking.getFirstFreeSpot();
+                    wayPoint = spot.getValue();
+                    this.trainParking.setSpot(spot.getKey(), false);
+                    this.trainParkingSpot = spot;
+                }
                 motionPath.addWayPoint(wayPoint);
+            }
+                
             startMotionEvent();
         }
     }
@@ -77,7 +90,8 @@ public class AGV extends WorldObject
         this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
         if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
-            if (motionControl.getPath().getWayPoint(wayPointIndex).equals(new Vector3f(250.0f, 0.0f, -723.0f))) {
+            if (this.trainParkingSpot != null && motionControl.getPath().getWayPoint(wayPointIndex).equals(this.trainParkingSpot.getValue())) {
+                this.trainParking.setSpot(this.trainParkingSpot.getKey(), true);
                 this.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
             }
             if(this.container != null)

@@ -45,6 +45,7 @@ public class ObjectLoader
     private Node craneNode;
     private Node dockCraneNode;
     private boolean canSpawn;
+    private TrainParking trainParking;
     
     public SortField[] sortFields;
     public HashMap<Integer, Crane> cranes = new HashMap<>();
@@ -73,6 +74,7 @@ public class ObjectLoader
         this.rootNode = rootNode;
         this.canSpawn = true;
         
+        this.initTrainParking();
         this.initSortFields();
     }
     
@@ -116,6 +118,12 @@ public class ObjectLoader
         }
         
         return new JSONObject(content);
+    }
+    
+    private void initTrainParking() {
+        Vector3f agvSize = new Vector3f();
+        ((BoundingBox) this.container.getWorldBound()).getExtent(agvSize);
+        this.trainParking = new TrainParking(new Vector3f(250.0f, 0.0f, -720.0f), agvSize.x, 50);
     }
     
     /**
@@ -370,7 +378,7 @@ public class ObjectLoader
                 craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                 break;
             case "AGV":
-                agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel());
+                agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel(), this.trainParking);
         }
         if (craneObj != null)
         {
