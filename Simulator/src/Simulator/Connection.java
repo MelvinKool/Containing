@@ -4,8 +4,13 @@
  */
 package Simulator;
 
+import Simulator.vehicles.AGV;
+import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Ship;
+import Simulator.vehicles.Train;
 import java.net.SocketException;
 import java.nio.channels.Selector;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,14 +109,14 @@ public class Connection extends Thread implements Runnable
             System.out.println("sending state to server");
             Random random = new Random();
                     
-                    int zeeschip    = 10 + random.nextInt(20);
-                    int binnenschip = 10 + random.nextInt(20);
-                    int agv         = 10 + random.nextInt(20);
-                    int trein       = 10 + random.nextInt(20);
-                    int vrachtauto  = 10 + random.nextInt(20);
-                    int opslag      = 10 + random.nextInt(20);
-                    int diversen    = 10 + random.nextInt(20);
-                    /*
+                    int zeeschip    = 0;//10 + random.nextInt(20);
+                    int binnenschip = 0;//10 + random.nextInt(20);
+                    int agv         = 0;//10 + random.nextInt(20);
+                    int trein       = 0;//10 + random.nextInt(20);
+                    int vrachtauto  = 0;//10 + random.nextInt(20);
+                    int opslag      = 0;//10 + random.nextInt(20);
+                    int diversen    = 0;//10 + random.nextInt(20);
+                    
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
                         System.out.println(pair.getKey() + " = " + pair.getValue());
                         
@@ -130,14 +135,14 @@ public class Connection extends Thread implements Runnable
                         else if(pair.getValue() instanceof FreightTruck){
                             vrachtauto++;
                         }
-                        //else if(pair.getValue() instanceof ){
-                        //    opslag
-                        //}
+                        else if(pair.getValue() instanceof SortField){
+                            opslag++;
+                        }
                         else{
                             diversen++;
                         }
                     }
-                    */
+                    
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+

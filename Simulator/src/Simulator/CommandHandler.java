@@ -49,7 +49,7 @@ public class CommandHandler
         int vehicleId;
         int containerId;
         AGV agv = null;
-        
+        System.out.println(jsonObject);
         
         switch(command)
         {

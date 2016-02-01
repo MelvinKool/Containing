@@ -94,7 +94,6 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 string JSONGenerator::spawnSeaShip(vector<int> contIDs,int shipID)
 {
 	//{'Command': 'spawnShip', 'containers': [i for i in range(5, 40)]}
-	//"{"Command" : "spawnShip", "position", [15.0,0.0,13.75], "id",1, "containers", [1,2,3,4,5,6,7]}"
 	rapidjson::Document document = createJSONDocument();
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command","spawnSeaShip", allocator);
