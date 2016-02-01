@@ -79,7 +79,10 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	double shortestDistance;
 	//validate placenames
 	if((place1 = getPlace(name1)) == nullptr || (place2 = getPlace(name2)) == nullptr)
-		throw string("One or both of the placenames are incorrect, please enter the valid placenames");
+    {
+        string error = "One or both of the placenames are incorrect: " + name1 + " ; " + name2;
+		throw string(error);
+    }
 	current = place1;
 	//From place = 0
 	place1->distance = 0;
@@ -117,10 +120,12 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
  		route.insert(route.begin(),current->name);
 		Place* previous = nullptr;
 		previous = current->previous;
-		if(previous != nullptr){
+		if(previous != nullptr)
+        {
 			current = previous;
 		}
-		else{
+		else
+        {
 			throw string("Could not trace back path");
 			break;
 		}
@@ -131,9 +136,11 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	return pair<double,vector<vector3f>>(shortestDistance,vector3fRoute);
 }
 
-vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector){
+vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector)
+{
 	vector<vector3f> vector3fVector;
-	for(string s : stringVector){
+	for(string s : stringVector)
+    {
 		vector<string> subStringVector = split(s, ',');
 		float x = atof(subStringVector.at(0).c_str());
 		float y = atof(subStringVector.at(1).c_str());

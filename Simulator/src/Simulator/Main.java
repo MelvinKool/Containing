@@ -60,7 +60,7 @@ public class Main extends SimpleApplication
         //long end = System.currentTimeMillis();
         //System.out.println(end - start);
 
-        flyCam.setEnabled(true);
+        flyCam.setEnabled(false);
         flyCam.setMoveSpeed(200);
         cam.setFrustumFar(3000);
         this.setPauseOnLostFocus(false); // don't pause automatically on lost focus

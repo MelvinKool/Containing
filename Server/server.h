@@ -44,9 +44,11 @@ class Server
         Timer timer;
         thread t1;
 
-        bool stop=true,trainSpawned=false;
+        bool stop=true,trainSpawned=false,seaShipSpawned=false;
         std::vector<vector3f> truckStops;
         std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
-        int containerId=-1,agvID=0,laatsteTreinContainer=-1,containersPerCrane=0,containerCount=0,trainCraneId=0;
+        int containerId=-1,agvID=0,containersPerCrane=0,containerCount=0;
+        int lastTrainContainer=-1,trainCraneId=0;
+        int lastSeaShipContainer=-1,seaShipID=0,seaShipCraneID=0;
 };
 #endif

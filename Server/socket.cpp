@@ -36,7 +36,6 @@ string ClientSocket::read()
 
 void ClientSocket::write(string message)
 {
-    cout << message << endl;
     if(!message.empty())
     {
         int count = message.size();
