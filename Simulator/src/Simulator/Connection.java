@@ -110,19 +110,23 @@ public class Connection extends Thread implements Runnable
             System.out.println("sending state to server");
             Random random = new Random();
                     
-                    int zeeschip    = 0;//10 + random.nextInt(20);
-                    int binnenschip = 0;//10 + random.nextInt(20);
-                    int agv         = 0;//10 + random.nextInt(20);
-                    int trein       = 0;//10 + random.nextInt(20);
-                    int vrachtauto  = 0;//10 + random.nextInt(20);
-                    int opslag      = 0;//10 + random.nextInt(20);
-                    int diversen    = 0;//10 + random.nextInt(20);
-                    
+                    int zeeschip    = 10 + random.nextInt(20);
+                    int binnenschip = 10 + random.nextInt(20);
+                    int agv         = 10 + random.nextInt(20);
+                    int trein       = 10 + random.nextInt(20);
+                    int vrachtauto  = 10 + random.nextInt(20);
+                    int opslag      = 10 + random.nextInt(20);
+                    int diversen    = 10 + random.nextInt(20);
+                    /*
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
+			/*
                         System.out.println(pair.getKey() + " = " + pair.getValue());
                         
                         if(((Container)pair.getValue()).getVehicle() instanceof Ship){
                             System.out.println("ship");
+                        //System.out.println(pair.getKey() + " = " + pair.getValue());
+                        */
+                        if(pair.getValue() instanceof Ship){
                             zeeschip++;
                         }
                         //else if(pair.getValue() instanceof Ship){
@@ -150,7 +154,7 @@ public class Connection extends Thread implements Runnable
                             diversen++;
                         }
                     }
-                    
+                    */
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
