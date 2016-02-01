@@ -48,7 +48,7 @@ public class Crane extends WorldObject {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
-        this.speed = speed * 4; //TODO: test * 2
+        this.speed = speed * 10; //TODO: test * 2
         this.hasHolder = true;
         this.commandQueue = new ArrayList<>();
         this.containerTarget = null;
@@ -202,7 +202,6 @@ public class Crane extends WorldObject {
         //System.out.println("crane: trymove");
 
         if ((this.holderDone || !this.hasHolder) && this.craneDone) {
-            System.out.println("crane: move");
             this.grabber.grabberMotion.play();
             if (this.cmd == Cmd.GRABBING) {
                 this.cmd = Cmd.Nothing;
@@ -303,12 +302,10 @@ public class Crane extends WorldObject {
         } else if (this.cmd == Cmd.GRABBER) 
         { // lower container
             this.putContainer(this.containerTarget);
-            //System.out.println("crane: putting");
             this.cmd = Cmd.PUTTING;
         } else if (this.cmd == Cmd.PUTTING) 
         { // detach container
             this.grabber.fixPositionToTarget();
-            //System.out.println("crane: detach");
             Vector3f pos = targetContainer.node.getWorldTranslation();
             Quaternion rot = targetContainer.node.getWorldRotation();
             this.rootNode.attachChild(this.targetContainer.node);
@@ -330,7 +327,6 @@ public class Crane extends WorldObject {
             }).start();
         } else if (this.cmd == Cmd.RESET) 
         { // end
-            //System.out.println("crane: reset");
             this.cmd = Cmd.Nothing;
             this.grabber.motionPath = null;
             this.targetContainer = null;

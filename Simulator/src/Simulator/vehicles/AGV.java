@@ -77,6 +77,9 @@ public class AGV extends WorldObject
         this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
         if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
+            if (motionControl.getPath().getWayPoint(wayPointIndex).equals(new Vector3f(250.0f, 0.0f, -723.0f))) {
+                this.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
+            }
             if(this.container != null)
             {
                 this.container.operationDone();
@@ -88,9 +91,11 @@ public class AGV extends WorldObject
 	
     public void attachContainer(Container container) 
     {
+        Quaternion rot = container.node.getWorldRotation().clone();
         this.container = container;
         this.node.attachChild(container.node);
         this.container.node.setLocalTranslation(0, 1.2f, 0);
+        this.container.node.rotate(rot);
         this.container.operationDone();
     }
 }

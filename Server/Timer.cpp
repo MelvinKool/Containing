@@ -21,7 +21,7 @@ void Timer::start()
 {
     this->year   = 2004;
     this->month  = 12;
-    this->day    = 13;
+    this->day    = 26;
     this->hour   = 0;
     this->minute = 0;
 

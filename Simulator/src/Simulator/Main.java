@@ -55,7 +55,7 @@ public class Main extends SimpleApplication
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.speed = 15;
+        this.speed = 1;
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
         //System.out.println(end - start);
@@ -97,7 +97,7 @@ public class Main extends SimpleApplication
         return temp;
     }
     
-    boolean test = true;
+    boolean test = false;
     // TODO: romove this function
     private int[] rangeArray(int b, int e) {
         int[] array = new int[e - b];
@@ -195,10 +195,8 @@ public class Main extends SimpleApplication
 //                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
                         break;
                     case "xp":
-                        
                         break;
                     case "xm":
-                       
                         break;
                     case "zp":
                         commandHandler.queueCommand(commandHandler.ParseJSON("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));

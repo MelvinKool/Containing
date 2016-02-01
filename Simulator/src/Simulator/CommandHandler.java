@@ -55,6 +55,9 @@ public class CommandHandler
         
         switch(command)
         {
+            case "setTimeMod":
+                
+                break;
             case "containerCommands":
                 this.setContainerCommands(jsonObject);
                 break;
