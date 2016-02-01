@@ -124,8 +124,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     if(vehicle=="vrachtauto") //TODO
     {
         int truckLoc = getTruckStop();
-        vector3f truckLocation = truckStops[truckLoc];
-        //TODO void expression?!?
+        vector3f truckLocation = truckStops.at(truckLoc);
         writeToSim(JGen.spawnTruck(truckLocation,containerId,transportId));
         commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(truckLocation.getX(),0.0000,-25.000),false,containerId));
         commands.push_back(allObjects.truckCranes.at(truckLoc).transfer(containerId,agvID)); //get container from truck to agv
@@ -150,27 +149,27 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             containersPerCrane = containers.size()/4;
 
             writeToSim(JGen.spawnTrain(containers,-1));
-            laatsteTreinContainer = containers.at(containers.size()-1);
+            lastTreinContainer = containers.at(containers.size()-1);
             trainSpawned = true;
         }
         containerCount++;
         if (containerCount>containersPerCrane)
         {
             containerCount = 0;
-            trainCraneId++;
+            CraneId++;
             if (trainCraneId >= 4)
             {
-                trainCraneId = 0;
+                CraneId = 0;
             }
         }
-        if (containerId==laatsteTreinContainer)
+        if (containerId==lastTrainContainer)
         {
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(58.00,0.0,-720.0),false,containerId));
             commands.push_back(allObjects.trainCranes.at(3).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "train",containerId));
             trainSpawned = false;
-            trainCraneId = 0;
+            CraneId = 0;
             containerCount = 0;
         }
         else
@@ -183,13 +182,50 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="zeeschip") //TODO
     {
-        return;
-        /*
-        //TODO spawn seaship
-        commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(x,y,z),vector3f(x,y,z),false));
-        commands.push_back(crane.transfer(containerId,agvID));
-        */
-    }
+        if (!seaShipSpawned)
+        {
+            string Containers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"zeeschip\" AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\";";
+
+            MYSQL_RES* resContainerList = db.select(Containers);
+            MYSQL_ROW row;
+            while((row = mysql_fetch_row(resContainerList)) != NULL)
+            {
+                containers.push_back(atoi(row[0]));
+            }
+            mysql_free_result(resContainerList);
+
+            containersPerCrane = containers.size()/10;
+
+            writeToSim(JGen.spawnSeaShip(containers,-1));
+            lastSeaShipContainer = containers.at(containers.size()-1);
+            seaShipSpawned = true;
+        }
+        containerCount++;
+        if (containerCount>containersPerCrane)
+        {
+            containerCount = 0;
+            shipCraneId++;
+            if (shipCraneId >= 4)
+            {
+                shipCraneId = 0;
+            }
+        }
+        if (containerId==lastSeashipContainer)
+        {
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
+            commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
+            commands.push_back(JGen.agvAttachContainer(agvID,containerId));
+            commands.push_back(JGen.despawnObject(-1, "seaship",containerId));
+            seaShipSpawned = false;
+            shipCraneId = 0;
+            containerCount = 0;
+        }
+        else
+        {
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
+            commands.push_back(allObjects.trainCranes.at(shipCraneId).transfer(containerId,agvID));
+            commands.push_back(JGen.agvAttachContainer(agvID,containerId));
+        }
 
     if(vehicle=="binnenschip") //TODO
     {
