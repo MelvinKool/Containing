@@ -39,7 +39,6 @@ public class CommandHandler
         try {
             container.setCommands(commandList);
             container.operationDone();
-            System.out.println("Set life for: " + container + ", id: " + containerId);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         } 
@@ -146,7 +145,6 @@ public class CommandHandler
 //                        container.operationDone();
 //                    }
 //                }
-                System.out.println(callingContainer);
                 objectloader.train.moveOut();
                 callingContainer.operationDone();
                 break;
