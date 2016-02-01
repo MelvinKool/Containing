@@ -48,9 +48,9 @@ public class AGV extends WorldObject
             this.trainParkingSpot = null;
         }
         if(container != null)
-            agvSpeed = 200;
+            agvSpeed = 20;
         else
-            agvSpeed = 400;
+            agvSpeed = 40;
         motionPath = new MotionPath();
         this.wayPointList = wayPoints;
         this.totalDistance = distance;

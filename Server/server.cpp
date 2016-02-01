@@ -183,6 +183,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="zeeschip")
     {
+        return;
         if (!seaShipSpawned)
         {
             string seaShipContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"zeeschip\" AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\";";
@@ -216,7 +217,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         if (containerId==lastSeaShipContainer)
         {
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
-            commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
+            commands.push_back(allObjects.seaShipCranes.at(0).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "seaShip",containerId));
             seaShipSpawned = false;
@@ -225,8 +226,8 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         }
         else
         {
-            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(100.0,0.0,31.1),false,containerId));
-            commands.push_back(allObjects.trainCranes.at(seaShipCraneId).transfer(containerId,agvID));
+            commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
+            commands.push_back(allObjects.seaShipCranes.at(seaShipCraneId).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
         }
     }
