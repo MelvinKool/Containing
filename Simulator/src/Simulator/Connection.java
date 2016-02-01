@@ -52,7 +52,7 @@ public class Connection extends Thread implements Runnable
             }
             try
             {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex)
             {
                 System.err.println(ex.getMessage());

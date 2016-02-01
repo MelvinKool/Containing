@@ -20,7 +20,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -128,13 +130,13 @@ public class ObjectLoader
         JSONArray maxContainers = sortFieldData.getJSONArray("containers");
         Vector3f containerSizeVec = new Vector3f();
         BoundingBox containerSize = (BoundingBox) this.container.getWorldBound();
+        containerSize.getExtent(containerSizeVec);
         
         maxIndex = new Vector3f(
                 (float) maxContainers.getInt(0),
                 (float) maxContainers.getInt(1),
                 (float) maxContainers.getInt(2));
         
-        containerSize.getExtent(containerSizeVec);
         //System.out.println("container dimensions: " + containerSizeVec);
         
         this.sortFields = new SortField[sortFieldPositions.length()];
@@ -264,19 +266,23 @@ public class ObjectLoader
    public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
    {
         this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
+        List<Container> containerList = new ArrayList<>();
         for(Object containerId : containers)
-         {
-             this.seaShip.addContainer(this.addContainer((int)containerId, commandHandler));
-         }
+        {
+            containerList.add(this.addContainer((int)containerId, commandHandler));
+        }
+        this.seaShip.addContainers(containerList);
    }
    
    public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
    {
         this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
+        List<Container> containerList = new ArrayList<>();
         for(Object containerId : containers)
-         {
-             this.bargeShip.addContainer(this.addContainer((int)containerId, commandHandler));
-         }
+        {
+            containerList.add(this.addContainer((int)containerId, commandHandler));
+        }
+        this.bargeShip.addContainers(containerList);
    }
 
 

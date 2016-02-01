@@ -27,10 +27,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 
 public class Main extends SimpleApplication
 {
@@ -98,10 +97,23 @@ public class Main extends SimpleApplication
         return temp;
     }
     
+    boolean test = true;
+    // TODO: romove this function
+    private int[] rangeArray(int b, int e) {
+        int[] array = new int[e - b];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = b++;
+        }
+        return array;
+    }
+    
     @Override
     public void simpleUpdate(float tpf)
     {
-        
+        if (test) {
+            test = false;
+            this.objectLoader.spawnSeaShip(new JSONArray(this.rangeArray(0, 1400)), commandHandler);
+        }
         // Destroy train when it says it can (when it's out of map)
         if (this.objectLoader.train != null && this.objectLoader.train.canDestroy) {
             this.objectLoader.train.node.removeFromParent();
@@ -112,7 +124,6 @@ public class Main extends SimpleApplication
         
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
-            
         }
     }
 
