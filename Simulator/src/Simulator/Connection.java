@@ -4,10 +4,10 @@
  */
 package Simulator;
 
+import Simulator.cranes.Crane;
 import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Ship;
-import Simulator.vehicles.Train;
 import Simulator.vehicles.TrainCart;
 import java.net.SocketException;
 import java.util.List;
@@ -126,7 +126,7 @@ public class Connection extends Thread implements Runnable
                     int trein = 0       ;//= 10 + random.nextInt(20);
                     int vrachtauto = 0  ;//= 10 + random.nextInt(20);
                     int opslag = 0      ;//= 10 + random.nextInt(20);
-                    int diversen = 0    ;//= 10 + random.nextInt(20);
+                    int kranen = 0    ;//= 10 + random.nextInt(20);
                     
                     
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
@@ -150,11 +150,10 @@ public class Connection extends Thread implements Runnable
                         else if(cont.getVehicle() == null){
                             opslag++;
                         }
-                        else{
-                            diversen++;
+                        else if (cont.getVehicle() instanceof Crane) {
+                            kranen++;
                         }
                     }
-                    
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
@@ -162,7 +161,7 @@ public class Connection extends Thread implements Runnable
                                     trein+","+
                                     vrachtauto+","+
                                     opslag+","+
-                                    diversen;
+                                    kranen;
             try
             {
                 this.socket.write(result);

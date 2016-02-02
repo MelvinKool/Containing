@@ -41,7 +41,7 @@ public class Container extends WorldObject
                 command.put("container", this.containerId);
             }
             this.commandHandler.queueCommand(command);
-            this.vehicle = null;
+            //this.vehicle = null;
         }
     }
     

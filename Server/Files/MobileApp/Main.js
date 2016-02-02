@@ -48,7 +48,7 @@ function main(){
         onAnimationComplete: function(){}
     };
     var data = {
-        labels: ["Zeeschip", "Binnenschip", "AGV", "Trein", "Vrachtauto", "Opslag", "Diversen"],
+        labels: ["Zeeschip", "Binnenschip", "AGV", "Trein", "Vrachtauto", "Opslag", "Kranen"],
         datasets: [
             {
                 fillColor: "rgba(58, 147, 241, 0.8)",
@@ -76,7 +76,7 @@ function main(){
             ctx.fillStyle = this.scale.textColor;
             ctx.textAlign = "center";
             ctx.textBaseline = "bottom";
-            
+
             this.datasets.forEach(function (dataset) {
                 dataset.bars.forEach(function (bar) {
                     ctx.fillText(bar.value, bar.x, bar.y - 5);
