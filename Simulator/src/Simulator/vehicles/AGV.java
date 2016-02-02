@@ -26,6 +26,7 @@ public class AGV extends WorldObject
     private float totalDistance;
     private float agvSpeed;
     private Vector3f vectorZero = new Vector3f(0,0,0);
+    private boolean busy;
 
     public Container container;
     private TrainParking trainParking;
@@ -35,6 +36,7 @@ public class AGV extends WorldObject
     {
         super(rootNode, assetManager, position, model);
         this.trainParking = trainParking;
+        this.busy = false;
     }
     
     public void setPath(List<Vector3f> wayPoints, float distance)
@@ -102,6 +104,7 @@ public class AGV extends WorldObject
             if(this.container != null)
             {
                 this.container.operationDone();
+                this.container = null;
             }
             this.motionEvent = null;
             this.motionPath = null;
@@ -115,6 +118,17 @@ public class AGV extends WorldObject
         this.node.attachChild(container.node);
         this.container.node.setLocalTranslation(0, 1.2f, 0);
         this.container.node.rotate(rot);
+        this.container.setVehicle(this);
         this.container.operationDone();
+    }
+    
+    public boolean isBusy() 
+    {
+        return this.busy;
+    }
+    
+    public void setBusy(boolean busy) 
+    {
+        this.busy = busy;
     }
 }

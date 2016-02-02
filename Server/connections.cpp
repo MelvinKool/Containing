@@ -5,6 +5,9 @@
 
 using namespace std;
 
+
+bool Connections::freeAgvAnswer = false;
+
 void Connections::initConnections(Server* server)
 {
     this->socket = new ServerSocket(1337);
@@ -26,6 +29,11 @@ Connections::~Connections()
     }
 
     delete this->socket;
+}
+
+bool Connections::freeAgvAvailable()
+{
+    return freeAgvAnswer;
 }
 
 // The thread that accepts new clients.
@@ -113,6 +121,19 @@ thread* Connections::newClientThread(int number)
                 std::string result = input.erase(0, 11);
                 dataForApp = result;
             }
+            else if(input.substr(0, 7) == "freeAgv")
+            {
+                //cout << input << endl;
+                std::string data = input.substr(7);
+
+                int id;
+                std::istringstream iss(data);
+                iss >> id;
+                this->newFreeAgv = id;
+
+                freeAgvAnswer = true;
+                cv.notify_one();
+            }
             else
             {
                 //what to do with the input?
@@ -153,3 +174,21 @@ std::string Connections::getDataForApp()
 {
     return dataForApp;
 }
+
+int Connections::requestFreeAgv()
+{
+    int freeAgv;
+    std::unique_lock<std::mutex> lock(mtx);
+    cout << "Requesting free agv" << endl;
+    writeToSim("freeAgv");
+
+    cv.wait(lock, freeAgvAvailable);
+
+    freeAgv = newFreeAgv;
+
+    freeAgvAnswer = false;
+
+    return freeAgv;
+}
+
+

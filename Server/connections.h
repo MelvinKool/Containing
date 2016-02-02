@@ -1,13 +1,13 @@
 #ifndef CONNECTIONS_H
 #define CONNECTIONS_H
 
+#include <mutex>
+#include <condition_variable>
 #include <vector>
 #include <string>
 #include <thread>
 #include "socket.h"
 #include "allObjects.h"
-
-//class Server;
 
 // Handles all connections with simulators and mobile app's.
 class Connections
@@ -19,6 +19,10 @@ class Connections
         void acceptClients();
         void writeToSim(std::string message);
         std::string getDataForApp();
+        int requestFreeAgv();
+        static bool freeAgvAnswer;
+        static bool freeAgvAvailable();
+        int newFreeAgv;
     private:
         // Holds som information about the client.
         //   type - either simulator or mobile app
@@ -38,6 +42,8 @@ class Connections
         bool stop = false;
         std::vector<Client> clients;
         std::thread* acceptThread;
+        std::mutex mtx;
+        std::condition_variable cv;
 
         int getFreeClientNumber();
         std::thread* newClientThread(int number);

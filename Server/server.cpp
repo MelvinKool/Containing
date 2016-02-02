@@ -297,13 +297,9 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
 
 int Server::getFreeAGV()
 {
-    static int i = -1;
-    if (i > 98)
-        i = 0;
-    else
-        i++;
-
-    return i;
+    int agvId = connections.requestFreeAgv();
+    cout << "using agv" << agvId << endl;
+    return agvId;
 
     /* this would work if server knows which AGV are idling
     static int i = 0;
@@ -320,7 +316,7 @@ int Server::getFreeAGV()
         while (distance < 0)
         {
             AGV agv = allObjects.agvs[e];
-            if (agv.getWorkingState()) //if agv is bussy, dont even try to give it a new order
+            if (agv.getWorkingState()) //if agv is busy, dont even try to give it a new order
             {
                 if (e > 98)
                 {

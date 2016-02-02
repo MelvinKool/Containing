@@ -2,11 +2,10 @@ package Simulator;
 
 import Simulator.cranes.Crane;
 import Simulator.vehicles.AGV;
-import Simulator.vehicles.FreightTruck;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -49,7 +48,7 @@ public class CommandHandler
         int vehicleId;
         int containerId;
         AGV agv = null;
-        System.out.println(jsonObject);
+        //System.out.println(jsonObject);
         
         switch(command)
         {
@@ -63,6 +62,7 @@ public class CommandHandler
                 vehicleId = jsonObject.getInt("vehicleId");
                 JSONArray route = jsonObject.getJSONArray("Route");
                 agv = objectloader.agvs.get(vehicleId);
+                System.out.println("moving agv with id " + vehicleId);
                 if (agv == null) {
                     return;
                 }
@@ -206,6 +206,18 @@ public class CommandHandler
         Vector3f position = new Vector3f(x, y, z);
         
         this.objectloader.spawnTruck(id, container, position);
+    }
+    
+    public List<Integer> getFreeAgvs() {
+        List<Integer> freeAgvs = new ArrayList<>();
+        AGV agv;
+        for (Entry agvEntry : this.objectloader.agvs.entrySet()) {
+            agv = (AGV) agvEntry.getValue();
+            if (!agv.isBusy()) {
+                freeAgvs.add((int) agvEntry.getKey());
+            }
+        }
+        return freeAgvs;
     }
 
     public void queueCommand(JSONObject input)
