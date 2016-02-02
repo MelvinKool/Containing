@@ -217,11 +217,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         if (containerId==lastSeaShipContainer)
         {
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
-<<<<<<< Updated upstream
             commands.push_back(allObjects.seaShipCranes.at(0).transfer(containerId,agvID));
-=======
-            commands.push_back(allObjects.trainCranes.at(0).transfer(containerId,agvID));
->>>>>>> Stashed changes
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "seaShip",containerId));
             seaShipSpawned = false;

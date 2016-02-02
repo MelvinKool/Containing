@@ -100,8 +100,7 @@ public class Connection extends Thread implements Runnable
                 {
                     this.objectLoader.agvs.get(agvIds.get(0)).setBusy(true); // agv will certainly be used, set busy
                     this.socket.write("freeAgv " + agvIds.get(0));
-                } catch (Exception ex) { System.err.println(ex.getMessage());}
-                System.out.println(data + agvIds);
+                } catch (Exception ex) { System.err.println(ex.getMessage()); }
                 continue;
             }
             
@@ -155,7 +154,7 @@ public class Connection extends Thread implements Runnable
                             diversen++;
                         }
                     }
-                    */
+                    
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
