@@ -7,6 +7,7 @@ package Simulator;
 import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Ship;
+import Simulator.vehicles.Train;
 import Simulator.vehicles.TrainCart;
 import java.net.SocketException;
 import java.util.List;
@@ -141,10 +142,10 @@ public class Connection extends Thread implements Runnable
                         else if(cont.getVehicle() instanceof AGV){
                             agv++;
                         }
-                        else if(cont.getVehicle()  instanceof TrainCart){
+                        else if(cont.getVehicle() instanceof TrainCart){
                             trein++;
                         }
-                        else if(cont.getVehicle()  instanceof FreightTruck){
+                        else if(cont.getVehicle() instanceof FreightTruck){
                             vrachtauto++;
                         }
                         else if(cont.getVehicle() == null){
@@ -154,6 +155,7 @@ public class Connection extends Thread implements Runnable
                             diversen++;
                         }
                     }
+                    */
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
