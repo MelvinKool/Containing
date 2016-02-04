@@ -183,7 +183,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="zeeschip")
     {
-        return;
+        //return;
         if (!seaShipSpawned)
         {
             string seaShipContainers = "SELECT cont.containerID FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND ship.sort = \"zeeschip\" AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\";";
@@ -204,20 +204,17 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             seaShipSpawned = true;
         }
 
-        containerCount++;
-        if (containerCount>containersPerCrane)
-        {
             containerCount = 0;
             seaShipCraneId++;
             if (seaShipCraneId >= 10)
             {
                 seaShipCraneId = 0;
             }
-        }
+
         if (containerId==lastSeaShipContainer)
         {
             commands.push_back(allObjects.agvs.at(agvID).goTo(vector3f(6.0,0.0,-100.0),false,containerId));
-            commands.push_back(allObjects.seaShipCranes.at(0).transfer(containerId,agvID));
+            commands.push_back(allObjects.seaShipCranes.at(seaShipCraneId).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "seaShip",containerId));
             seaShipSpawned = false;
@@ -298,7 +295,6 @@ void Server::processLeavingContainer(MYSQL_ROW &row)
 int Server::getFreeAGV()
 {
     int agvId = connections.requestFreeAgv();
-    cout << "using agv" << agvId << endl;
     return agvId;
 
     /* this would work if server knows which AGV are idling

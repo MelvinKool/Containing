@@ -5,7 +5,7 @@ var xhttp = new XMLHttpRequest();
 
 function main(){
     Chart.defaults.global = {
-        animation: true,
+        animation: false,
         animationSteps: 60,
         animationEasing: "easeOutQuart",
         showScale: true,
@@ -25,7 +25,7 @@ function main(){
         scaleFontColor: "#000000",
         responsive: true,
         maintainAspectRatio: false,
-        showTooltips: true,
+        showTooltips: false,
         customTooltips: false,
         tooltipEvents: ["mousemove", "touchstart", "touchmove"],
         tooltipFillColor: "rgba(0,0,0,0.8)",
@@ -69,7 +69,7 @@ function main(){
         barValueSpacing : 5,
         barDatasetSpacing : 1,
         legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
-        showTooltips : false,
+        showTooltips : true,
         onAnimationComplete : function(){
             var ctx = this.chart.ctx;
             ctx.font = this.scale.font;

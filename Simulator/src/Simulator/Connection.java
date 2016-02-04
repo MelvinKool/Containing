@@ -95,11 +95,26 @@ public class Connection extends Thread implements Runnable
             }
             
             if (data.equals("freeAgv")) {
-                List<Integer> agvIds = this.commandHandler.getFreeAgvs();
+                int agvId = -1;
+                while (agvId == -1) {
+                    agvId = this.commandHandler.getFreeAgv();
+                    if (agvId == -1)
+                    {
+                        try
+                        {
+                            Thread.sleep(10);
+                        } catch (InterruptedException ex)
+                        {
+                            this.connected = false;
+                            break;
+                        }
+                    }
+                }
+                System.out.println("Found free agv");
                 try
                 {
-                    this.objectLoader.agvs.get(agvIds.get(0)).setBusy(true); // agv will certainly be used, set busy
-                    this.socket.write("freeAgv " + agvIds.get(0));
+                    this.objectLoader.agvs.get(agvId).setBusy(true); // agv will certainly be used, set busy
+                    this.socket.write("freeAgv " + agvId);
                 } catch (Exception ex) { System.err.println(ex.getMessage()); }
                 continue;
             }
@@ -132,7 +147,7 @@ public class Connection extends Thread implements Runnable
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
                         //System.out.println(pair.getKey() + " = " + pair.getValue());
                         Container cont = (Container) pair.getValue();
-                        if(pair.getValue() instanceof Ship){
+                        if(cont.getVehicle() instanceof Ship){
                             zeeschip++;
                         }
                         //else if(pair.getValue() instanceof Ship){

@@ -179,7 +179,6 @@ int Connections::requestFreeAgv()
 {
     int freeAgv;
     std::unique_lock<std::mutex> lock(mtx);
-    cout << "Requesting free agv" << endl;
     writeToSim("freeAgv");
 
     cv.wait(lock, freeAgvAvailable);

@@ -62,7 +62,6 @@ public class CommandHandler
                 vehicleId = jsonObject.getInt("vehicleId");
                 JSONArray route = jsonObject.getJSONArray("Route");
                 agv = objectloader.agvs.get(vehicleId);
-                System.out.println("moving agv with id " + vehicleId);
                 if (agv == null) {
                     return;
                 }
@@ -208,16 +207,16 @@ public class CommandHandler
         this.objectloader.spawnTruck(id, container, position);
     }
     
-    public List<Integer> getFreeAgvs() {
-        List<Integer> freeAgvs = new ArrayList<>();
+    public int getFreeAgv() 
+    {
         AGV agv;
-        for (Entry agvEntry : this.objectloader.agvs.entrySet()) {
-            agv = (AGV) agvEntry.getValue();
+        for (int i = 0; i < this.objectloader.agvs.size(); i++) {
+            agv =  this.objectloader.agvs.get(i);
             if (!agv.isBusy()) {
-                freeAgvs.add((int) agvEntry.getKey());
+                return i;
             }
         }
-        return freeAgvs;
+        return -1;
     }
 
     public void queueCommand(JSONObject input)

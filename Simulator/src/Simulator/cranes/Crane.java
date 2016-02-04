@@ -6,6 +6,7 @@ package Simulator.cranes;
 
 import Simulator.Container;
 import Simulator.WorldObject;
+import Simulator.vehicles.AGV;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.events.MotionEvent;
@@ -48,7 +49,7 @@ public class Crane extends WorldObject {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
-        this.speed = speed;
+        this.speed = speed * 5;
         this.hasHolder = true;
         this.commandQueue = new ArrayList<>();
         this.containerTarget = null;
@@ -247,23 +248,21 @@ public class Crane extends WorldObject {
     
     /**
      * Attach container after delay.
-     * WARNING:
-     * this method is called from a separate thread. This means that it is not
-     * possible to make any modifications to the scene from this method.
      */
     private void delayAttachContainer() 
     {
         //System.out.println("crane: grabbed");
         this.cmd = Cmd.GRABBER;
         this.grabber.resetPosition(this);
+        if (this.targetContainer.getVehicle() instanceof AGV)
+        {
+            ((AGV) this.targetContainer.getVehicle()).setBusy(false);
+        }
         this.targetContainer.setVehicle(this);
     }
     
     /**
      * Detach container after delay.
-     * WARNING:
-     * this method is called from a separate thread. This means that it is not
-     * possible to make any modifications to the scene from this method.
      */
     private void delayDetachContainer() 
     {        
@@ -292,7 +291,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(3000);
+                            Thread.sleep(300);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -317,8 +316,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(3000
-                                    );
+                            Thread.sleep(300);
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
