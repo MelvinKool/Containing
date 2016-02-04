@@ -187,6 +187,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="zeeschip")
     {
+        //return;
         if (!seaShipSpawned) //When there is not yet a ship, spawn it
         {
             vector<int> containers;
@@ -243,7 +244,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         commands.push_back(crane.transfer(containerId,agvID));
         */
     }
-    
+
     //Same for aal containers, drive to storage lane and unload container
     vector<int> storageLane = getStorageLaneSpot();
     int storageLaneID = storageLane.at(3);
