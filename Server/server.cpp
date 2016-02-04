@@ -118,10 +118,11 @@ void Server::checkContainers()
 //Processes 1 container the arrives
 void Server::processArrivingContainer(MYSQL_ROW &row)
 {
-    containerId = atoi(row[0]); //gets container Id
-    vehicle = row[1]; //gets vehicle containers arrives with
-    agvID = getFreeAGV();
+    int containerId = atoi(row[0]); //gets container Id
+    std::string vehicle = row[1]; //gets vehicle containers arrives with
+    int agvID = getFreeAGV();
     vector<string> commands; //vector to keep track of commands to run
+    int containersPerCrane;
 
     if(vehicle=="vrachtauto")
     {
@@ -209,7 +210,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             seaShipSpawned = true;
         }
 
-        containerCount = 0;
+        int containerCount = 0;
         seaShipCraneId++;
         if (seaShipCraneId >= 10)
         {
@@ -243,7 +244,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
         commands.push_back(crane.transfer(containerId,agvID));
         */
     }
-    
+
     //Same for aal containers, drive to storage lane and unload container
     vector<int> storageLane = getStorageLaneSpot();
     int storageLaneID = storageLane.at(3);
@@ -370,52 +371,45 @@ int Server::getFreeAGV()
 //Distributes trucks over all truck stops
 int Server::getTruckStop()
 {
-    static int i = -1;
+    if (lastTruckStop == 20)
+        lastTruckStop = 0;
 
-    if (i > 19)
-        i = 0;
-    else
-        i++;
-
-    return i;
+    return lastTruckStop++;
 }
 
 //Generates fresh cup of transport Id
 int Server::getTransportID()
 {
-    static int i = -1;
-    i++;
-    return i;
+    return lastTransportID++;;
 }
 
 //Gives back spot in storage lane to place container
-vector<int> Server::getStorageLaneSpot()
+storageLaneSpot Server::getStorageLaneSpot()
 {
-    static int x=0,y=0,z=0,nr=0;
-    if (nr>43) //nr represents storagelane Id
+    if (lastStorageLaneSpot.nr>43) //nr represents storagelane Id
     {
-        nr=0;
+        lastStorageLaneSpot.nr=0;
 
-        if (x>4)
+        if (lastStorageLaneSpot.x>4)
         {
-            x=0;
+            lastStorageLaneSpot.x=0;
 
-            if (z>40)
-                z=0;
+            if (lastStorageLaneSpot.z>40)
+                lastStorageLaneSpot.z=0;
             else
-                z++;
+                lastStorageLaneSpot.z++;
         }
         else
-            x++;
+            lastStorageLaneSpot.x++;
     }
     else
-        nr++;
+        lastStorageLaneSpot.nr++;
 
     vector<int> result;
-    result.push_back(x);
-    result.push_back(y);
-    result.push_back(z);
-    result.push_back(nr);
+    result.push_back(lastStorageLaneSpot.x);
+    result.push_back(lastStorageLaneSpot.y);
+    result.push_back(lastStorageLaneSpot.z);
+    result.push_back(lastStorageLaneSpot.nr);
     return result;
 }
 

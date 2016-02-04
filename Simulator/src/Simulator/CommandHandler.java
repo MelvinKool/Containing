@@ -210,11 +210,11 @@ public class CommandHandler
     public int getFreeAgv() 
     {
         AGV agv;
-        for (int i = 0; i < this.objectloader.agvs.size(); i++) {
+        for (int i : this.objectloader.agvs.keySet()) {
             agv =  this.objectloader.agvs.get(i);
             if (!agv.isBusy()) {
                 return i;
-            }
+            } 
         }
         return -1;
     }

@@ -47,8 +47,18 @@ class Server
         bool stop=true,trainSpawned=false,seaShipSpawned=false;
         std::vector<vector3f> truckStops;
         std::string vehicle="",currentDate="",currentTime="",previousDate="",previousTime="";
-        int containerId=-1,agvID=0,containersPerCrane=0,containerCount=0;
+        //int containerId=-1,agvID=0,containersPerCrane=0,
+        int containerCount=0;
         int lastTrainContainer=-1,trainCraneId=0;
         int lastSeaShipContainer=-1,seaShipId=0,seaShipCraneId=0;
+        int lastTruckStop = 0;
+        int lastTransportID = 0;
+
+        struct storageLaneSpot_t {
+            int x = 0;
+            int y = 0;
+            int z = 0;
+            int nr = 0;
+        } lastStorageLaneSpot;
 };
 #endif

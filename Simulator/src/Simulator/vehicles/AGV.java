@@ -21,7 +21,7 @@ public class AGV extends WorldObject
 {
     private MotionPath motionPath;
     private MotionEvent motionEvent;
-    private List<Vector3f> wayPointList = new ArrayList<>();
+    public List<Vector3f> wayPointList = new ArrayList<>(); // TDOD: make privatew
     private float duration;
     private float totalDistance;
     private float agvSpeed;
@@ -41,10 +41,10 @@ public class AGV extends WorldObject
     
     public void setPath(List<Vector3f> wayPoints, float distance)
     {
-        if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
-        {
-            return;
-        }
+//        if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
+//        {
+//            return;
+//        }
         if (this.trainParkingSpot != null) {
             this.trainParking.setSpot(this.trainParkingSpot.getKey(), true);
             this.trainParkingSpot = null;

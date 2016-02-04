@@ -39,6 +39,7 @@ public class Connection extends Thread implements Runnable
         this.commandHandler = commandHandler;
         this.connected = false;
         this.lastAppDataSent = System.currentTimeMillis();
+        this.setName("connection thread");
         this.start();
     }
     
@@ -53,7 +54,7 @@ public class Connection extends Thread implements Runnable
                 this.communicate();
             } catch (Exception ex)
             {
-                System.err.println(ex.getMessage());
+                System.err.println("Unknown error when trying to connect to server: " + ex.getMessage());
                 this.connected = false;
             }
             try
@@ -61,7 +62,7 @@ public class Connection extends Thread implements Runnable
                 Thread.sleep(5000);
             } catch (InterruptedException ex)
             {
-                System.err.println(ex.getMessage());
+                System.err.println("Stopping connection: " + ex.getMessage());
                 this.connected = false;
                 break;
             }
@@ -78,19 +79,19 @@ public class Connection extends Thread implements Runnable
             try
             {
                 data = this.socket.read();
-                //System.out.println("Received: " + data);
+//                System.out.println("Received: " + data);
             } 
             catch (java.net.SocketTimeoutException ex) { 
                 continue;
             }
             catch (SocketException ex)
             {
-                System.err.println(ex.getMessage());
+                System.err.println("SocketError while trying to read:" + ex.getMessage());
                 this.connected = false;
             } 
             catch (Exception ex) 
             {
-                System.err.println(ex.getMessage());
+                System.err.println("Unknown error while trying to read: " + ex.getMessage());
                 this.connected = false;
             }
             
@@ -102,20 +103,34 @@ public class Connection extends Thread implements Runnable
                     {
                         try
                         {
-                            Thread.sleep(10);
+                            Thread.sleep(1);
                         } catch (InterruptedException ex)
                         {
+                            System.err.println("Error while waiting for free agv:" + ex.getMessage());
                             this.connected = false;
-                            break;
+                            return;
                         }
                     }
                 }
-                System.out.println("Found free agv");
                 try
                 {
                     this.objectLoader.agvs.get(agvId).setBusy(true); // agv will certainly be used, set busy
                     this.socket.write("freeAgv " + agvId);
-                } catch (Exception ex) { System.err.println(ex.getMessage()); }
+                }
+                catch (SocketException ex) 
+                {
+                    System.err.println("Error while sending free agv: " + ex.getMessage()); 
+                    this.connected = false;
+                    break;
+                }
+                catch (Exception ex) 
+                { 
+                    System.err.println("At agv req; " + ex.getMessage());
+                    if (!this.connected) 
+                    {
+                        break;
+                    }
+                }
                 continue;
             }
             
@@ -182,7 +197,8 @@ public class Connection extends Thread implements Runnable
                 this.socket.write(result);
             } catch (Exception ex)
             {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error while sending state to server" + ex.getMessage());
+                this.connected = false;
             }
             this.lastAppDataSent = System.currentTimeMillis();
         }

@@ -124,6 +124,7 @@ thread* Connections::newClientThread(int number)
             else if(input.substr(0, 7) == "freeAgv")
             {
                 //cout << input << endl;
+                std::unique_lock<std::mutex> lck(mtx);
                 std::string data = input.substr(7);
 
                 int id;
@@ -178,15 +179,16 @@ std::string Connections::getDataForApp()
 int Connections::requestFreeAgv()
 {
     int freeAgv;
-    std::unique_lock<std::mutex> lock(mtx);
+    std::unique_lock<std::mutex> lck(mtx);
     writeToSim("freeAgv");
 
-    cv.wait(lock, freeAgvAvailable);
+    while (!freeAgvAnswer) {
+        cv.wait(lck);
+    }
 
     freeAgv = newFreeAgv;
 
     freeAgvAnswer = false;
-
     return freeAgv;
 }
 
