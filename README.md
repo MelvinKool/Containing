@@ -20,9 +20,12 @@ Om de simulatie te starten kan eerst de database server en daarna de controller(
 ## Opzetten van de database
 Onze server heeft een connectie nodig met de database, zodat hier de container data in kan komen etc.
 Deze moet als volgt aangemaakt worden:
-Download een mysql server of mariadb
-Log in als superuser op je mysql client.
-Voer vervolgens de onderstaande commando's uit.
+
+1.Download een mysql server of mariadb
+
+2.Log in als superuser op je mysql client.
+
+3.Voer vervolgens de onderstaande commando's uit.
 
 create database containing;
 
