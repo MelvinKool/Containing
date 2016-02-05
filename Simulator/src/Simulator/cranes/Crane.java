@@ -257,6 +257,10 @@ public class Crane extends WorldObject {
         if (this.targetContainer.getVehicle() instanceof AGV)
         {
             ((AGV) this.targetContainer.getVehicle()).setBusy(false);
+            System.out.println("on agv:" + this.targetContainer.getVehicle());
+        }
+        else {
+            System.out.println("Container not on agv, not freeing up: " + this.targetContainer.getVehicle());
         }
         this.targetContainer.setVehicle(this);
     }

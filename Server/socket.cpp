@@ -38,11 +38,11 @@ void ClientSocket::write(string message)
 {
     if(!message.empty())
     {
-        int count = message.size();
+        int count = message.size() + 1;
         /* if you want to send a larger message than bufsize*/
         char buffer[count];
         strcpy(buffer, message.c_str());
-        buffer[count++] = '\n';
+        buffer[count - 1] = '\n';
         send(sock, buffer, count, 0);
         //cout << buffer << endl;
         /*if(count <= bufsize-1)

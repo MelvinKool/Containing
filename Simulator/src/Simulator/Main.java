@@ -1,11 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -18,30 +14,20 @@ import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONArray;
 
 public class Main extends SimpleApplication
 {
     boolean connected = false;
-    private Spatial SimWorld;    
-    //private Node dockCraneNode;
-    //private List<Container> containers;
+    private Spatial SimWorld;
     private Connection connection;
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
 
-    private Train train; // TODO: this is test code
+//    private Train train; // TODO: this is test code
 
     public static void main(String[] args)
     {
@@ -52,22 +38,20 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
         this.speed = 20;
         this.setDisplayStatView(false);
-        //long end = System.currentTimeMillis();
-        //System.out.println(end - start);
 
-        flyCam.setEnabled(true);
-        flyCam.setMoveSpeed(200);
-        cam.setFrustumFar(3000);
+        flyCam.setEnabled(true);    //flycam lets you move the camera with wasd and mouse.
+        flyCam.setMoveSpeed(200);   //set the movespeed if the flycam is enabled
+        cam.setFrustumFar(3000);    //sets render distance of the scene
         this.setPauseOnLostFocus(false); // don't pause automatically on lost focus
         
+        //Initialize the world with light, water, skybox and fog.
         initWorld();
         initLight();
-        initInputs();
+//        initInputs();
         initWater();
         initSkybox();
         initFog();
@@ -79,41 +63,41 @@ public class Main extends SimpleApplication
         catch (Exception e) { System.out.println(e); }
     }
     
-    public String readJsonFile() throws FileNotFoundException, IOException{
-        BufferedReader br = new BufferedReader(new FileReader("assets\\data\\spawns.json"));
-        String temp = "";
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                temp += line;
-                line = br.readLine();
-            }
-            String everything = sb.toString();
-        } finally {
-            br.close();
-        }
-        return temp;
-    }
-    
-    boolean test = false;
-    // TODO: romove this function
-    private int[] rangeArray(int b, int e) {
-        int[] array = new int[e - b];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = b++;
-        }
-        return array;
-    }
+//    public String readJsonFile() throws FileNotFoundException, IOException{
+//        BufferedReader br = new BufferedReader(new FileReader("assets\\data\\spawns.json"));
+//        String temp = "";
+//        try {
+//            StringBuilder sb = new StringBuilder();
+//            String line = br.readLine();
+//
+//            while (line != null) {
+//                temp += line;
+//                line = br.readLine();
+//            }
+//            String everything = sb.toString();
+//        } finally {
+//            br.close();
+//        }
+//        return temp;
+//    }
+//    
+//    boolean test = false;
+//    // TODO: romove this function
+//    private int[] rangeArray(int b, int e) {
+//        int[] array = new int[e - b];
+//        for (int i = 0; i < array.length; i++) {
+//            array[i] = b++;
+//        }
+//        return array;
+//    }
     
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (test) {
-            test = false;
-            this.objectLoader.spawnSeaShip(new JSONArray(this.rangeArray(0, 1400)), commandHandler);
-        }
+//        if (test) {
+//            test = false;
+//            this.objectLoader.spawnSeaShip(new JSONArray(this.rangeArray(0, 1400)), commandHandler);
+//        }
         // Destroy train when it says it can (when it's out of map)
         if (this.objectLoader.train != null && this.objectLoader.train.canDestroy) {
             this.objectLoader.train.node.removeFromParent();
@@ -142,95 +126,95 @@ public class Main extends SimpleApplication
         if(connection != null) connection.interrupt();
     }
 
-   public Crane getNearestCrane(Node obj){
-//        float dist;
-//        float minDist = -1;
-        Crane nCrane = null;
-//        for (Crane crane : this.objectLoader.cranes.values())
+//   public Crane getNearestCrane(Node obj){
+////        float dist;
+////        float minDist = -1;
+//        Crane nCrane = null;
+////        for (Crane crane : this.objectLoader.cranes.values())
+////        {
+////            dist = obj.getLocalTranslation().distance(crane.getPosition());
+////            if (dist < minDist || minDist == -1)
+////            {
+////                minDist = dist;
+////                nCrane = crane;
+////            }
+////        }
+//        return nCrane;
+//   }
+//   
+//    private void initInputs(){
+//        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
+//        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
+//        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
+//
+//        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
+//        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
+//        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
+//        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
+//        
+//        ActionListener acl = new ActionListener()
 //        {
-//            dist = obj.getLocalTranslation().distance(crane.getPosition());
-//            if (dist < minDist || minDist == -1)
+//            public void onAction(String name, boolean keyPressed, float tpf)
 //            {
-//                minDist = dist;
-//                nCrane = crane;
-//            }
-//        }
-        return nCrane;
-   }
-   
-    private void initInputs(){
-        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
-        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
-
-        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
-        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
-        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
-        
-        ActionListener acl = new ActionListener()
-        {
-            public void onAction(String name, boolean keyPressed, float tpf)
-            {
-//                Container cont = containers.get(0);
-//                Container cont2 = containers.get(1);
-//                Container cont3 = containers.get(2);
-//                if(name.equals("play_stop") && keyPressed)
-//                {
-//                    if (playing) {
-//                        playing = false;
+////                Container cont = containers.get(0);
+////                Container cont2 = containers.get(1);
+////                Container cont3 = containers.get(2);
+////                if(name.equals("play_stop") && keyPressed)
+////                {
+////                    if (playing) {
+////                        playing = false;
+////                        
+////                    } else {
+////                        playing = true;
+////                    }
+//                //else if
+//                if (keyPressed) {
+//                    switch (name) {
+//                    case "target":
+////                        Crane crane = getNearestCrane(cont.node);
+////                        crane.moveContainer(cont, new Vector3f(55,0,-10));
+//                        break;
+//                    case "target2":
+////                        Crane crane2 = getNearestCrane(cont2.node);
+////                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
+//                        break;
+//                    case "xp":
+//                        break;
+//                    case "xm":
+//                        break;
+//                    case "zp":
+//                        commandHandler.queueCommand(commandHandler.ParseJSON("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));
+//                            
+//                        break;
+//                    case "zm":
+//                        Container container = objectLoader.addContainer(1, commandHandler);
 //                        
-//                    } else {
-//                        playing = true;
+//                        
+//                        try 
+//                        {
+//                            commandHandler.executeCommand(commandHandler.ParseJSON(readJsonFile()));                            
+//                        }
+//                        catch (FileNotFoundException ex) {
+//                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        catch (IOException ex) {
+//                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                        objectLoader.agvs.get(1).attachContainer(container);
+//                        break;
 //                    }
-                //else if
-                if (keyPressed) {
-                    switch (name) {
-                    case "target":
-//                        Crane crane = getNearestCrane(cont.node);
-//                        crane.moveContainer(cont, new Vector3f(55,0,-10));
-                        break;
-                    case "target2":
-//                        Crane crane2 = getNearestCrane(cont2.node);
-//                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
-                        break;
-                    case "xp":
-                        break;
-                    case "xm":
-                        break;
-                    case "zp":
-                        commandHandler.queueCommand(commandHandler.ParseJSON("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));
-                            
-                        break;
-                    case "zm":
-                        Container container = objectLoader.addContainer(1, commandHandler);
-                        
-                        
-                        try 
-                        {
-                            commandHandler.executeCommand(commandHandler.ParseJSON(readJsonFile()));                            
-                        }
-                        catch (FileNotFoundException ex) {
-                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        catch (IOException ex) {
-                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        objectLoader.agvs.get(1).attachContainer(container);
-                        break;
-                    }
-                }
-            }
-        };
-
-        inputManager.addListener(acl, "play_stop");
-        inputManager.addListener(acl, "xp");
-        inputManager.addListener(acl, "zp");
-        inputManager.addListener(acl, "xm");
-        inputManager.addListener(acl, "zm");
-        inputManager.addListener(acl, "target");
-        inputManager.addListener(acl, "target2");
-   }
+//                }
+//            }
+//        };
+//
+//        inputManager.addListener(acl, "play_stop");
+//        inputManager.addListener(acl, "xp");
+//        inputManager.addListener(acl, "zp");
+//        inputManager.addListener(acl, "xm");
+//        inputManager.addListener(acl, "zm");
+//        inputManager.addListener(acl, "target");
+//        inputManager.addListener(acl, "target2");
+//   }
     
     private void initLight()
     {

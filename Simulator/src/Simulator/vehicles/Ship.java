@@ -54,7 +54,7 @@ public class Ship extends WorldObject {
             Vector3f pos = new Vector3f(
                     (indexes[0] * containerSize.x) + xOffset - shipSizeC.x,
                     (indexes[1] * containerSize.y),
-                    (indexes[2] * containerSize.z) - (shipSizeC.z / 2) );
+                    (indexes[2] * containerSize.z));
             
             this.attachContainer(container, pos);
             
