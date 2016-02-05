@@ -45,7 +45,8 @@ public class AGV extends WorldObject
 //        {
 //            return;
 //        }
-        if (this.trainParkingSpot != null) {
+        if (this.trainParkingSpot != null) 
+        {
             this.trainParking.setSpot(this.trainParkingSpot.getKey(), true);
             this.trainParkingSpot = null;
         }
@@ -61,10 +62,12 @@ public class AGV extends WorldObject
         if(wayPoints.size() > 0)
         {
             motionPath.addWayPoint(node.getWorldTranslation());
-            for(Vector3f wayPoint : this.wayPointList) {
+            for(Vector3f wayPoint : this.wayPointList) 
+            {
                 
                 // If end waypoint is train then queue in line 
-                if (this.trainParking.getPosition().equals(wayPoint)) {
+                if (this.trainParking.getPosition().equals(wayPoint)) 
+                {
                     SimpleEntry<Integer, Vector3f> spot = this.trainParking.getFirstFreeSpot();
                     wayPoint = spot.getValue().clone();
                     this.trainParking.setSpot(spot.getKey(), false);
@@ -98,7 +101,8 @@ public class AGV extends WorldObject
         this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(wayPointIndex), vectorZero);
         if(motionPath.getNbWayPoints() == wayPointIndex + 1)
         {
-            if (this.trainParkingSpot != null && motionControl.getPath().getWayPoint(wayPointIndex).equals(this.trainParkingSpot.getValue())) {
+            if (this.trainParkingSpot != null && motionControl.getPath().getWayPoint(wayPointIndex).equals(this.trainParkingSpot.getValue())) 
+            {
                 this.node.rotate(0.0f, FastMath.DEG_TO_RAD * 90.0f, 0.0f);
             }
             if(this.container != null)

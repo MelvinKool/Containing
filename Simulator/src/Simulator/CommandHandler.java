@@ -42,7 +42,8 @@ public class CommandHandler
         } 
     }
     
-    public void executeCommand(JSONObject jsonObject) {
+    public void executeCommand(JSONObject jsonObject) 
+    {
         String command = jsonObject.getString("Command");
         int vehicleId;
         int containerId;
@@ -60,10 +61,12 @@ public class CommandHandler
                 vehicleId = jsonObject.getInt("vehicleId");
                 JSONArray route = jsonObject.getJSONArray("Route");
                 agv = objectloader.agvs.get(vehicleId);
-                if (agv == null) {
+                if (agv == null)
+                {
                     return;
                 }
-                if (jsonObject.has("container") && jsonObject.getInt("container") != -1) {
+                if (jsonObject.has("container") && jsonObject.getInt("container") != -1) 
+                {
                     containerId = jsonObject.getInt("container");
                     Container container = this.objectloader.containers.get(containerId);
                     agv.container = container;
@@ -145,9 +148,11 @@ public class CommandHandler
         };
     }
     
-    private List<Container> getAttachedContainers(WorldObject vehicleObject){
+    private List<Container> getAttachedContainers(WorldObject vehicleObject)
+    {
         List<Container> containerList = new ArrayList<>();
-        for(Container container :  this.objectloader.containers.values()){
+        for(Container container :  this.objectloader.containers.values())
+        {
             //check if this container is attached to the vehicle
             System.out.println(container.getVehicle() + " == " + vehicleObject);
             if(container.getVehicle() == vehicleObject){
@@ -173,7 +178,9 @@ public class CommandHandler
             int y = targetIndex.getInt(1);
             int z = targetIndex.getInt(2);
             targetVec = this.objectloader.sortFields[sortFieldId].indexToCoords(x, y, z);
-        } catch (ClassCastException ex) {
+        } 
+        catch (ClassCastException ex) 
+        {
             int agvId = (int) target;
             targetVec = this.objectloader.agvs.get(agvId).getPosition().add(0.0f, 1.2f, 0.0f);
         }
@@ -196,9 +203,11 @@ public class CommandHandler
     public int getFreeAgv() 
     {
         AGV agv;
-        for (int i : this.objectloader.agvs.keySet()) {
+        for (int i : this.objectloader.agvs.keySet())
+        {
             agv =  this.objectloader.agvs.get(i);
-            if (!agv.isBusy()) {
+            if (!agv.isBusy()) 
+            {
                 return i;
             } 
         }
