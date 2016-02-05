@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -98,7 +99,7 @@ public class ObjectLoader
      * @param filePath path to json file
      * @return JSONObject
      */
-    private JSONObject loadJson(String filePath)
+    public JSONObject loadJson(String filePath)
     {
         BufferedReader reader;
         String content = "";
@@ -276,8 +277,11 @@ public class ObjectLoader
     
    public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
    {
+       Iterator<Object> iterator = containers.iterator();
         this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
-        List<Integer> containersL = (List<Integer>) containers.iterator();
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
         Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
         for(int containerId : containersL)
@@ -289,8 +293,11 @@ public class ObjectLoader
    
    public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
    {
+       Iterator<Object> iterator = containers.iterator();   
         this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
-        List<Integer> containersL = (List<Integer>) containers.iterator();
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
         Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
         for(int containerId : containersL)

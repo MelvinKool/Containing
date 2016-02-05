@@ -10,11 +10,8 @@ import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Ship;
 import Simulator.vehicles.TrainCart;
 import java.net.SocketException;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +48,6 @@ public class Connection extends Thread implements Runnable
             try
             {
                 this.socket = new SimSocket(this.address, this.port);
-                this.socket.write("Simulator");
                 this.connected = true;
                 this.communicate();
             } catch (Exception ex)
@@ -66,12 +62,13 @@ public class Connection extends Thread implements Runnable
             {
                 System.err.println("Stopping connection: " + ex.getMessage());
                 this.running = false;
-                break;
             }
         }
     }
     
-    public void communicate() {
+    public void communicate() throws Exception {
+        this.lastAppDataSent = System.currentTimeMillis();
+        this.socket.write("Simulator");
         while (this.connected && this.running) {
             String data = "";
             JSONObject command = null;
@@ -150,8 +147,6 @@ public class Connection extends Thread implements Runnable
     
     private void sendAppData() {
         if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
-            System.out.println("sending state to server");
-            Random random = new Random();
                     
                     int zeeschip = 0    ;//= 10 + random.nextInt(20);
                     int binnenschip = 0 ;//= 10 + random.nextInt(20);

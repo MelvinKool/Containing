@@ -10,5 +10,5 @@ tempXML.xml
 *.xml~
 
 #Executables
-/Simulator/dist/
-Server/Server
+#/Simulator/dist/
+#Server/Server
