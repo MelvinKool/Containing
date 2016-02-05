@@ -10,11 +10,8 @@ import Simulator.vehicles.FreightTruck;
 import Simulator.vehicles.Ship;
 import Simulator.vehicles.TrainCart;
 import java.net.SocketException;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +28,7 @@ public class Connection extends Thread implements Runnable
     private String address;
     private int port;
     private boolean connected;
+    private boolean running;
     
     public Connection(String address, int port, ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception {
         this.address = address;
@@ -45,11 +43,11 @@ public class Connection extends Thread implements Runnable
     
     @Override
     public void run() {
-        while (!this.isInterrupted()) {
+        this.running = true;
+        while (this.running) {
             try
             {
                 this.socket = new SimSocket(this.address, this.port);
-                this.socket.write("Simulator");
                 this.connected = true;
                 this.communicate();
             } catch (Exception ex)
@@ -63,14 +61,15 @@ public class Connection extends Thread implements Runnable
             } catch (InterruptedException ex)
             {
                 System.err.println("Stopping connection: " + ex.getMessage());
-                this.connected = false;
-                break;
+                this.running = false;
             }
         }
     }
     
-    public void communicate() {
-        while (this.connected && !this.isInterrupted()) {
+    public void communicate() throws Exception {
+        this.lastAppDataSent = System.currentTimeMillis();
+        this.socket.write("Simulator");
+        while (this.connected && this.running) {
             String data = "";
             JSONObject command = null;
             
@@ -108,6 +107,7 @@ public class Connection extends Thread implements Runnable
                         {
                             System.err.println("Error while waiting for free agv:" + ex.getMessage());
                             this.connected = false;
+                            this.running = false;
                             return;
                         }
                     }
@@ -147,8 +147,6 @@ public class Connection extends Thread implements Runnable
     
     private void sendAppData() {
         if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
-            System.out.println("sending state to server");
-            Random random = new Random();
                     
                     int zeeschip = 0    ;//= 10 + random.nextInt(20);
                     int binnenschip = 0 ;//= 10 + random.nextInt(20);

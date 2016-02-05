@@ -24,7 +24,8 @@ public class Ship extends WorldObject {
     
     public List<Container> containers;
     
-    public Ship(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, int rotation, float scale) {
+    public Ship(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, int rotation, float scale) 
+    {
         super(rootNode, assetManager, position, model);
         this.node.scale(scale, 1, scale);
         this.node.rotate(0,FastMath.DEG_TO_RAD * rotation, 0);
@@ -35,13 +36,13 @@ public class Ship extends WorldObject {
      * add List of containers to ship and stack them
      * @param containers 
      */
-    public void addContainers(List<Container> containers) {
+    public void addContainers(List<Container> containers) 
+    {
         int[] bounds = {16, 6, 19};
         int[] indexes = {0, 0, 0};
         Vector3f shipSizeC = new Vector3f();
         Vector3f containerSizeC = new Vector3f(); // size from center
         Vector3f containerSize;                   // full size
-        
         Collections.reverse(containers);
         
         ((BoundingBox) containers.get(0).node.getWorldBound()).getExtent(containerSizeC);
@@ -58,14 +59,17 @@ public class Ship extends WorldObject {
             
             this.attachContainer(container, pos);
             
-            if (indexes[0] == bounds[0]) {
+            if (indexes[0] == bounds[0]) 
+            {
                 indexes[0] = 0;
                 indexes[2]++;
-                if (indexes[2] == bounds[2]) {
+                if (indexes[2] == bounds[2]) 
+                {
                     indexes[2] = 0;
                     indexes[1]++; // height is unlimited
                 }
-            } else {
+            } else
+            {
                 indexes[0]++;
             }
         }

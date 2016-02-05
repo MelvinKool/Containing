@@ -6,13 +6,8 @@ package Simulator;
 
 import java.io.DataInputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
-/**
- *
- * @author erwin
- */
 public class SimSocket extends Socket
     {
         private DataInputStream in;

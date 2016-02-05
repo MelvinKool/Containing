@@ -1,6 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
+import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -11,13 +12,13 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
+import org.json.JSONObject;
 
 public class Main extends SimpleApplication
 {
@@ -26,8 +27,18 @@ public class Main extends SimpleApplication
     private Connection connection;
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
+    private static int stSpeed;
 
-//    private Train train; // TODO: this is test code
+    private Train train; // TODO: this is test code
+    
+    public static int getSpeed() {
+        return stSpeed;
+    }
+    
+    public void setSpeed(int speed) {
+        this.speed = speed;
+        stSpeed = speed;
+    }
 
     public static void main(String[] args)
     {
@@ -39,8 +50,11 @@ public class Main extends SimpleApplication
     public void simpleInitApp()
     {
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
+        
+        JSONObject config = this.objectLoader.loadJson("resources/config.json");
+        
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.speed = 20;
+        this.setSpeed(config.getInt("simulation_speed"));
         this.setDisplayStatView(false);
 
         flyCam.setEnabled(true);    //flycam lets you move the camera with wasd and mouse.
@@ -51,70 +65,33 @@ public class Main extends SimpleApplication
         //Initialize the world with light, water, skybox and fog.
         initWorld();
         initLight();
-//        initInputs();
         initWater();
         initSkybox();
         initFog();
         
         try 
         { 
-            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
+            connection = new Connection(config.getString("server_ip"), config.getInt("server_port"), this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
     
-//    public String readJsonFile() throws FileNotFoundException, IOException{
-//        BufferedReader br = new BufferedReader(new FileReader("assets\\data\\spawns.json"));
-//        String temp = "";
-//        try {
-//            StringBuilder sb = new StringBuilder();
-//            String line = br.readLine();
-//
-//            while (line != null) {
-//                temp += line;
-//                line = br.readLine();
-//            }
-//            String everything = sb.toString();
-//        } finally {
-//            br.close();
-//        }
-//        return temp;
-//    }
-//    
-//    boolean test = false;
-//    // TODO: romove this function
-//    private int[] rangeArray(int b, int e) {
-//        int[] array = new int[e - b];
-//        for (int i = 0; i < array.length; i++) {
-//            array[i] = b++;
-//        }
-//        return array;
-//    }
-    
     @Override
     public void simpleUpdate(float tpf)
     {
-//        if (test) {
-//            test = false;
-//            this.objectLoader.spawnSeaShip(new JSONArray(this.rangeArray(0, 1400)), commandHandler);
-//        }
-        // Destroy train when it says it can (when it's out of map)
+        // Destroy train when it says it can (when it's out of map)        
         if (this.objectLoader.train != null && this.objectLoader.train.canDestroy) {
-            this.objectLoader.train.node.removeFromParent();
+            rootNode.detachChild(this.objectLoader.train.node);
             this.objectLoader.train = null;
         }
         
+        // execute queued commands
         this.commandHandler.executeQueued();
         
+        // execute queued commands for each crane
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
         }
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm)
-    {
-        
     }
     
     //This is important to properly close the connection
@@ -125,96 +102,6 @@ public class Main extends SimpleApplication
         super.destroy();
         if(connection != null) connection.interrupt();
     }
-
-//   public Crane getNearestCrane(Node obj){
-////        float dist;
-////        float minDist = -1;
-//        Crane nCrane = null;
-////        for (Crane crane : this.objectLoader.cranes.values())
-////        {
-////            dist = obj.getLocalTranslation().distance(crane.getPosition());
-////            if (dist < minDist || minDist == -1)
-////            {
-////                minDist = dist;
-////                nCrane = crane;
-////            }
-////        }
-//        return nCrane;
-//   }
-//   
-//    private void initInputs(){
-//        inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));
-//        inputManager.addMapping("target", new KeyTrigger(KeyInput.KEY_T));
-//        inputManager.addMapping("target2", new KeyTrigger(KeyInput.KEY_Y));
-//
-//        inputManager.addMapping("xp", new KeyTrigger(KeyInput.KEY_I));
-//        inputManager.addMapping("xm", new KeyTrigger(KeyInput.KEY_K));
-//        inputManager.addMapping("zp", new KeyTrigger(KeyInput.KEY_L));
-//        inputManager.addMapping("zm", new KeyTrigger(KeyInput.KEY_J));
-//        
-//        ActionListener acl = new ActionListener()
-//        {
-//            public void onAction(String name, boolean keyPressed, float tpf)
-//            {
-////                Container cont = containers.get(0);
-////                Container cont2 = containers.get(1);
-////                Container cont3 = containers.get(2);
-////                if(name.equals("play_stop") && keyPressed)
-////                {
-////                    if (playing) {
-////                        playing = false;
-////                        
-////                    } else {
-////                        playing = true;
-////                    }
-//                //else if
-//                if (keyPressed) {
-//                    switch (name) {
-//                    case "target":
-////                        Crane crane = getNearestCrane(cont.node);
-////                        crane.moveContainer(cont, new Vector3f(55,0,-10));
-//                        break;
-//                    case "target2":
-////                        Crane crane2 = getNearestCrane(cont2.node);
-////                        crane2.moveContainer(cont2, new Vector3f(235, 0.0f, -100));
-//                        break;
-//                    case "xp":
-//                        break;
-//                    case "xm":
-//                        break;
-//                    case "zp":
-//                        commandHandler.queueCommand(commandHandler.ParseJSON("{'Command': 'moveTo', 'vehicleId': 1, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1000}"));
-//                            
-//                        break;
-//                    case "zm":
-//                        Container container = objectLoader.addContainer(1, commandHandler);
-//                        
-//                        
-//                        try 
-//                        {
-//                            commandHandler.executeCommand(commandHandler.ParseJSON(readJsonFile()));                            
-//                        }
-//                        catch (FileNotFoundException ex) {
-//                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                        catch (IOException ex) {
-//                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                        objectLoader.agvs.get(1).attachContainer(container);
-//                        break;
-//                    }
-//                }
-//            }
-//        };
-//
-//        inputManager.addListener(acl, "play_stop");
-//        inputManager.addListener(acl, "xp");
-//        inputManager.addListener(acl, "zp");
-//        inputManager.addListener(acl, "xm");
-//        inputManager.addListener(acl, "zm");
-//        inputManager.addListener(acl, "target");
-//        inputManager.addListener(acl, "target2");
-//   }
     
     private void initLight()
     {

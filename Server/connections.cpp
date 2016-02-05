@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 bool Connections::freeAgvAnswer = false;
 
 void Connections::initConnections(Server* server)
@@ -23,11 +22,9 @@ Connections::~Connections()
 
     for(uint i = 0; i < clients.size(); i++)
     {
-        //clients[i].socket->write("disconnect");
         clients[i].worker->join();
         delete clients[i].worker;
     }
-
     delete this->socket;
 }
 
@@ -137,7 +134,8 @@ thread* Connections::newClientThread(int number)
             }
             else
             {
-                //what to do with the input?
+                //we should not get any other data from the sim.
+                //but in case we do print it out.
                 cout << input << endl;
             }
 
@@ -182,7 +180,8 @@ int Connections::requestFreeAgv()
     std::unique_lock<std::mutex> lck(mtx);
     writeToSim("freeAgv");
 
-    while (!freeAgvAnswer) {
+    while (!freeAgvAnswer)
+    {
         cv.wait(lck);
     }
 
@@ -191,5 +190,3 @@ int Connections::requestFreeAgv()
     freeAgvAnswer = false;
     return freeAgv;
 }
-
-

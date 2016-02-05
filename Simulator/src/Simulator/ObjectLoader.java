@@ -21,7 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -97,7 +99,7 @@ public class ObjectLoader
      * @param filePath path to json file
      * @return JSONObject
      */
-    private JSONObject loadJson(String filePath)
+    public JSONObject loadJson(String filePath)
     {
         BufferedReader reader;
         String content = "";
@@ -254,11 +256,13 @@ public class ObjectLoader
     
     public void spawnTrain(JSONArray containers, CommandHandler commandHandler) 
     {
-        this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        this.train = new Train(containers.length(), this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        
         for (Object containerId : containers) 
         {
             this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
+        
         //this.train.moveIn();
 
     }
@@ -273,22 +277,32 @@ public class ObjectLoader
     
    public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
    {
+       Iterator<Object> iterator = containers.iterator();
         this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
+        Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
-        for(Object containerId : containers)
+        for(int containerId : containersL)
         {
-            containerList.add(this.addContainer((int)containerId, commandHandler));
+            containerList.add(this.addContainer(containerId, commandHandler));
         }
         this.seaShip.addContainers(containerList);
    }
    
    public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
    {
+       Iterator<Object> iterator = containers.iterator();   
         this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
+        Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
-        for(Object containerId : containers)
+        for(int containerId : containersL)
         {
-            containerList.add(this.addContainer((int)containerId, commandHandler));
+            containerList.add(this.addContainer(containerId, commandHandler));
         }
         this.bargeShip.addContainers(containerList);
    }

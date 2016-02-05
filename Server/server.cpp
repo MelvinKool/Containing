@@ -67,26 +67,7 @@ void Server::checkContainers()
         currentTime = timer.getTime();
         //SQL for current containers, with the time from the timer this gets the containers corresponding containers
         string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
-        //string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID AND dep.date <= \""+currentDate+"\" AND dep.date >= \""+previousDate+"\" AND dep.timeFrom <= \""+currentTime+"\" AND dep.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort;";
-
-        /* The SQL works, but the logics for leaving containers doesn't
-        //process leaving containers
-        MYSQL_RES* res1 = db.select(departures);
-        MYSQL_ROW row1;
-        while((row1 = mysql_fetch_row(res1)) != NULL)
-        {
-            try
-            {
-                processLeavingContainer(row1);
-            }
-            catch (string error)
-            {
-                //cout<<error<<endl;
-            }
-        }
-        mysql_free_result(res1);
-        */
 
         //process arriving containers
         MYSQL_RES* res2 = db.select(arrivals);
@@ -211,7 +192,8 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             seaShipSpawned = true;
         }
 
-        int containerCount = 0;
+
+        containerCount = 0;
         seaShipCraneId++;
         if (seaShipCraneId >= 10)
         {
@@ -224,7 +206,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             commands.push_back(allObjects.seaShipCranes.at(seaShipCraneId).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "seaShip",containerId));
-            seaShipSpawned = false;
+            seaShipSpawned = false; // this happens while still generating the commands so seaSipSpawned will always be false
             seaShipCraneId = 0;
             containerCount = 0;
         }
@@ -247,10 +229,10 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
 
     //Same for aal containers, drive to storage lane and unload container
-    vector<int> storageLane = getStorageLaneSpot();
-    int storageLaneID = storageLane.at(3);
+    storageLaneSpot_t storageLane = getStorageLaneSpot();
+    int storageLaneID = storageLane.nr;
     commands.push_back(allObjects.agvs.at(agvID).goTo(allObjects.parkingSpots[6*storageLaneID],true,-1)); //move to dump row
-    commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.at(0),0,storageLane.at(2))));
+    commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.x,0,storageLane.z)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 
@@ -305,68 +287,6 @@ int Server::getFreeAGV()
 {
     int agvId = connections.requestFreeAgv();
     return agvId;
-
-    /* this would work if server knows which AGV are idling
-    static int i = 0;
-    int e = i, idClosestAGV = 0;
-    double distClosesestAGV = 999999999.9999;
-    if (i > 99)
-    {
-        i = 0;
-    }
-
-    for (int j = 0; j < 5; j++)
-    {
-        double distance = -1;
-        while (distance < 0)
-        {
-            AGV agv = allObjects.agvs[e];
-            if (agv.getWorkingState()) //if agv is busy, dont even try to give it a new order
-            {
-                if (e > 98)
-                {
-                    e = 0;
-                }
-                else
-                {
-                    e++;
-                }
-                continue;
-            }
-
-            try
-            {
-                distance = pathFinderUnloaded.route(agv.getCurrentLocation().toString(),destination.toString()).first;
-
-                if (distance < distClosesestAGV) //if there is a distance, see if it is shorter than previous
-                {
-                    distClosesestAGV = distance;
-                    idClosestAGV = e;
-                }
-            }
-            catch (string error)
-            {
-                distance = -1;
-
-                //needed till agv have correct locations and correct destination
-                distance = 291.6;
-                idClosestAGV = e;
-            }
-
-            if (e > 98)
-            {
-                e = 0;
-            }
-            else
-            {
-                e++;
-            }
-        }
-    }
-
-    i = i + 2;
-    return idClosestAGV;
-    */
 }
 
 //Distributes trucks over all truck stops
@@ -385,15 +305,15 @@ int Server::getTransportID()
 }
 
 //Gives back spot in storage lane to place container
-storageLaneSpot Server::getStorageLaneSpot()
+Server::storageLaneSpot_t Server::getStorageLaneSpot()
 {
     if (lastStorageLaneSpot.nr>43) //nr represents storagelane Id
     {
         lastStorageLaneSpot.nr=0;
 
-        if (lastStorageLaneSpot.x>4)
+        if (lastStorageLaneSpot.x == 5)
         {
-            lastStorageLaneSpot.x=0;
+            lastStorageLaneSpot.x= -1;
 
             if (lastStorageLaneSpot.z>40)
                 lastStorageLaneSpot.z=0;
@@ -406,12 +326,7 @@ storageLaneSpot Server::getStorageLaneSpot()
     else
         lastStorageLaneSpot.nr++;
 
-    vector<int> result;
-    result.push_back(lastStorageLaneSpot.x);
-    result.push_back(lastStorageLaneSpot.y);
-    result.push_back(lastStorageLaneSpot.z);
-    result.push_back(lastStorageLaneSpot.nr);
-    return result;
+    return lastStorageLaneSpot;
 }
 
 //Initially loads all AGV parking spots into a vector
