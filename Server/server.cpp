@@ -169,6 +169,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
 
     if(vehicle=="zeeschip")
     {
+        //return;
         if (!seaShipSpawned) //When there is not yet a ship, spawn it
         {
             vector<int> containers;

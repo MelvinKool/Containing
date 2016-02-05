@@ -115,17 +115,17 @@ thread* Connections::newClientThread(int number)
             }
             else if(input.substr(0, 11) == "dataforapp/")
             {
-                std::string result = input.erase(0, 11);
+                string result = input.erase(0, 11);
                 dataForApp = result;
             }
             else if(input.substr(0, 7) == "freeAgv")
             {
                 //cout << input << endl;
-                std::unique_lock<std::mutex> lck(mtx);
-                std::string data = input.substr(7);
+                unique_lock<mutex> lck(mtx);
+                string data = input.substr(7);
 
                 int id;
-                std::istringstream iss(data);
+                istringstream iss(data);
                 iss >> id;
                 this->newFreeAgv = id;
 
@@ -169,7 +169,7 @@ void Connections::writeToSim(string message)
     }
 }
 
-std::string Connections::getDataForApp()
+string Connections::getDataForApp()
 {
     return dataForApp;
 }
@@ -177,7 +177,7 @@ std::string Connections::getDataForApp()
 int Connections::requestFreeAgv()
 {
     int freeAgv;
-    std::unique_lock<std::mutex> lck(mtx);
+    unique_lock<mutex> lck(mtx);
     writeToSim("freeAgv");
 
     while (!freeAgvAnswer)
