@@ -136,7 +136,10 @@ public class CommandHandler
                 objectloader.train.moveOut();
                 callingContainer.operationDone();
                 break;
-            case "seaShip" : 
+            case "seaShip":
+                this.objectloader.seaShip.node.removeFromParent();
+                this.objectloader.seaShip = null;
+                callingContainer.operationDone();
                 break;
             case "bargeShip" : 
                 break;
@@ -225,9 +228,10 @@ public class CommandHandler
         {
             JSONObject cmd;
             List<JSONObject> queueForNextTick = new ArrayList<>();
-            for(; 0 < commandQueue.size(); )
+            while(0 < commandQueue.size())
             {
                 cmd = commandQueue.remove(0);
+                try {
                 if (("spawnTrain".equals(cmd.getString("Command")) && this.objectloader.train != null) || 
                         ("spawnSeaShip".equals(cmd.getString("Command")) && this.objectloader.seaShip != null)) {
                     queueForNextTick.add(cmd);
@@ -235,6 +239,9 @@ public class CommandHandler
                 else
                 {
                     this.executeCommand(cmd);
+                }
+                } catch(Exception ex) {
+                    System.out.println("ex: " + cmd);
                 }
             }
             this.commandQueue = queueForNextTick;

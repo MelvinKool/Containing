@@ -1,6 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
+import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -17,6 +18,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
+import org.json.JSONObject;
 
 public class Main extends SimpleApplication
 {
@@ -26,6 +28,8 @@ public class Main extends SimpleApplication
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
     private static int stSpeed;
+
+    private Train train; // TODO: this is test code
     
     public static int getSpeed() {
         return stSpeed;
@@ -46,8 +50,11 @@ public class Main extends SimpleApplication
     public void simpleInitApp()
     {
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
+        
+        JSONObject config = this.objectLoader.loadJson("resources/config.json");
+        
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.setSpeed(60);
+        this.setSpeed(config.getInt("simulation_speed"));
         this.setDisplayStatView(false);
 
         flyCam.setEnabled(true);    //flycam lets you move the camera with wasd and mouse.
@@ -64,7 +71,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
+            connection = new Connection(config.getString("server_ip"), config.getInt("server_port"), this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
@@ -78,13 +85,13 @@ public class Main extends SimpleApplication
             this.objectLoader.train = null;
         }
         
+        // execute queued commands
         this.commandHandler.executeQueued();
         
+        // execute queued commands for each crane
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
         }
-        
-        this.commandHandler.executeQueued();
     }
     
     //This is important to properly close the connection
