@@ -238,9 +238,6 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
             }
         }
 
-
-
-
         int ownerID                 = -1;
         int sizeID                  = -1;
         int contentID               = -1;
@@ -431,9 +428,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         started = true;
                         if (i == 0)
                         {
-                            //OUTPUT line to file
                             outputFile<<line<<endl;
-                            //cout<<line<<endl;
                         }
                     }
                 }
@@ -444,9 +439,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         //At end of recordset
                         if (i == (xmlPaths.size()-1))//If at last xmlfile, do end resultset
                         {
-                            // OUTPUT line to file
                             outputFile<<line<<endl;
-                            //cout<<line<<endl;
                         }
                         //If end of recordset, stop while loop
                         break;
@@ -458,9 +451,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         node = node + line;
                         if (regex_search(node, regNode))//Add ! to return incorrect xml nodes
                         {
-                            //OUTPUT node to file
                             outputFile<<node<<endl;
-                            //cout<<node<<endl;
                         }
                         else
                         {

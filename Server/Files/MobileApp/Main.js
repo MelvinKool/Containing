@@ -1,5 +1,3 @@
-window.onkeydown = checkKey;
-
 var chart;
 var xhttp = new XMLHttpRequest();
 
@@ -104,21 +102,3 @@ xhttp.onreadystatechange = function() {
         chart.update();
     }
 };
-
-//------------------------------------------------------------------------------
-var i = 0;
-function checkKey(ev){
-    switch(ev.keyCode)
-    {
-        case 49:{
-            i += 5;
-            chart.datasets[0].bars[0].value = i;
-            chart.update();
-            break;
-        }
-        case 50:{
-            update();
-            break;
-        }
-    }
-}

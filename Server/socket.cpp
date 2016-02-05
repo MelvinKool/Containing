@@ -44,18 +44,6 @@ void ClientSocket::write(string message)
         strcpy(buffer, message.c_str());
         buffer[count - 1] = '\n';
         send(sock, buffer, count, 0);
-        //cout << buffer << endl;
-        /*if(count <= bufsize-1)
-        {
-            char buffer[bufsize];
-            strcpy(buffer, message.c_str());
-            buffer[count++] = '\n';
-            send(sock, buffer, count, 0);
-        }
-        else
-        {
-            cout << "ClientSocket::write - message to large to send." << endl;
-        }*/
     }
 
 }
