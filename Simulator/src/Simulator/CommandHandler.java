@@ -104,7 +104,6 @@ public class CommandHandler
                 this.objectloader.spawnTrain(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnSeaShip":
-                System.out.println("ship");
                 this.objectloader.spawnSeaShip(jsonObject.getJSONArray("containers"), this);
                 break;
             case "spawnBargeShip":
@@ -228,11 +227,21 @@ public class CommandHandler
     {
         if (!this.commandQueue.isEmpty())
         {
+            JSONObject cmd;
+            List<JSONObject> queueForNextTick = new ArrayList<>();
             for(; 0 < commandQueue.size(); )
             {
-                this.executeCommand(commandQueue.get(0));
-                this.commandQueue.remove(0);
+                cmd = commandQueue.remove(0);
+                if (("spawnTrain".equals(cmd.getString("Command")) && this.objectloader.train != null) || 
+                        ("spawnSeaShip".equals(cmd.getString("Command")) && this.objectloader.seaShip != null)) {
+                    queueForNextTick.add(cmd);
+                } 
+                else
+                {
+                    this.executeCommand(cmd);
+                }
             }
+            this.commandQueue = queueForNextTick;
         }
     }
 }

@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONArray;
@@ -254,11 +255,13 @@ public class ObjectLoader
     
     public void spawnTrain(JSONArray containers, CommandHandler commandHandler) 
     {
-        this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        this.train = new Train(containers.length(), this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        
         for (Object containerId : containers) 
         {
             this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
+        
         //this.train.moveIn();
 
     }
@@ -274,10 +277,12 @@ public class ObjectLoader
    public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
    {
         this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
+        List<Integer> containersL = (List<Integer>) containers.iterator();
+        Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
-        for(Object containerId : containers)
+        for(int containerId : containersL)
         {
-            containerList.add(this.addContainer((int)containerId, commandHandler));
+            containerList.add(this.addContainer(containerId, commandHandler));
         }
         this.seaShip.addContainers(containerList);
    }
@@ -285,10 +290,12 @@ public class ObjectLoader
    public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
    {
         this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
+        List<Integer> containersL = (List<Integer>) containers.iterator();
+        Collections.sort(containersL);
         List<Container> containerList = new ArrayList<>();
-        for(Object containerId : containers)
+        for(int containerId : containersL)
         {
-            containerList.add(this.addContainer((int)containerId, commandHandler));
+            containerList.add(this.addContainer(containerId, commandHandler));
         }
         this.bargeShip.addContainers(containerList);
    }

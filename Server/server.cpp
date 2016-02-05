@@ -210,7 +210,8 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             seaShipSpawned = true;
         }
 
-        int containerCount = 0;
+
+        containerCount = 0;
         seaShipCraneId++;
         if (seaShipCraneId >= 10)
         {
@@ -223,7 +224,7 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
             commands.push_back(allObjects.seaShipCranes.at(seaShipCraneId).transfer(containerId,agvID));
             commands.push_back(JGen.agvAttachContainer(agvID,containerId));
             commands.push_back(JGen.despawnObject(-1, "seaShip",containerId));
-            seaShipSpawned = false;
+            seaShipSpawned = false; // this happens while still generating the commands so seaSipSpawned will always be false
             seaShipCraneId = 0;
             containerCount = 0;
         }
@@ -246,10 +247,10 @@ void Server::processArrivingContainer(MYSQL_ROW &row)
     }
 
     //Same for aal containers, drive to storage lane and unload container
-    vector<int> storageLane = getStorageLaneSpot();
-    int storageLaneID = storageLane.at(3);
+    storageLaneSpot_t storageLane = getStorageLaneSpot();
+    int storageLaneID = storageLane.nr;
     commands.push_back(allObjects.agvs.at(agvID).goTo(allObjects.parkingSpots[6*storageLaneID],true,-1)); //move to dump row
-    commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.at(0),0,storageLane.at(2))));
+    commands.push_back(allObjects.storageCranes.at(storageLaneID).transfer(containerId,storageLaneID,vector3f(storageLane.x,0,storageLane.z)));
     writeToSim(JGen.generateCommandList(containerId,commands));
 }
 
@@ -384,15 +385,15 @@ int Server::getTransportID()
 }
 
 //Gives back spot in storage lane to place container
-storageLaneSpot Server::getStorageLaneSpot()
+Server::storageLaneSpot_t Server::getStorageLaneSpot()
 {
     if (lastStorageLaneSpot.nr>43) //nr represents storagelane Id
     {
         lastStorageLaneSpot.nr=0;
 
-        if (lastStorageLaneSpot.x>4)
+        if (lastStorageLaneSpot.x == 5)
         {
-            lastStorageLaneSpot.x=0;
+            lastStorageLaneSpot.x= -1;
 
             if (lastStorageLaneSpot.z>40)
                 lastStorageLaneSpot.z=0;
@@ -405,12 +406,7 @@ storageLaneSpot Server::getStorageLaneSpot()
     else
         lastStorageLaneSpot.nr++;
 
-    vector<int> result;
-    result.push_back(lastStorageLaneSpot.x);
-    result.push_back(lastStorageLaneSpot.y);
-    result.push_back(lastStorageLaneSpot.z);
-    result.push_back(lastStorageLaneSpot.nr);
-    return result;
+    return lastStorageLaneSpot;
 }
 
 //Initially loads all AGV parking spots into a vector

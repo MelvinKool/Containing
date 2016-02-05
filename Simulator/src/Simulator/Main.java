@@ -40,8 +40,18 @@ public class Main extends SimpleApplication
     private Connection connection;
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
+    private static int stSpeed;
 
     private Train train; // TODO: this is test code
+    
+    public static int getSpeed() {
+        return stSpeed;
+    }
+    
+    public void setSpeed(int speed) {
+        this.speed = speed;
+        stSpeed = speed;
+    }
 
     public static void main(String[] args)
     {
@@ -55,7 +65,7 @@ public class Main extends SimpleApplication
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.speed = 20;
+        this.setSpeed(60);
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
         //System.out.println(end - start);
@@ -97,34 +107,20 @@ public class Main extends SimpleApplication
         return temp;
     }
     
-    boolean test = false;
-    // TODO: romove this function
-    private int[] rangeArray(int b, int e) {
-        int[] array = new int[e - b];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = b++;
-        }
-        return array;
-    }
-    
     @Override
     public void simpleUpdate(float tpf)
     {
-        if (test) {
-            test = false;
-            this.objectLoader.spawnSeaShip(new JSONArray(this.rangeArray(0, 1400)), commandHandler);
-        }
-        // Destroy train when it says it can (when it's out of map)
+        // Destroy train when it says it can (when it's out of map)        
         if (this.objectLoader.train != null && this.objectLoader.train.canDestroy) {
-            this.objectLoader.train.node.removeFromParent();
+            rootNode.detachChild(this.objectLoader.train.node);
             this.objectLoader.train = null;
         }
-        
-        this.commandHandler.executeQueued();
         
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
         }
+        
+        this.commandHandler.executeQueued();
     }
 
     @Override
@@ -141,22 +137,6 @@ public class Main extends SimpleApplication
         super.destroy();
         if(connection != null) connection.interrupt();
     }
-
-   public Crane getNearestCrane(Node obj){
-//        float dist;
-//        float minDist = -1;
-        Crane nCrane = null;
-//        for (Crane crane : this.objectLoader.cranes.values())
-//        {
-//            dist = obj.getLocalTranslation().distance(crane.getPosition());
-//            if (dist < minDist || minDist == -1)
-//            {
-//                minDist = dist;
-//                nCrane = crane;
-//            }
-//        }
-        return nCrane;
-   }
    
     private void initInputs(){
         inputManager.addMapping("play_stop", new KeyTrigger(KeyInput.KEY_SPACE));

@@ -41,7 +41,6 @@ public class Ship extends WorldObject {
         Vector3f shipSizeC = new Vector3f();
         Vector3f containerSizeC = new Vector3f(); // size from center
         Vector3f containerSize;                   // full size
-        
         Collections.reverse(containers);
         
         ((BoundingBox) containers.get(0).node.getWorldBound()).getExtent(containerSizeC);

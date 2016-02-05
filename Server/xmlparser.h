@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <fstream>
 #include <stdio.h>
+#include <dirent.h>
 
 
 class XmlParser

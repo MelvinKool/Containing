@@ -20,7 +20,7 @@ public class TrainControl extends AbstractControl implements Cloneable
 
     public TrainControl(Train train) {
         this.train = train;
-        this.disappearX = 1715.0f;        
+        this.disappearX = 1715.0f;
     }
     
     @Override

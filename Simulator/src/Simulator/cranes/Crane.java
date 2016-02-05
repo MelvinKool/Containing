@@ -5,6 +5,7 @@
 package Simulator.cranes;
 
 import Simulator.Container;
+import Simulator.Main;
 import Simulator.WorldObject;
 import Simulator.vehicles.AGV;
 import com.jme3.asset.AssetManager;
@@ -49,7 +50,7 @@ public class Crane extends WorldObject {
         super(rootNode, assetManager, position, model);
         this.craneType = craneType;
         this.defaultPos = position;
-        this.speed = speed * 5;
+        this.speed = speed * 2;
         this.hasHolder = true;
         this.commandQueue = new ArrayList<>();
         this.containerTarget = null;
@@ -75,10 +76,12 @@ public class Crane extends WorldObject {
         if ((this.craneType.equals("dockingcrane") && this.node.getLocalRotation().getY() != 0.0) || this.craneType.equals("traincrane")) 
         {
             this.setPosition(new Vector3f(this.motionTarget.x, this.getPosition().y, this.getPosition().z));
-        } else 
+        } 
+        else 
         {
             this.setPosition(new Vector3f(this.getPosition().x, this.getPosition().y, this.motionTarget.z));
         }
+        
     }
     
     /**
@@ -257,10 +260,6 @@ public class Crane extends WorldObject {
         if (this.targetContainer.getVehicle() instanceof AGV)
         {
             ((AGV) this.targetContainer.getVehicle()).setBusy(false);
-            System.out.println("on agv:" + this.targetContainer.getVehicle());
-        }
-        else {
-            System.out.println("Container not on agv, not freeing up: " + this.targetContainer.getVehicle());
         }
         this.targetContainer.setVehicle(this);
     }
@@ -295,7 +294,7 @@ public class Crane extends WorldObject {
                     public void run() {
                         try
                         {
-                            Thread.sleep(300);
+                            Thread.sleep(3000 / Main.getSpeed());
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);
@@ -315,12 +314,13 @@ public class Crane extends WorldObject {
             this.rootNode.attachChild(this.targetContainer.node);
             targetContainer.node.setLocalTranslation(pos);
             targetContainer.node.setLocalRotation(rot);
+            
             new Thread(new Runnable(){
                     @Override
                     public void run() {
                         try
                         {
-                            Thread.sleep(300);
+                            Thread.sleep(3000 / Main.getSpeed());
                         } catch (InterruptedException ex)
                         {
                             Logger.getLogger(Crane.class.getName()).log(Level.SEVERE, null, ex);

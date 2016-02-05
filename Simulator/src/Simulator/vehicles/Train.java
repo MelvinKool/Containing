@@ -27,7 +27,7 @@ public class Train
     public Node node;
     public Locomotive locomotive;
     public List<TrainCart> trainCarts;
-    public boolean canDestroy = false;
+    public boolean canDestroy;
     
     public Train(int length, Node rootNode, AssetManager assetManager, Spatial locomotiveModel, Spatial trainCartModel) 
     {
@@ -35,6 +35,7 @@ public class Train
         this.node = new Node();
         this.trainCarts = new ArrayList<>();
         this.speed = 15.0f;
+        this.canDestroy = false;
         
         this.locomotive = new Locomotive(this.node, assetManager, Vector3f.ZERO, locomotiveModel);
         
@@ -94,7 +95,7 @@ public class Train
     
     public void moveOut() 
     {
-        this.moveTo(new Vector3f(1720.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
+        this.moveTo(new Vector3f(1750.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
     }
     
 //    public void moveIn() 

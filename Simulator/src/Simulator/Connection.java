@@ -31,6 +31,7 @@ public class Connection extends Thread implements Runnable
     private String address;
     private int port;
     private boolean connected;
+    private boolean running;
     
     public Connection(String address, int port, ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception {
         this.address = address;
@@ -45,7 +46,8 @@ public class Connection extends Thread implements Runnable
     
     @Override
     public void run() {
-        while (!this.isInterrupted()) {
+        this.running = true;
+        while (this.running) {
             try
             {
                 this.socket = new SimSocket(this.address, this.port);
@@ -63,14 +65,14 @@ public class Connection extends Thread implements Runnable
             } catch (InterruptedException ex)
             {
                 System.err.println("Stopping connection: " + ex.getMessage());
-                this.connected = false;
+                this.running = false;
                 break;
             }
         }
     }
     
     public void communicate() {
-        while (this.connected && !this.isInterrupted()) {
+        while (this.connected && this.running) {
             String data = "";
             JSONObject command = null;
             
@@ -108,6 +110,7 @@ public class Connection extends Thread implements Runnable
                         {
                             System.err.println("Error while waiting for free agv:" + ex.getMessage());
                             this.connected = false;
+                            this.running = false;
                             return;
                         }
                     }

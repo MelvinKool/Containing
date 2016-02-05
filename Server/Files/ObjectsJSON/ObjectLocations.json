@@ -48,15 +48,15 @@
             90.0,
             0.0
         ],
-        "speed":1.0,
+        "speed":7.0,
         "grabber":{
-            "holderSpeed":1.0,
+            "holderSpeed":2.0,
             "position":[
                 0.0,
                 10.2,
                 0.0
             ],
-            "speed":1.0,
+            "speed":2.0,
             "y_offset":-11.0,
             "has_holder":true
         }
@@ -297,13 +297,13 @@
         ],
         "speed":1.389,
         "grabber":{
-            "holderSpeed":1.0,
+            "holderSpeed":2.0,
             "position":[
                 0.0,
                 0.0,
                 0.0
             ],
-            "speed":1.0,
+            "speed":2.0,
             "y_offset":-23.0,
             "has_holder":true
         }
@@ -367,15 +367,15 @@
             0.0,
             0.0
         ],
-        "speed":1.0,
+        "speed":7.0,
         "grabber":{
-            "holderSpeed":1.0,
+            "holderSpeed":2.0,
             "position":[
                 0.0,
                 10.2,
                 0.0
             ],
-            "speed":1.0,
+            "speed":2.0,
             "y_offset":-11.0,
             "has_holder":true
         }
@@ -409,15 +409,15 @@
             90.0,
             0.0
         ],
-        "speed":1.0,
+        "speed":5.0,
         "grabber":{
-            "holderSpeed":1.0,
+            "holderSpeed":2.0,
             "position":[
                 0.0,
                 0.0,
                 0.0
             ],
-            "speed":1.0,
+            "speed":2.0,
             "y_offset":-4.0,
             "has_holder":true
         }
@@ -1042,15 +1042,15 @@
             0.0,
             0.0
         ],
-        "speed":1.0,
+        "speed":4.0,
         "grabber":{
-            "holderSpeed":1.0,
+            "holderSpeed":2.0,
             "position":[
                 0.0,
                 0.0,
                 0.0
             ],
-            "speed":1.0,
+            "speed":2.0,
             "y_offset": -5.5,
             "has_holder":false
         }

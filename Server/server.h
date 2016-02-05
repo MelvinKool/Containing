@@ -28,13 +28,19 @@ class Server
         ShortestPathDijkstra pathFinderUnloaded = ShortestPathDijkstra("./Files/RouteFiles/UnloadedRoutes.csv");
 
     private:
+        struct storageLaneSpot_t {
+            int x = -1;
+            int y = 0;
+            int z = 0;
+            int nr = -1;
+        } lastStorageLaneSpot;
         void processLeavingContainer(MYSQL_ROW &row);
         void processArrivingContainer(MYSQL_ROW &row);
         int getFreeAGV();
         int getTruckStop();
         int getTransportID();
         void spawnObject(std::string type,vector3f location, int contID);
-        std::vector<int> getStorageLaneSpot();
+        storageLaneSpot_t getStorageLaneSpot();
         void loadParkingLots();
 
         Database db;
@@ -53,12 +59,5 @@ class Server
         int lastSeaShipContainer=-1,seaShipId=0,seaShipCraneId=0;
         int lastTruckStop = 0;
         int lastTransportID = 0;
-
-        struct storageLaneSpot_t {
-            int x = 0;
-            int y = 0;
-            int z = 0;
-            int nr = 0;
-        } lastStorageLaneSpot;
 };
 #endif
