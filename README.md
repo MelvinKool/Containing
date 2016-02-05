@@ -23,6 +23,9 @@ Deze moet als volgt aangemaakt worden:
 Download een mysql server of mariadb
 Log in als superuser op je mysql client.
 Voer vervolgens de onderstaande commando's uit.
+
 create database containing;
+
 create user 'containing'@'localhost' identified by 'e0d2c603414413df6b6d15dcb4f7c1fb';
+
 grant all privileges on containing.* to 'containing'@'localhost';
