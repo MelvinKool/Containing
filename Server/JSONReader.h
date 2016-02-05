@@ -18,13 +18,12 @@ using namespace rapidjson;
 
 class JSONReader
 {
-private:
-    char* transportFPath;
 public:
     JSONReader(char* transportFPath, Server* server);
     void loadTransport(AllObjects& allObjects);
 private:
     /*loads all vehicles with the specified key into a list of json strings*/
+    char* transportFPath;
     Server* server;
     std::vector<std::string> loadCranes(const char* key,rapidjson::Document& document, std::vector<Crane>& craneVector, int indexStart);
     std::vector<std::string> loadAGVs(rapidjson::Document& document, std::vector<AGV>& AGVVector);
