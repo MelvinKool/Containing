@@ -1,0 +1,3707 @@
+{
+  "objects": [
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        100.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 0
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        150.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 1
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        200.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 2
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        250.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 3
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        300.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 4
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        350.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 5
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        400.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 6
+    }, 
+    {
+      "type": "FreightShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -11.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        450.0, 
+        0.0, 
+        31.1
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 7
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        57.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 8
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        91.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 9
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        125.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 10
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        159.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 11
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        193.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 12
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        227.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 13
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        261.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 14
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        295.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 15
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        329.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 16
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        363.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 17
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        397.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 18
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        431.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 19
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        465.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 20
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        499.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 21
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        533.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 22
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        567.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 23
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        601.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 24
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        635.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 25
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        669.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 26
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        703.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 27
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        737.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 28
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        771.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 29
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        805.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 30
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        839.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 31
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        873.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 32
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        907.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 33
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        941.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 34
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        975.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 35
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1009.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 36
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1043.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 37
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1077.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 38
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1111.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 39
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1145.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 40
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1179.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 41
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1213.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 42
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1247.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 43
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1281.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 44
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1315.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 45
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1349.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 46
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1383.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 47
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1417.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 48
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1451.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 49
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1485.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 50
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1519.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 51
+    }, 
+    {
+      "type": "Storage", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -23.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1553.0, 
+        0.0, 
+        -365.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 4.0, 
+      "id": 52
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -100.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 53
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -150.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 54
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -200.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 55
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -250.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 56
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -300.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 57
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -350.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 58
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -400.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 59
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -450.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 60
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -500.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 61
+    }, 
+    {
+      "type": "SeaShip", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          10.2, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        -31.0, 
+        0.0, 
+        -550.0
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 62
+    }, 
+    {
+      "type": "Train", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        250.0, 
+        0.0, 
+        -723.0
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 63
+    }, 
+    {
+      "type": "Train", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        550.0, 
+        0.0, 
+        -723.0
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 64
+    }, 
+    {
+      "type": "Train", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        850.0, 
+        0.0, 
+        -723.0
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 65
+    }, 
+    {
+      "type": "Train", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": 0.0, 
+        "has_holder": true
+      }, 
+      "position": [
+        1150.0, 
+        0.0, 
+        -723.0
+      ], 
+      "rotation": [
+        0.0, 
+        90.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 66
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        45.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 67
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        79.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 68
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        113.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 69
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        147.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 70
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        181.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 71
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        215.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 72
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        249.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 73
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        283.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 74
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        317.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 75
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        351.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 76
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        385.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 77
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        419.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 78
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        453.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 79
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        487.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 80
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        521.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 81
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        555.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 82
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        589.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 83
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        623.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 84
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        657.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 85
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        691.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 86
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        725.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 87
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        759.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 88
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        793.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 89
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        827.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 90
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        861.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 91
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        895.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 92
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        929.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 93
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        963.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 94
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        997.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 95
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1031.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 96
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1065.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 97
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1099.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 98
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1133.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 99
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1167.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 100
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1201.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 101
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1235.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 102
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1269.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 103
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1303.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 104
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1337.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 105
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1371.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 106
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1405.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 107
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1439.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 108
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1473.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 109
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1507.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 110
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1541.75, 
+        0.0, 
+        -73.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 111
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        45.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 112
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        79.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 113
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        113.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 114
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        147.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 115
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        181.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 116
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        215.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 117
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        249.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 118
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        283.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 119
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        317.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 120
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        351.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 121
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        385.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 122
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        419.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 123
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        453.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 124
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        487.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 125
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        521.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 126
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        555.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 127
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        589.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 128
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        623.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 129
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        657.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 130
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        691.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 131
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        725.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 132
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        759.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 133
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        793.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 134
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        827.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 135
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        861.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 136
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        895.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 137
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        929.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 138
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        963.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 139
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        997.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 140
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1031.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 141
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1065.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 142
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1099.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 143
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1133.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 144
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1167.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 145
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1201.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 146
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1235.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 147
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1269.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 148
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1303.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 149
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1337.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 150
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1371.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 151
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1405.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 152
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1439.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 153
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1473.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 154
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1507.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 155
+    }, 
+    {
+      "type": "AGV", 
+      "grabber": null, 
+      "position": [
+        1541.75, 
+        0.0, 
+        -657.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 7.0, 
+      "id": 156
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        835.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 157
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        842.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 158
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        850.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 159
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        857.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 160
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        865.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 161
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        872.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 162
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        880.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 163
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        887.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 164
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        895.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 165
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        902.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 166
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        910.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 167
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        917.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 168
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        925.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 169
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        932.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 170
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        940.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 171
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        947.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 172
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        955.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 173
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        962.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 174
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        970.25, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 175
+    }, 
+    {
+      "type": "TruckCrane", 
+      "grabber": {
+        "holderSpeed": 1.0, 
+        "position": [
+          0.0, 
+          0.0, 
+          0.0
+        ], 
+        "speed": 1.0, 
+        "y_offset": -5.5, 
+        "has_holder": false
+      }, 
+      "position": [
+        977.75, 
+        0.0, 
+        -0.5
+      ], 
+      "rotation": [
+        0.0, 
+        0.0, 
+        0.0
+      ], 
+      "speed": 1.5, 
+      "id": 176
+    }
+  ], 
+  "Command": "spawnObjects"
+}

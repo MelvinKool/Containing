@@ -12,7 +12,6 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import java.util.List;
 
 /**
  *
@@ -31,7 +30,8 @@ public class Grabber extends WorldObject {
     private float speed;
     private float yOffset;
     
-    public Grabber(Node rootNode, AssetManager assetManager, String craneType, float yOffset, float grabberSpeed) {
+    public Grabber(Node rootNode, AssetManager assetManager, String craneType, float yOffset, float grabberSpeed)
+    {
         super(rootNode, assetManager, new Vector3f(0,0,0), "Models/crane/" + craneType + "/grabbingGear.j3o");
         this.defaultPos = new Vector3f(0,0,0);
         this.container = null;
@@ -53,15 +53,22 @@ public class Grabber extends WorldObject {
      * @param pos
      * @return new Vector3f with fixed postion
      */
-    public Vector3f toRealPos(Vector3f pos) {
+    public Vector3f toRealPos(Vector3f pos)
+    {
         return new Vector3f(0.0f, pos.y + this.yOffset, 0.0f);
+    }
+    
+    public void fixPositionToTarget()
+    {
+        this.setPosition(this.motionTarget);
     }
     
     /**
      * set a target to move to
      * @param target
      */
-    public void setTarget(Vector3f target) {
+    public void setTarget(Vector3f target) 
+    {
         float distance = FastMath.abs(target.y - this.getPosition().y);
         this.motionTarget = target;
         this.motionPath = new MotionPath();
@@ -78,12 +85,13 @@ public class Grabber extends WorldObject {
      * attach container to grabber node
      * @param container 
      */
-    public void attachContainer(Container container) {
+    public void attachContainer(Container container) 
+    {
         Vector3f pos = container.node.getWorldTranslation();
         Quaternion rot = container.node.getWorldRotation();
         this.node.attachChild(container.node);
         container.node.setLocalTranslation(this.node.worldToLocal(pos, null));
-        container.node.rotate(rot);
+        //container.node.setLocalRotation(rot);
         this.container = container;
     }
     
@@ -99,7 +107,8 @@ public class Grabber extends WorldObject {
      * reset position to default position
      * @param listener crane instance to add to listeners of motionPath
      */
-    public void resetPosition(Crane listener) {
+    public void resetPosition(Crane listener) 
+    {
         this.setTarget(this.defaultPos);
         this.motionPath.addListener(listener);
         this.grabberMotion.play();

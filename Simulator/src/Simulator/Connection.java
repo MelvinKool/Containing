@@ -1,220 +1,187 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Simulator;
-import java.net.*;
-import java.io.*;
+
+import Simulator.cranes.Crane;
+import Simulator.vehicles.AGV;
+import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Ship;
+import Simulator.vehicles.TrainCart;
+import java.net.SocketException;
+import java.util.Map;
 import java.util.Random;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Connection
+/**
+ *
+ * @author erwin
+ */
+public class Connection extends Thread implements Runnable
 {
-    private String ip = "localhost";
-
-    private class SimSocket extends Socket
-    {
-        private DataInputStream in;
-        private OutputStream out;
-        private final int bufsize = 4096;
-        private SocketAddress socket = new InetSocketAddress(ip, 1337);
-        
-        public SimSocket(InetAddress ip, int port) throws Exception
-        {
-            super(ip, port);
-            in = new DataInputStream(getInputStream());
-            out = getOutputStream();
-        }
-        
-        public void write(String message) throws Exception
-        {
-            if(message.length() > bufsize - 1)
-                throw new Exception("SimSocket.write() - message to long.");
-            out.write((message+"\n").getBytes());
-        }
-        
-        public String read() throws Exception
-        {
-            return in.readLine();
-        }
-    }
-    
-    private boolean shouldStop = false;
-    private SimSocket simSocket;
+    private long lastAppDataSent;
+    private SimSocket socket;
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
+    private String address;
+    private int port;
+    private boolean connected;
+    private boolean running;
     
-    private Thread tConnection;
-    private Thread tRead;
-    private Thread tCheck;
-    private Thread tDataForApp;
-    
-    public Connection(ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception
-    {
+    public Connection(String address, int port, ObjectLoader objectLoader, CommandHandler commandHandler) throws Exception {
+        this.address = address;
+        this.port = port;
         this.objectLoader = objectLoader;
         this.commandHandler = commandHandler;
-        tConnection = initTConnection();
-        tConnection.start();
+        this.connected = false;
+        this.lastAppDataSent = System.currentTimeMillis();
+        this.setName("connection thread");
+        this.start();
     }
     
-    public void stop()
-    {
-        try
-        {
-            shouldStop = true;
-            if(simSocket != null)
-            {
-                simSocket.write("disconnect");
-                tConnection.join();
-                simSocket.close();
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println("Connection.stop() - Cannot close connection.");
-        }
-        finally
-        {
-            simSocket = null;
-        }
-    }
-    
-    private String read() throws Exception
-    {
-        return simSocket.read();
-    }
-    
-    private void write(String message) throws Exception
-    {
-        if(simSocket != null)
-            simSocket.write(message);
-        else
-            throw new Exception("Connection.write() - simSocket = null");
-    }
-    
-    private Thread initTConnection()
-    {
-        return new Thread(new Runnable() { @Override public void run()
-        {
-            while(!shouldStop)
-            {
-                initSocket();
-                if(simSocket != null)
-                {
-                    try { write("Simulator"); }
-                    catch(Exception e)
-                    {
-                        try                 { simSocket.close(); }
-                        catch(Exception ex) {}
-                        finally             { simSocket = null; continue; }
-                    }
-                    
-                    tRead = initTRead();
-                    tCheck = initTCheck();
-                    tDataForApp = initTDataFotApp();
-                    
-                    tRead.start();
-                    tCheck.start();
-                    tDataForApp.start();
-                    
-                    try
-                    {
-                        tCheck.join();
-                        tRead.stop();
-                        tDataForApp.stop();
-                    }
-                    catch(Exception e){}
-                }
-                else
-                {
-                    System.out.println("Cannot get connection, trying again in 5s");
-                    try { Thread.sleep(5000); }
-                    catch(Exception e) {}
-                }
-            }
-        }});
-    }
-    
-    private Thread initTRead()
-    {
-        return new Thread(new Runnable() { @Override public void run()
-        {
+    @Override
+    public void run() {
+        this.running = true;
+        while (this.running) {
             try
             {
-                while(!shouldStop)
-                {
-                    String input = read();
-                    if(input.contentEquals("disconnect"))
+                this.socket = new SimSocket(this.address, this.port);
+                this.connected = true;
+                this.communicate();
+            } catch (Exception ex)
+            {
+                System.err.println("Unknown error when trying to connect to server: " + ex.getMessage());
+                this.connected = false;
+            }
+            try
+            {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex)
+            {
+                System.err.println("Stopping connection: " + ex.getMessage());
+                this.running = false;
+            }
+        }
+    }
+    
+    public void communicate() throws Exception {
+        this.lastAppDataSent = System.currentTimeMillis();
+        this.socket.write("Simulator");
+        while (this.connected && this.running) {
+            String data = "";
+            JSONObject command = null;
+            
+            this.sendAppData();
+            
+            try
+            {
+                data = this.socket.read();
+//                System.out.println("Received: " + data);
+            } 
+            catch (java.net.SocketTimeoutException ex) { 
+                continue;
+            }
+            catch (SocketException ex)
+            {
+                System.err.println("SocketError while trying to read:" + ex.getMessage());
+                this.connected = false;
+            } 
+            catch (Exception ex) 
+            {
+                System.err.println("Unknown error while trying to read: " + ex.getMessage());
+                this.connected = false;
+            }
+            
+            if (data.equals("freeAgv")) {
+                int agvId = -1;
+                while (agvId == -1) {
+                    agvId = this.commandHandler.getFreeAgv();
+                    if (agvId == -1)
                     {
-                        System.out.println("Disconnected from server.");
+                        try
+                        {
+                            Thread.sleep(1);
+                        } catch (InterruptedException ex)
+                        {
+                            System.err.println("Error while waiting for free agv:" + ex.getMessage());
+                            this.connected = false;
+                            this.running = false;
+                            return;
+                        }
+                    }
+                }
+                try
+                {
+                    this.objectLoader.agvs.get(agvId).setBusy(true); // agv will certainly be used, set busy
+                    this.socket.write("freeAgv " + agvId);
+                }
+                catch (SocketException ex) 
+                {
+                    System.err.println("Error while sending free agv: " + ex.getMessage()); 
+                    this.connected = false;
+                    break;
+                }
+                catch (Exception ex) 
+                { 
+                    System.err.println("At agv req; " + ex.getMessage());
+                    if (!this.connected) 
+                    {
                         break;
                     }
-                    System.out.println(input);
-                    commandHandler.queueCommand(input);
                 }
+                continue;
             }
-            catch(Exception e){}
-        }});
-    }
-    
-    private Thread initTCheck()
-    {
-        return new Thread(new Runnable() { @Override public void run() 
-        {
+            
             try 
             {
-                while (!shouldStop) 
-                {   
-                    write("connection_check");
-                    Thread.sleep(1000);
-                }
+                command = this.commandHandler.ParseJSON(data);
+                this.commandHandler.queueCommand(command);
             } 
-            catch (Exception e) 
-            {
-                System.out.println("Connection lost");
+            catch (JSONException ex) { 
+                System.err.println(ex.getMessage() + ": " + data);
             }
-        }});
+        }
     }
     
-    private Thread initTDataFotApp()
-    {
-        return new Thread(new Runnable() { @Override public void run() 
-        {
-            try 
-            {
-                while (!shouldStop) 
-                {
-                    Random random = new Random();
+    private void sendAppData() {
+        if (System.currentTimeMillis() - this.lastAppDataSent >= 3000) {
                     
-                    int zeeschip    = 10 + random.nextInt(20);
-                    int binnenschip = 10 + random.nextInt(20);
-                    int agv         = 10 + random.nextInt(20);
-                    int trein       = 10 + random.nextInt(20);
-                    int vrachtauto  = 10 + random.nextInt(20);
-                    int opslag      = 10 + random.nextInt(20);
-                    int diversen    = 10 + random.nextInt(20);
-                    /*
+                    int zeeschip = 0    ;//= 10 + random.nextInt(20);
+                    int binnenschip = 0 ;//= 10 + random.nextInt(20);
+                    int agv = 0         ;//= 10 + random.nextInt(20);
+                    int trein = 0       ;//= 10 + random.nextInt(20);
+                    int vrachtauto = 0  ;//= 10 + random.nextInt(20);
+                    int opslag = 0      ;//= 10 + random.nextInt(20);
+                    int kranen = 0    ;//= 10 + random.nextInt(20);
+                    
+                    
                     for (Map.Entry pair : objectLoader.containers.entrySet()) {
-                        System.out.println(pair.getKey() + " = " + pair.getValue());
-                        
-                        if(pair.getValue() instanceof Ship){
+                        //System.out.println(pair.getKey() + " = " + pair.getValue());
+                        Container cont = (Container) pair.getValue();
+                        if(cont.getVehicle() instanceof Ship){
                             zeeschip++;
                         }
                         //else if(pair.getValue() instanceof Ship){
                         //    
                         //}
-                        else if(pair.getValue() instanceof AGV){
+                        else if(cont.getVehicle() instanceof AGV){
                             agv++;
                         }
-                        else if(pair.getValue() instanceof Train){
+                        else if(cont.getVehicle() instanceof TrainCart){
                             trein++;
                         }
-                        else if(pair.getValue() instanceof FreightTruck){
+                        else if(cont.getVehicle() instanceof FreightTruck){
                             vrachtauto++;
                         }
-                        //else if(pair.getValue() instanceof ){
-                        //    opslag
-                        //}
-                        else{
-                            diversen++;
+                        else if(cont.getVehicle() == null){
+                            opslag++;
+                        }
+                        else if (cont.getVehicle() instanceof Crane) {
+                            kranen++;
                         }
                     }
-                    */
                     String result = "dataforapp/"+
                                     zeeschip+","+
                                     binnenschip+","+
@@ -222,18 +189,16 @@ public class Connection
                                     trein+","+
                                     vrachtauto+","+
                                     opslag+","+
-                                    diversen;
-                    write(result);
-                    Thread.sleep(3000);
-                }
-            } 
-            catch (Exception e){}
-        }});
-    }
-    
-    private void initSocket()
-    {
-        try                { simSocket = new Connection.SimSocket(InetAddress.getByName(ip), 1337); }
-        catch(Exception e) { simSocket = null; }
+                                    kranen;
+            try
+            {
+                this.socket.write(result);
+            } catch (Exception ex)
+            {
+                System.out.println("Error while sending state to server" + ex.getMessage());
+                this.connected = false;
+            }
+            this.lastAppDataSent = System.currentTimeMillis();
+        }
     }
 }

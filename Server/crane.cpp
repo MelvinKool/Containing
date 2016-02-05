@@ -2,16 +2,34 @@
 #include "server.h"
 
 using namespace std;
-
-Crane::Crane(int id,float x,float y,float z,Server* ser)
+Crane::Crane(const char* craneType, int id,float x,float y,float z, float maximumSpeed, Server* ser)
 {
-    //set movement speeds?
+    //set movement speeds and secure time?
     currentLocation = vector3f(x,y,z);
-    ID = id;
+    Id = id;
     server = ser;
+    vehicleType = string(craneType);
+    loaded_Speed = maximumSpeed;
+    unloaded_Speed = maximumSpeed;
 }
 
-string Crane::transfer(int containerID,int destID,vector3f dest)
+//Generate JSON-string telling a crane what container to transfer to an AGV
+/*
+    containerId:    Vector of coordinates of destination
+    destId:         Id of destination AGV
+*/
+string Crane::transfer(int containerId,int destId)
 {
-    return server->JGen.craneTransferContainer(ID,containerID,dest);
+    return server->JGen.craneTransferContainer(Id,containerId,destId);
+}
+
+//Generate JSON-string telling a crane what container to transfer to a location in storage
+/*
+    containerId:    Vector of coordinates of destination
+    destId:         Id of destination storageLane
+    location:       Realtive location in storageLane
+*/
+string Crane::transfer(int containerId,int destId,vector3f location)
+{
+    return server->JGen.craneTransferContainer(Id,containerId,destId,location);
 }

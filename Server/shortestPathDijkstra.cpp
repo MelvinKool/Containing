@@ -10,18 +10,19 @@ using namespace std;
 
 ShortestPathDijkstra::ShortestPathDijkstra(char* fPath)
 {
+	loadedPath = fPath;
 	initRoutes(fPath);
 }
 
 ShortestPathDijkstra::~ShortestPathDijkstra()
 {
+	amountCalls++;
 	//delete every item in places
-	//for(pair<const string,Place*> &place : places)
-	//{
-		//Place *p = place.second;
-	//	delete place.second;
-	//	place.second = nullptr;
-	//}
+	for(pair<const string,Place*> &place : places)
+	{
+		delete place.second;
+		place.second = nullptr;
+	}
 }
 
 
@@ -61,10 +62,6 @@ void ShortestPathDijkstra::initRoutes(char* fPath)
 			{
 				add(fromPlace,toPlace,distanceBetween);
 			}
-			/*if(!roadExists(toPlace,fromPlace,distanceBetween))
-			{
-				add(toPlace,fromPlace,distanceBetween);
-			}*/
 		}
 	}
 }
@@ -78,7 +75,10 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 	double shortestDistance;
 	//validate placenames
 	if((place1 = getPlace(name1)) == nullptr || (place2 = getPlace(name2)) == nullptr)
-		throw string("One or both of the placenames are incorrect, please enter the valid placenames");
+    {
+        string error = "One or both of the placenames are incorrect: " + name1 + " ; " + name2;
+		throw string(error);
+    }
 	current = place1;
 	//From place = 0
 	place1->distance = 0;
@@ -107,7 +107,6 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
 		}
 		temp->done = true;
 		current = temp;
-		//cout << " going to next one.... " << endl;
 	}
 	vector<string> route;
 	//trace back the route
@@ -116,28 +115,29 @@ pair<double,vector<vector3f>> ShortestPathDijkstra::route(string name1, string n
  		route.insert(route.begin(),current->name);
 		Place* previous = nullptr;
 		previous = current->previous;
-		if(previous != nullptr){
+		if(previous != nullptr)
+        {
 			current = previous;
 		}
-		else{
-			//do something if there is an error
+		else
+        {
 			throw string("Could not trace back path");
 			break;
 		}
-		//route = current->name + ", " + route;
 	}
-	//route += place2->name;
 	vector<vector3f> vector3fRoute = vectorStringToVectorVector3f(route);
 	return pair<double,vector<vector3f>>(shortestDistance,vector3fRoute);
 }
 
-vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector){
+vector<vector3f> ShortestPathDijkstra::vectorStringToVectorVector3f(vector<string> stringVector)
+{
 	vector<vector3f> vector3fVector;
-	for(string s : stringVector){
+	for(string s : stringVector)
+    {
 		vector<string> subStringVector = split(s, ',');
 		float x = atof(subStringVector.at(0).c_str());
 		float y = atof(subStringVector.at(1).c_str());
-	 	float z = atof(subStringVector.at(2).c_str());
+	    float z = atof(subStringVector.at(2).c_str());
 		vector3f tempVector3f = vector3f(x,y,z);
 		vector3fVector.push_back(tempVector3f);
 	}
@@ -179,20 +179,14 @@ double ShortestPathDijkstra::distance(string coordinate1, string coordinate2)
 	vector<string> coordVect1 = split(coordinate1,',');
 	vector<string> coordVect2 = split(coordinate2,',');
 	double x1,z1,x2,z2;
-	//y1,y2
 	x1 = atof(coordVect1.at(0).c_str());
 	x2 = atof(coordVect2.at(0).c_str());
 	z1 = atof(coordVect1.at(2).c_str());
 	z2 = atof(coordVect2.at(2).c_str());
-	//only x and z distance
-	//distance between coordinate 1 and 2 = side c
-	//find out point ab of pythagoras
-	//int pointAB_X = abs(x2 - abs(x1));
-	//int pointAB_Z = abs(z2 - abs(z1));
+
 	double distSideAC = abs(abs(x2) - abs(x1));
 	double distSideBC = abs(abs(z2) - abs(z1));
 	double distanceC1ToC2 = sqrt(pow(distSideAC,2) + pow(distSideBC,2));
-	//cout << "done : distance = " << distanceC1ToC2 << " from: "<< coordinate1 << " to: " << coordinate2 << endl;
 	return distanceC1ToC2;
 }
 

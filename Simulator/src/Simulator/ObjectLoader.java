@@ -7,6 +7,7 @@ import Simulator.cranes.TrainCrane;
 import Simulator.cranes.TruckCrane;
 import Simulator.vehicles.AGV;
 import Simulator.vehicles.FreightTruck;
+import Simulator.vehicles.Ship;
 import Simulator.vehicles.Train;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
@@ -19,11 +20,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ObjectLoader {
+public class ObjectLoader 
+{
     
     private Spatial container;
     private Spatial sortCrane;
@@ -41,6 +47,7 @@ public class ObjectLoader {
     private Node craneNode;
     private Node dockCraneNode;
     private boolean canSpawn;
+    private TrainParking trainParking;
     
     public SortField[] sortFields;
     public HashMap<Integer, Crane> cranes = new HashMap<>();
@@ -48,9 +55,13 @@ public class ObjectLoader {
     public HashMap<Integer, Container> containers = new HashMap<>();
     public HashMap<Integer, WorldObject> vehicles = new HashMap<>();
     public JSONArray spawnObjectList;
-    private Train train;
+    public Train train;
+    public Ship seaShip;
+    public Ship bargeShip;
+    
 
-    public ObjectLoader(Node rootNode, AssetManager assetManager) {
+    public ObjectLoader(Node rootNode, AssetManager assetManager)
+    {
         this.dockCrane = assetManager.loadModel("Models/crane/dockingcrane/crane.j3o");
         this.sortCrane = assetManager.loadModel("Models/crane/storagecrane/crane.j3o");
         this.truckCrane = assetManager.loadModel("Models/crane/truckcrane/crane.j3o");
@@ -65,11 +76,14 @@ public class ObjectLoader {
         this.rootNode = rootNode;
         this.canSpawn = true;
         
+        this.initTrainParking();
         this.initSortFields();
     }
     
-    public Container addContainer(int containerId, CommandHandler commandHandler) {
+    public Container addContainer(int containerId, CommandHandler commandHandler) 
+    {
         Container containerAdd = new Container(
+                    containerId,
                     this.rootNode,
                     this.assetManager,
                     new Vector3f(0, 0, 0),
@@ -85,7 +99,8 @@ public class ObjectLoader {
      * @param filePath path to json file
      * @return JSONObject
      */
-    private JSONObject loadJson(String filePath) {
+    public JSONObject loadJson(String filePath)
+    {
         BufferedReader reader;
         String content = "";
         String line;
@@ -107,10 +122,17 @@ public class ObjectLoader {
         return new JSONObject(content);
     }
     
+    private void initTrainParking() {
+        Vector3f agvSize = new Vector3f();
+        ((BoundingBox) this.container.getWorldBound()).getExtent(agvSize);
+        this.trainParking = new TrainParking(new Vector3f(58.0f, 0.0f, -720.0f), 18, 50);
+    }
+    
     /**
      * initialize sortFields array
      */    
-    private void initSortFields() {
+    private void initSortFields() 
+    {
         Vector3f positionVec;        
         Vector3f maxIndex;
         JSONObject sortFieldData = this.loadJson("assets/data/sortfields.json");
@@ -118,18 +140,19 @@ public class ObjectLoader {
         JSONArray maxContainers = sortFieldData.getJSONArray("containers");
         Vector3f containerSizeVec = new Vector3f();
         BoundingBox containerSize = (BoundingBox) this.container.getWorldBound();
+        containerSize.getExtent(containerSizeVec);
         
         maxIndex = new Vector3f(
                 (float) maxContainers.getInt(0),
                 (float) maxContainers.getInt(1),
                 (float) maxContainers.getInt(2));
         
-        containerSize.getExtent(containerSizeVec);
-        System.out.println("container dimensions: " + containerSizeVec);
+        //System.out.println("container dimensions: " + containerSizeVec);
         
         this.sortFields = new SortField[sortFieldPositions.length()];
         
-        for (int i = 0; i < sortFieldPositions.length(); i++) {
+        for (int i = 0; i < sortFieldPositions.length(); i++) 
+        {
             JSONArray posArray  = sortFieldPositions.getJSONArray(i);
             positionVec = new Vector3f(
                     (float) posArray.getDouble(0),
@@ -137,106 +160,153 @@ public class ObjectLoader {
                     (float) posArray.getDouble(2)
                 );
             this.sortFields[i] = new SortField(positionVec, containerSizeVec.mult(2), maxIndex);
-            System.out.println("new sortfield " + i + " at: " + positionVec);
+            //System.out.println("new sortfield " + i + " at: " + positionVec);
         }
     }
     
     /**
      * @return clone of dockcrane model
      */
-    public Spatial getDockCraneModel() {
+    public Spatial getDockCraneModel() 
+    {
        return this.dockCrane.clone();
     }
     
     /**
      * @return clone of container model
      */
-    public Spatial getContainerModel() {
+    public Spatial getContainerModel()
+    {
        return this.container.clone();
     }
     
     /**
      * @return clone of sort crane model
      */
-    public Spatial getSortCraneModel() {
+    public Spatial getSortCraneModel()
+    {
        return this.sortCrane.clone();
     }
     
     /**
      * @return clone of truck crane model
      */
-    public Spatial getTruckCraneModel() {
+    public Spatial getTruckCraneModel() 
+    {
        return this.truckCrane.clone();
     }
     
     /**
      * @return clone of train crane model
      */
-    public Spatial getTrainCraneModel() {
+    public Spatial getTrainCraneModel() 
+    {
        return this.trainCrane.clone();
     }
     
     /**
      * @return clone of trainCart model
      */
-    public Spatial getTrainCartModel() {
+    public Spatial getTrainCartModel() 
+    {
        return this.trainCart.clone();
     }
     
     /**
      * @return clone of train locomotive model
      */
-    public Spatial getLocomotiveModel() {
+    public Spatial getLocomotiveModel() 
+    {
        return this.locomotive.clone();
     }
     
     /**
      * @return clone of ship model
      */
-    public Spatial getShipModel() {
+    public Spatial getShipModel()
+    {
         return this.ship.clone();
     }
     
     /**
      * @return clone of truck model
      */
-    public Spatial getTruckModel() {
+    public Spatial getTruckModel()
+    {
         return this.truck.clone();
     }
     
     /**
      * @return clone of agv model
      */
-    public Spatial getAgvModel() {
+    public Spatial getAgvModel()
+    {
         return this.agv.clone();
     }
     
-    public boolean checkObjects() {
-        if (this.spawnObjectList != null && this.canSpawn) {
+    public boolean checkObjects()
+    {
+        if (this.spawnObjectList != null && this.canSpawn) 
+        {
             this.canSpawn = false;
             return true;
         }
         return false;
     }
     
-    public void spawnTrain(JSONArray containers) {
-        this.train = new Train(50, this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
-        for (Object containerId : containers) {
-            this.train.addContainer(new Container(
-                    this.rootNode,
-                    this.assetManager,
-                    new Vector3f(0, 0, 0),
-                    this.getContainerModel(),
-                    null));            
+    public void spawnTrain(JSONArray containers, CommandHandler commandHandler) 
+    {
+        this.train = new Train(containers.length(), this.rootNode, this.assetManager, this.getLocomotiveModel(), this.getTrainCartModel());
+        
+        for (Object containerId : containers) 
+        {
+            this.train.addContainer(this.addContainer((int) containerId, commandHandler));            
         }
-        this.train.moveIn();
+        
+        //this.train.moveIn();
+
     }
+
     
-    public void spawnTruck(int id, Container container, Vector3f position) {
+    public void spawnTruck(int id, Container container, Vector3f position)
+    {
         FreightTruck frtruck = new FreightTruck(this.rootNode, this.assetManager, position, this.getTruckModel());
         frtruck.attachContainer(container);
         this.vehicles.put(id, frtruck);
     }
+    
+   public void spawnSeaShip(JSONArray containers, CommandHandler commandHandler)
+   {
+       Iterator<Object> iterator = containers.iterator();
+        this.seaShip = new Ship(this.rootNode, this.assetManager, new Vector3f(-35,0,-350), this.getShipModel(), 0, 1);
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
+        Collections.sort(containersL);
+        List<Container> containerList = new ArrayList<>();
+        for(int containerId : containersL)
+        {
+            containerList.add(this.addContainer(containerId, commandHandler));
+        }
+        this.seaShip.addContainers(containerList);
+   }
+   
+   public void spawnBargeShip(JSONArray containers, CommandHandler commandHandler)
+   {
+       Iterator<Object> iterator = containers.iterator();   
+        this.bargeShip = new Ship(this.rootNode, this.assetManager, new Vector3f(350,0,35), this.getShipModel(), 0, 0.5f);
+        List<Integer> containersL = new ArrayList<>();
+        while (iterator.hasNext())
+            containersL.add((int) iterator.next());
+        Collections.sort(containersL);
+        List<Container> containerList = new ArrayList<>();
+        for(int containerId : containersL)
+        {
+            containerList.add(this.addContainer(containerId, commandHandler));
+        }
+        this.bargeShip.addContainers(containerList);
+   }
+
 
     /**
      * get spawn information from file and spawn objects
@@ -248,7 +318,8 @@ public class ObjectLoader {
         
         for(int i = 0; i < objects.length(); i++)
         {
-            this.spawnObject(objects.getJSONObject(i));
+            JSONObject objectObject = new JSONObject(objects.getString(i)); // TODO: fix json in server
+            this.spawnObject(objectObject);
         }
         
         this.craneNode.attachChild(this.dockCraneNode);
@@ -286,7 +357,8 @@ public class ObjectLoader {
         Crane craneObj = null;
         AGV agvObj = null;
         
-        if (!type.equals("AGV")) {        
+        if (!type.equals("AGV"))
+        {        
             JSONObject grabberInfo = object.getJSONObject("grabber");
             JSONArray grabberPosition = grabberInfo.getJSONArray("position");
             boolean hasHolder = grabberInfo.getBoolean("has_holder");
@@ -320,7 +392,7 @@ public class ObjectLoader {
                 craneObj = new DockCrane(this.rootNode, this.assetManager, positionVec, this.getDockCraneModel(), "dockingcrane", speed);
                 break;
             case "AGV":
-                agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel());
+                agvObj = new AGV(this.rootNode, this.assetManager, positionVec, this.getAgvModel(), this.trainParking);
         }
         if (craneObj != null)
         {

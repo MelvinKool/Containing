@@ -18,15 +18,17 @@ public class TrainControl extends AbstractControl implements Cloneable
     private Train train;
     private float disappearX;
 
-    public TrainControl(Train train) {
+    public TrainControl(Train train) 
+    {
         this.train = train;
-        this.disappearX = 1715.0f;        
+        this.disappearX = 1715.0f;
     }
     
     @Override
     protected void controlUpdate(float tpf)
     {
-        for (TrainCart trainCart : this.train.trainCarts) {
+        for (TrainCart trainCart : this.train.trainCarts) 
+        {
             if (trainCart.node.getWorldTranslation().x > this.disappearX && 
                     trainCart.node.getCullHint() != Spatial.CullHint.Always) 
             {
@@ -38,12 +40,14 @@ public class TrainControl extends AbstractControl implements Cloneable
             }
         }
         
-        if (this.train.locomotive.node.getWorldTranslation().x > this.disappearX &&
+        if (this.train.locomotive.node.getWorldTranslation().x >= this.disappearX &&
                 this.train.locomotive.node.getCullHint() != Spatial.CullHint.Always)
         {
             this.train.locomotive.node.setCullHint(Spatial.CullHint.Always);
             this.train.canDestroy = true;
-        } else if (this.train.locomotive.node.getWorldTranslation().x < this.disappearX &&
+            System.out.println("train can be destroyed");
+        } 
+        else if (this.train.locomotive.node.getWorldTranslation().x < this.disappearX &&
                 this.train.locomotive.node.getCullHint() != Spatial.CullHint.Inherit)
         {
             this.train.locomotive.node.setCullHint(Spatial.CullHint.Inherit);
@@ -51,6 +55,8 @@ public class TrainControl extends AbstractControl implements Cloneable
     }
 
     @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) { }
-    
+    protected void controlRender(RenderManager rm, ViewPort vp)
+    {
+        
+    }    
 }

@@ -9,28 +9,28 @@
 #include <unistd.h>
 #include <iostream>
 
-#define bufsize 16384
+#define bufsize 65536
 
 class ClientSocket
 {
-    public:
-        ClientSocket(std::string ip, int port);
-        ClientSocket(int sock);
-        ~ClientSocket();
-        std::string read();
-        void write(std::string message);
-    private:
-        int sock;
+public:
+    ClientSocket(std::string ip, int port);
+    ClientSocket(int sock);
+    ~ClientSocket();
+    std::string read();
+    void write(std::string message);
+private:
+    int sock;
 };
 
 class ServerSocket
 {
-    public:
-        ServerSocket(int port);
-        ~ServerSocket();
-        int accept();
-    private:
-        int sock;
+public:
+    ServerSocket(int port);
+    ~ServerSocket();
+    int accept();
+private:
+    int sock;
 };
 
 #endif //SOCKET_H

@@ -16,7 +16,8 @@ import com.jme3.scene.Spatial;
  */
 public class Locomotive extends WorldObject {
     
-    public Locomotive(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model) {
+    public Locomotive(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model)
+    {
         super(rootNode, assetManager, position, model);
     }    
 }

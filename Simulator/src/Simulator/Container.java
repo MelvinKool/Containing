@@ -8,16 +8,17 @@ import org.json.JSONObject;
 
 public class Container extends WorldObject
 {
-    public String containerId;
+    public int containerId;
     public List<JSONObject> commands;
     
     private WorldObject vehicle;
     private CommandHandler commandHandler;
     
-    public Container(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, CommandHandler commandHandler)
+    public Container(int id, Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, CommandHandler commandHandler)
     {
         super(rootNode, assetManager, position, model);
         this.commandHandler = commandHandler;
+        this.containerId = id;
     }
     
     /**
@@ -35,8 +36,12 @@ public class Container extends WorldObject
         if (this.commands != null && !this.commands.isEmpty())
         {    
             JSONObject command = this.commands.remove(0);
-            this.commandHandler.executeCommand(command);
-            this.vehicle = null;
+            if ("despawnVehicle".equals(command.getString("Command"))) 
+            {
+                command.put("container", this.containerId);
+            }
+            this.commandHandler.queueCommand(command);
+            //this.vehicle = null;
         }
     }
     

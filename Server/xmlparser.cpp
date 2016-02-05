@@ -7,23 +7,58 @@
 using namespace std;
 using namespace rapidxml;
 
+std::vector<int> extract_ints(std::string const& input_str)
+{
+    std::vector<int> ints;
+    std::istringstream input(input_str);
+
+    std::string number;
+    while (std::getline(input, number, ' '))
+    {
+        std::istringstream iss(number);
+        int i;
+        iss >> i;
+        ints.push_back(i);
+    }
+
+    return ints;
+}
+
 void XmlParser::readXML(Database &db)
 {
-    cout << "Do you want to load the XML files ('yes' or 'no')? ";
+    vector<string> xmlDocPaths;
+    vector<int> xmlNumbers;
+
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir("Files/XML")) != NULL) {
+        /* print all the files and directories within directory */
+        while ((ent = readdir(dir)) != NULL) {
+            if (ent->d_name[0] != '.')
+            {
+                printf("%d - %s\n", ent->d_name[3] - 48, ent->d_name);
+            }
+        }
+        closedir(dir);
+    } else {
+        cout << "Could not list XML files." << endl;
+    }
+
+    cout << "select XML numbers to load into database (separate by spaces): ";
     string answer;
     getline(cin, answer);
-    if(answer == "yes")
+    xmlNumbers = extract_ints(answer);
+
+    for (int i = 0; i < xmlNumbers.size(); i++) {
+        std::ostringstream stringStream;
+        stringStream << "Files/XML/xml" << xmlNumbers[i] << ".xml";
+
+        xmlDocPaths.push_back(stringStream.str());
+    }
+
+    if(answer.length() > 0)
     {
         cout << "Loading XML..." << endl;
-
-        vector<string> xmlDocPaths;
-        xmlDocPaths.push_back("../docs/XML/xml1.xml");
-        xmlDocPaths.push_back("../docs/XML/xml2.xml");
-        xmlDocPaths.push_back("../docs/XML/xml3.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml4.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml5.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml6.xml");
-        //xmlDocPaths.push_back("../docs/XML/xml7.xml");
 
         if(checkData(xmlDocPaths, db))
         {
@@ -34,6 +69,16 @@ void XmlParser::readXML(Database &db)
             cout << "....Error while reading." << endl;
         }
     }
+}
+
+int getChildCount(xml_node<> *n)
+{
+  int c = 0;
+  for (xml_node<> *child = n->first_node(); child != NULL; child = child->next_sibling())
+  {
+    c++;
+  }
+  return c;
 }
 
 //places data in the database
@@ -50,8 +95,13 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
 
     //find the root node
     xml_node<> * root = doc.first_node("recordset");
+    int nodeCount = getChildCount(root);
+    int currNode = 0;
     for (xml_node<> *record = root->first_node(); record; record = record->next_sibling())
     {
+        cout << (++currNode * 100) / (nodeCount) << "% completed, " << currNode
+                << '\\' << nodeCount << " items" << '\r' << flush; // display progress
+
         string iso = record->first_node("ISO")->value();
 
         //arrival
@@ -187,9 +237,6 @@ bool XmlParser::processData(string &xmlDocPath, Database &db)
                 }
             }
         }
-
-
-
 
         int ownerID                 = -1;
         int sizeID                  = -1;
@@ -381,9 +428,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         started = true;
                         if (i == 0)
                         {
-                            //OUTPUT line to file
                             outputFile<<line<<endl;
-                            //cout<<line<<endl;
                         }
                     }
                 }
@@ -394,9 +439,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         //At end of recordset
                         if (i == (xmlPaths.size()-1))//If at last xmlfile, do end resultset
                         {
-                            // OUTPUT line to file
                             outputFile<<line<<endl;
-                            //cout<<line<<endl;
                         }
                         //If end of recordset, stop while loop
                         break;
@@ -408,9 +451,7 @@ bool XmlParser::checkData(vector<string> &xmlPaths, Database &db)
                         node = node + line;
                         if (regex_search(node, regNode))//Add ! to return incorrect xml nodes
                         {
-                            //OUTPUT node to file
                             outputFile<<node<<endl;
-                            //cout<<node<<endl;
                         }
                         else
                         {

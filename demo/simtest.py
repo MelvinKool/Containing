@@ -14,11 +14,20 @@ def init_commands(file_path, cams=True):
   commands = [
       {'cmdt': 0, 'cmd': spawn_objects},
       {'cmdt': 1, 'cmd': {'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}},
+      {'cmdt': 1, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2, 'id': 1}},
       {'cmdt': 1, 'cmd': {'Command': 'containerCommands', 'container': 1, 'commands': [
-            {'Command': 'moveTo', 'vehicleId': 89, 'Route': [[793.75, 0.0, -51.5], [835.75, 0.0, -51.5], [835.75, 0.0, -40.0]], 'totalDistance': 1, 'container': 1},
+            {'Command': 'moveAGV', 'vehicleId': 89, 'Route': [[793.75, 0.0, -51.5], [835.75, 0.0, -51.5], [835.75, 0.0, -40.0]], 'totalDistance': 10, 'container': 1},
             {'Command': 'craneMoveContainer', 'craneId': 157, 'containerId': 1, 'target': 89},
             {'Command': 'agvAttachContainer', 'agvId': 89, 'containerId': 1},
-            {'Command': 'moveTo', 'vehicleId': 89, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 1},
+            {'Command': 'moveAGV', 'vehicleId': 89, 'Route': [[835.75, 0.0, -51.5], [793.75, 0.0, -51.5], [793.75, 0.0, -73.5]], 'totalDistance': 10},
+            {'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 1, 'sortField': 22, 'target': [0,0,0]},
+          ]}},
+      {'cmdt': 1, 'cmd': {'Command': 'containerCommands', 'container': 2, 'commands': [
+            {'Command': 'moveTo', 'vehicleId': 90, 'Route': [[827.75, 0.0, -51.5], [842.75, 0.0, -51.5], [842.75, 0.0, -40.0]], 'totalDistance': 15.0 + 27.0, 'container': 2},
+            {'Command': 'craneMoveContainer', 'craneId': 158, 'containerId': 2, 'target': 90},
+            {'Command': 'agvAttachContainer', 'agvId': 90, 'containerId': 2},
+            {'Command': 'moveTo', 'vehicleId': 90, 'Route': [[842.75, 0.0, -51.5], [798.5, 0.0, -51.5], [798.5, 0.0, -73.5]], 'totalDistance': 15.0 + 27.0, 'container': -1},
+            {'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 2, 'sortField': 22, 'target': [1,0,0]},
           ]}}
   #     {'cmdt': 1, 'cmd': {'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1}},
   #     {'cmdt': 1, 'cmd': {'Command': 'craneMoveContainer', 'craneId': 8, 'containerId': 3, 'target': [45.75, 1.0, -73.5]}},
@@ -78,7 +87,7 @@ class Server(object):
           print 'sending: %s' % json.dumps(command['cmd'])
           self.send_command(command['cmd'])
           commands[i] = None
-      time.sleep(0.1)
+      time.sleep(0.01)
 
   def send_command(self, command):
     self.sim.write('%s\n' % json.dumps(command))

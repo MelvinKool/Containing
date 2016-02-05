@@ -15,7 +15,8 @@ import com.jme3.scene.Spatial;
  */
 public class DockCrane extends Crane {
     
-    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType, float speed) {
+    public DockCrane(Node rootNode, AssetManager assetManager, Vector3f position, Spatial model, String craneType, float speed) 
+    {
         super(rootNode, assetManager, position, Vector3f.ZERO, model, craneType, speed);
     }   
 }

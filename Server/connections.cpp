@@ -5,9 +5,10 @@
 
 using namespace std;
 
-void Connections::initConnections(AllObjects& allObjects, Server* server)
+bool Connections::freeAgvAnswer = false;
+
+void Connections::initConnections(Server* server)
 {
-    this->allObjects = allObjects;
     this->socket = new ServerSocket(1337);
     this->server = server;
 }
@@ -21,12 +22,15 @@ Connections::~Connections()
 
     for(uint i = 0; i < clients.size(); i++)
     {
-        clients[i].socket->write("disconnect");
         clients[i].worker->join();
         delete clients[i].worker;
     }
-
     delete this->socket;
+}
+
+bool Connections::freeAgvAvailable()
+{
+    return freeAgvAnswer;
 }
 
 // The thread that accepts new clients.
@@ -83,7 +87,8 @@ thread* Connections::newClientThread(int number)
         if(isSim){
             cout << "sending initialization json to simulator..." << endl;
             JSONReader jsonReader("Files/ObjectsJSON/ObjectLocations.json", server);
-            jsonReader.loadTransport(allObjects);
+            jsonReader.loadTransport(server->allObjects);
+            server->startRunning();
         }
         //load vehicles
         while(!this->stop)
@@ -101,6 +106,7 @@ thread* Connections::newClientThread(int number)
             if(input == "disconnect")
             {
                 cout << clients[number].type + " disconneced." << endl;
+                server->stopRunning();
                 break;
             }
             else if(input == "connection_check")
@@ -112,9 +118,24 @@ thread* Connections::newClientThread(int number)
                 std::string result = input.erase(0, 11);
                 dataForApp = result;
             }
+            else if(input.substr(0, 7) == "freeAgv")
+            {
+                //cout << input << endl;
+                std::unique_lock<std::mutex> lck(mtx);
+                std::string data = input.substr(7);
+
+                int id;
+                std::istringstream iss(data);
+                iss >> id;
+                this->newFreeAgv = id;
+
+                freeAgvAnswer = true;
+                cv.notify_one();
+            }
             else
             {
-                //what to do with the input?
+                //we should not get any other data from the sim.
+                //but in case we do print it out.
                 cout << input << endl;
             }
 
@@ -151,4 +172,21 @@ void Connections::writeToSim(string message)
 std::string Connections::getDataForApp()
 {
     return dataForApp;
+}
+
+int Connections::requestFreeAgv()
+{
+    int freeAgv;
+    std::unique_lock<std::mutex> lck(mtx);
+    writeToSim("freeAgv");
+
+    while (!freeAgvAnswer)
+    {
+        cv.wait(lck);
+    }
+
+    freeAgv = newFreeAgv;
+
+    freeAgvAnswer = false;
+    return freeAgv;
 }

@@ -55,7 +55,7 @@ MYSQL_RES* Database::select(string sqlStatement)
 {
     if(execute(sqlStatement))
     {
-        return mysql_use_result(connection);
+        return mysql_store_result(connection);
     }
     return NULL;
 }
@@ -64,7 +64,7 @@ MYSQL_RES* Database::select(string sqlStatement)
 bool Database::createAllTables()
 {
     vector<string> createTables;
-    
+
     createTables.push_back( "CREATE TABLE IF NOT EXISTS Owner("
                             "ownerID INT NOT NULL AUTO_INCREMENT,"
                             "name VARCHAR(50),"
@@ -141,7 +141,7 @@ bool Database::createAllTables()
                             "FOREIGN KEY(arrivalInfo) REFERENCES Arrival(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE,"
                             "FOREIGN KEY(departureInfo) REFERENCES Departure(shipmentID) ON UPDATE CASCADE ON DELETE CASCADE"
                             ");");
-    
+
     for(string createTable : createTables)
     {
         if(!execute(createTable)) return false;
@@ -152,7 +152,7 @@ bool Database::createAllTables()
 bool Database::dropAllTables()
 {
     vector<string> dropTables;
-    
+
     dropTables.push_back("DROP TABLE Container;");
     dropTables.push_back("DROP TABLE Departure;");
     dropTables.push_back("DROP TABLE Arrival;");

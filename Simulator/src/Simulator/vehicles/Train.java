@@ -27,7 +27,7 @@ public class Train
     public Node node;
     public Locomotive locomotive;
     public List<TrainCart> trainCarts;
-    public boolean canDestroy = false;
+    public boolean canDestroy;
     
     public Train(int length, Node rootNode, AssetManager assetManager, Spatial locomotiveModel, Spatial trainCartModel) 
     {
@@ -35,6 +35,7 @@ public class Train
         this.node = new Node();
         this.trainCarts = new ArrayList<>();
         this.speed = 15.0f;
+        this.canDestroy = false;
         
         this.locomotive = new Locomotive(this.node, assetManager, Vector3f.ZERO, locomotiveModel);
         
@@ -42,27 +43,32 @@ public class Train
         
         rootNode.attachChild(this.node);
         this.trainControl = new TrainControl(this);
-        this.node.setLocalTranslation(1715.0f, 0.0f, -724.5f);
+        this.node.setLocalTranslation(45.0f, 0.0f, -724.5f);
         this.node.rotate(0.0f, verticalRotation, 0.0f);
         this.node.addControl(this.trainControl);
     }
     
-    public void addContainers(List<Container> containers) {
-        for (int i = 0; i < containers.size(); i++) {
+    public void addContainers(List<Container> containers) 
+    {
+        for (int i = 0; i < containers.size(); i++) 
+        {
             TrainCart trainCart = this.trainCarts.get(i);
             trainCart.attachContainer(containers.get(i));
         }
     }
     
-    public void addContainer(Container container) {
-        for (int i = 0; i < this.trainCarts.size(); i++) {
-            this.trainCarts.get(i).attachContainer(container);
-        }
+    public void addContainer(Container container)
+    {
+        TrainCart cart = this.getFirstFreeCart();
+        cart.attachContainer(container);
     }
     
-    public TrainCart getFirstFreeCart() {
-        for (TrainCart cart : this.trainCarts) {
-            if (cart.hasContainer()) {
+    public TrainCart getFirstFreeCart() 
+    {
+        for (TrainCart cart : this.trainCarts)
+        {
+            if (!cart.hasContainer()) 
+            {
                 return cart;
             }
         }
@@ -73,7 +79,8 @@ public class Train
     {
         Vector3f position = new Vector3f(0, 0, 0);
         
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) 
+        {
             position = position.set(0.0f, 0.0f, -((this.locomotive.getPosition().x + 18.45f) * i) - 13.21f);
             this.trainCarts.add(new TrainCart(this.node, assetManager, position, trainCartModel.clone()));
         }
@@ -95,12 +102,6 @@ public class Train
     
     public void moveOut() 
     {
-        this.moveTo(new Vector3f(1715.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
-    }
-    
-    public void moveIn() 
-    {
-        this.moveTo(new Vector3f(45.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
-    }
-    
+        this.moveTo(new Vector3f(1750.0f, this.node.getLocalTranslation().y, this.node.getLocalTranslation().z));
+    }    
 }

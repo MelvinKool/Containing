@@ -36,23 +36,16 @@ string ClientSocket::read()
 
 void ClientSocket::write(string message)
 {
-    int count = message.size();
-    /* if you want to send a larger message than bufsize*/
-    /*char buffer[count + 1];
-    strcpy(buffer, message.c_str());
-    buffer[count + 1] = '\n';
-    send(sock, buffer, count, 0);*/
-    if(count <= bufsize-1)
+    if(!message.empty())
     {
-        char buffer[bufsize];
+        int count = message.size() + 1;
+        /* if you want to send a larger message than bufsize*/
+        char buffer[count];
         strcpy(buffer, message.c_str());
-        buffer[count++] = '\n';
+        buffer[count - 1] = '\n';
         send(sock, buffer, count, 0);
     }
-    else
-    {
-        cout << "ClientSocket::write - message to large to send." << endl;
-    }
+
 }
 
 ServerSocket::ServerSocket(int port)

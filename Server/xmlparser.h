@@ -9,15 +9,16 @@
 #include <algorithm>
 #include <fstream>
 #include <stdio.h>
+#include <dirent.h>
 
 
 class XmlParser
 {
-    public:
-        void readXML(Database &db);
-    private:
-        bool processData(std::string &xmlDocPath, Database &db);
-        bool checkData(std::vector<std::string> &xmlPaths, Database &db);
+public:
+    void readXML(Database &db);
+private:
+    bool processData(std::string &xmlDocPath, Database &db);
+    bool checkData(std::vector<std::string> &xmlPaths, Database &db);
 };
 
 #endif //XMLPARSER_H

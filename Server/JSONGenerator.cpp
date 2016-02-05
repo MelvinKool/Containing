@@ -45,10 +45,34 @@ rapidjson::Value* document_to_value(rapidjson::Document & document, Allocator & 
   }
 }
 
-//generates JSON for doing a container transfer between two vehicles
-string JSONGenerator::craneTransferContainer(int craneId, int containerId, vector3f targetVect)
+//generate JSON-string telling a crane what container to transfer to an AGV
+/*
+    craneId:        Id of crane that has to mave the container
+    containerId:    Vector of coordinates of destination
+    destAGV:        Id of destination AGV
+*/
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int destAGV)
 {
-	//{'Command': 'craneMoveContainer', 'craneId': 8, 'containerId': 4, 'target': [51.25, 1.0, -73.5]}
+	//{'Command': 'craneMoveContainer', 'craneId': 157, 'containerId': 1, 'target': 89}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "craneMoveContainer", allocator);
+	document.AddMember("craneId", craneId, allocator);
+	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("target", destAGV, allocator);
+    return toString(document);
+}
+
+//generates JSON for doing a container transfer between crane and a sortfield
+/*
+    craneId:        Id of crane that moves container
+    containerId:    Id of cantainer being moved
+    sortFieldId:    Id of destination sortfield
+    targetVect:     vector of relative destination in sortfield
+*/
+string JSONGenerator::craneTransferContainer(int craneId, int containerId, int sortFieldId, vector3f targetVect)
+{
+	//{'Command': 'craneMoveContainer', 'craneId': 30, 'containerId': 1, 'sortField': 22, 'target': [0,0,0]}
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -56,6 +80,7 @@ string JSONGenerator::craneTransferContainer(int craneId, int containerId, vecto
 	document.AddMember("Command", "craneMoveContainer", allocator);
 	document.AddMember("craneId", craneId, allocator);
 	document.AddMember("containerId", containerId, allocator);
+	document.AddMember("sortField",sortFieldId, allocator);
 	rapidjson::Value target(rapidjson::kArrayType);
 	target.PushBack(targetVect.getX(), allocator).PushBack(targetVect.getY(), allocator).PushBack(targetVect.getZ(),allocator);
 	document.AddMember("target", target, allocator);
@@ -63,6 +88,10 @@ string JSONGenerator::craneTransferContainer(int craneId, int containerId, vecto
 }
 
 //Method for attaching a container to an AGV
+/*
+    agvId:          Id of destination AGV
+    containerId:    Id of container being attatched
+*/
 string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 {
 	//{'Command': 'agvAttachContainer', 'agvId': 90, 'containerId': 2}
@@ -76,40 +105,81 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 	return toString(document);
 }
 
-//generates JSON for spawning an object
-string JSONGenerator::spawnObject(string type,vector3f location,vector<int> contID,int transportID)
+//generates JSON for spawning seaship
+//type: "SeaShip"
+/*
+    contIds:    List of containers of ship or train
+    shipId:     Id for new ship
+*/
+string JSONGenerator::spawnSeaShip(vector<int> contIds,int shipId)
 {
-	// {'cmdt': 2, 'cmd': {'Command': 'spawnTruck', 'position': [842.75, 0, 0], 'container': 2}},
-	//{'cmdt': 15, 'cmd': {'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}},
-    return "";
+	//{'Command': 'spawnShip', 'containers': [2,56,84,12,54]}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnSeaShip", allocator);
+	document.AddMember("id", shipId, allocator);
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIds)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
+    return toString(document);
 }
 
-//templates???
-//used for spawning trucks ships and tranes
-/*string JSONGenerator::spawnObject(Transport& transport)//rotation???
+//generates JSON for spawning bargeships
+//type: "BargeShip"
+string JSONGenerator::spawnBargeShip(vector3f location,vector<int> contIDs,int shipID)
 {
-	// document is the root of a json message
+	//{'Command': 'spawnShip', 'containers': [i for i in range(5, 40)]}
+	//"{"Command" : "spawnShip", "position", [15.0,0.0,13.75], "id",1, "containers", [1,2,3,4,5,6,7]}"
 	rapidjson::Document document = createJSONDocument();
-	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command", "spawnObject", allocator);
-	document.AddMember("objectId",objectId, allocator);
-	Value s;
-	s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
-	document.AddMember("vehicleType", s, allocator);
-	document.AddMember("maximumSpeed", maximumSpeed, allocator);
-	rapidjson::Value spawnLocation(rapidjson::kObjectType);
-	spawnLocation.AddMember("X",coordinate.getX(),allocator);
-	spawnLocation.AddMember("Y",coordinate.getY(),allocator);
-	spawnLocation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnLocation",spawnLocation,allocator);
-	rapidjson::Value spawnRotation(rapidjson::kObjectType);
-	spawnRotation.AddMember("X",coordinate.getX(),allocator);
-	spawnRotation.AddMember("Y",coordinate.getY(),allocator);
-	spawnRotation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnRotation",spawnRotation,allocator);
+	document.AddMember("Command","spawnBargeShip", allocator);
+	rapidjson::Value position(rapidjson::kArrayType);
+	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
+	document.AddMember("position",position,allocator);
+	document.AddMember("id", shipID, allocator);
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIDs)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
+    return toString(document);
+}
+
+//generates JSON for spawning train
+string JSONGenerator::spawnTrain(vector<int> contIDs,int trainID)
+{
+	//{'Command': 'spawnTrain', 'containers': [i for i in range(5, 40)]}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnTrain", allocator);
+	document.AddMember("id", trainID, allocator);
+	rapidjson::Value containers(rapidjson::kArrayType);
+	for(int i : contIDs)
+	{
+		containers.PushBack(i,allocator);
+	}
+	document.AddMember("containers", containers, allocator);
 	return toString(document);
-}*/
+}
+
+//generates JSON for spawning trucks
+string JSONGenerator::spawnTruck(vector3f location, int contID, int truckId)
+{
+	//{'Command': 'spawnTruck', 'position': [835.75, 0, 0], 'container': 1, 'id': 0}
+	rapidjson::Document document = createJSONDocument();
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command","spawnTruck", allocator);
+	rapidjson::Value position(rapidjson::kArrayType);
+	position.PushBack(location.getX(), allocator).PushBack(location.getY(), allocator).PushBack(location.getZ(), allocator);
+	document.AddMember("position",position,allocator);
+	document.AddMember("id", truckId, allocator);
+	document.AddMember("container", contID, allocator);
+	return toString(document);
+}
 
 //JSON for crane
 //PUT THOSE OBJECTS IN CRANE CLASS
@@ -118,37 +188,6 @@ string JSONGenerator::spawnObject(string type,vector3f location,vector<int> cont
 //vector3f rotation???
 string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 {
-	/*
-	string objectStringTemplate =
-	"{\
-		\"grabber\": %s, \"id\":%d,\"position\":[%s],\"rotation\":[%s],\"speed\":%d,\"type\":%s\
-	}";
-	string templateGrabber = "{\
-		\"has_holder\": %s,\
-		\"holderSpeed\": %d,\
-		\"position\": [%s],\
-		\"speed\": %d,\
-		\"y_offset\":%d\
-	}";
-
-	string object, grabber, final_string;
-	sprintf(grabber ,templateGrabber,
-			has_holder ? "true" : "false",
-			holderSpeed,
-			grabberPos.toString(),
-			grabberSpeed,
-			grabber_y_offset
-		);
-	sprintf(object,
-			objectStringTemplate,
-			grabber,
-			objectId,
-		 	coordinate.toString(),
-			rotation.toString(),
-			vehicleType
-		);
-	return object;
-	*/
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -156,7 +195,6 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	document.AddMember("id",craneId, allocator);
 	Value s;
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
-	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
 	document.AddMember("speed", crane.unloaded_Speed, allocator);
 	rapidjson::Value spawnLocation(rapidjson::kArrayType);
@@ -177,6 +215,8 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 				.PushBack(crane.currentGrabber.position.getY(), allocator)
 				.PushBack(crane.currentGrabber.position.getZ(),allocator);
 	grabber.AddMember("position", grabberPositon, allocator);
+	grabber.AddMember("speed",crane.currentGrabber.speed,allocator);
+	grabber.AddMember("y_offset",crane.currentGrabber.y_offset,allocator);
 	grabber.AddMember("has_holder",crane.currentGrabber.has_holder, allocator);
 	document.AddMember("grabber", grabber, allocator);
 	return toString(document);
@@ -187,8 +227,7 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 //PUT THOSE OBJECTS IN CRANE CLASS
 //(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
 //float holderSpeed, float grabberSpeed, float grabber_y_offset, vector3f grabberPos, bool has_holder)
-//vector3f rotation???
-std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
+string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -213,8 +252,22 @@ std::string JSONGenerator::spawnAGV(AGV& agv, int agvId, vector3f rotation)
 	return toString(document);
 }
 
+std::string JSONGenerator::despawnObject(int transportID, const char* vehicleType, int containerId)
+{
+	rapidjson::Document document = createJSONDocument();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+	document.AddMember("Command", "despawnVehicle", allocator);
+	Value s;
+	s.SetString(vehicleType,strlen(vehicleType),allocator);
+	document.AddMember("vehicleType",s,allocator);
+	document.AddMember("vehicleId", transportID, allocator);
+	document.AddMember("containerId", containerId, allocator);
+	return toString(document);
+}
+
 //spawn multiple objects with one JSON string
-std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
+string JSONGenerator::spawnObjects(vector<string>& spawnStrings)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -245,13 +298,8 @@ std::string JSONGenerator::spawnObjects(std::vector<std::string>& spawnStrings)
 	return toString(document);
 }
 
-//setCamera
-//trainCam
-//spawnTrain
-//spawnTruck
-
 //generates JSON for moving a vehicle
-string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance)
+string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance, int containerId)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -259,7 +307,8 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 	document.AddMember("Command", "moveAGV", allocator);
 	document.AddMember("vehicleId", vehicleId, allocator);
-	// create a rapidjson array type with similar syntax to std::vector
+	document.AddMember("container",containerId, allocator);
+	// create a rapidjson array type with similar syntax to vector
 	// chain methods as rapidjson provides a fluent interface when modifying its objects
 	document.AddMember("totalDistance", totalDistance, allocator);
 	rapidjson::Value route(rapidjson::kArrayType);
@@ -275,7 +324,7 @@ string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float 
 	return toString(document);
 }
 
-std::string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
+string JSONGenerator::generateCommandList(int containerId, vector<string>& commandList)
 {
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
@@ -292,18 +341,3 @@ std::string JSONGenerator::generateCommandList(int containerId, vector<string>& 
 	document.AddMember("commands", commandArray, allocator);
 	return toString(document);
 }
-
-/*std::string toCommandString(string commandString, int vehicleId){
-	int bufSize = commandString.length() + 50;
-	char buffer[bufSize];
-	int strLen = snprintf(buffer,bufSize, "{'cmdt': %d, 'cmd': %s}");
-	if(strLen > bufSize){
-		//buffer overflow
-		cout >> "buffer overflow" >> endl;
-	}
-	else{
-		cout >> "success" >> endl;
-	}
-	string finalCommandString = str(buffer);
-	return finalCommandString;
-}*/

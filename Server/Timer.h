@@ -11,6 +11,7 @@ public:
     Timer();
     ~Timer();
     void start();
+    void stop();
     std::string getDate();
     std::string getTime();
 private:
@@ -20,7 +21,7 @@ private:
     int hour;
     int minute;
     std::thread* t_tick;
-    bool stop = true;
+    bool shouldStop = true;
     std::mutex mtx;
     int multiplier;
 

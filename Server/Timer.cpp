@@ -6,12 +6,6 @@
 
 Timer::Timer()
 {
-    this->year   = 2004;
-    this->month  = 12;
-    this->day    = 1;
-    this->hour   = 0;
-    this->minute = 0;
-
     std::cout << "Set time multiplier: ";
     std::string temp;
     getline(std::cin, temp);
@@ -20,17 +14,28 @@ Timer::Timer()
 
 Timer::~Timer()
 {
-    if(this->stop == false)
-    {
-        this->stop = true;
-        this->t_tick->join();
-    }
+    this->stop();
 }
 
 void Timer::start()
 {
-    this->stop = false;
+    this->year   = 2004;
+    this->month  = 12;
+    this->day    = 0;
+    this->hour   = 0;
+    this->minute = 0;
+
+    this->shouldStop = false;
     this->t_tick = new std::thread([this] {tick();});
+}
+
+void Timer::stop()
+{
+    if(this->shouldStop == false)
+    {
+        this->shouldStop = true;
+        this->t_tick->join();
+    }
 }
 
 std::string Timer::getDate()
@@ -59,7 +64,7 @@ std::string Timer::getTime()
     {
         ss << 0;
     }
-    ss << this->hour << ":";
+    ss << this->hour << ".";
     if(this->minute < 10)
     {
         ss << 0;
@@ -71,7 +76,7 @@ std::string Timer::getTime()
 
 void Timer::tick()
 {
-    while(!this->stop)
+    while(!this->shouldStop)
     {
         this->mtx.lock();
         this->minute += 1 * this->multiplier;
@@ -96,7 +101,7 @@ void Timer::tick()
             }
         }
         this->mtx.unlock();
-        std::cout << this->getDate()+" "+this->getTime() << std::endl;
+        std::cout << this->getDate()+" "+this->getTime() << '\r' << std::flush;
         sleep(1);
     }
 }

@@ -9,13 +9,13 @@ class Server;
 
 class AGV : public Transport
 {
-    public:
-        AGV(){};
-        std::string goTo(vector3f destination,bool loaded);
-        vector3f getCurrentLocation();
-        AGV(int id,float x,float y,float z,Server* ser);
-    private:
-        Server* server;
+public:
+    AGV(){};
+    std::string goTo(vector3f destination,bool loaded,int contID);
+    vector3f getCurrentLocation();
+    AGV(int id,float x,float y,float z,Server* ser);
+private:
+    Server* server;
 };
 
 #endif
