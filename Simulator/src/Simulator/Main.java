@@ -1,11 +1,7 @@
 package Simulator;
 
 import Simulator.cranes.Crane;
-import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -15,21 +11,12 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONArray;
 
 public class Main extends SimpleApplication
 {
@@ -39,8 +26,6 @@ public class Main extends SimpleApplication
     private ObjectLoader objectLoader;
     private CommandHandler commandHandler;
     private static int stSpeed;
-
-    private Train train; // TODO: this is test code
     
     public static int getSpeed() {
         return stSpeed;
@@ -60,13 +45,10 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         this.commandHandler = new CommandHandler(this.objectLoader);
         this.setSpeed(60);
         this.setDisplayStatView(false);
-        //long end = System.currentTimeMillis();
-        //System.out.println(end - start);
 
         flyCam.setEnabled(true);    //flycam lets you move the camera with wasd and mouse.
         flyCam.setMoveSpeed(200);   //set the movespeed if the flycam is enabled
@@ -76,7 +58,6 @@ public class Main extends SimpleApplication
         //Initialize the world with light, water, skybox and fog.
         initWorld();
         initLight();
-//        initInputs();
         initWater();
         initSkybox();
         initFog();
@@ -104,12 +85,6 @@ public class Main extends SimpleApplication
         }
         
         this.commandHandler.executeQueued();
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm)
-    {
-        
     }
     
     //This is important to properly close the connection
