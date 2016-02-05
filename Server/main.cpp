@@ -17,8 +17,9 @@ int main(int argc, char* argv[])
     cout << "██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██║██║██║╚██╗██║██║██║╚██╗██║██║   ██║" << endl;
     cout << "╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║██║ ╚████║██║██║ ╚████║╚██████╔╝" << endl;
     cout << " ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝ " << endl;
-
+    cout << endl;
     cout << "Type 'exit' to close the application." << endl << endl;
+
     Server* server = new Server();
 
     while(true)

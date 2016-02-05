@@ -6,12 +6,10 @@ package Simulator.cranes;
 
 import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import java.util.List;
 
 /**
  *
@@ -25,23 +23,28 @@ class Hook extends WorldObject {
     private Quaternion openRotation;
     private Quaternion closeRotation;
     
-    public Hook(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile, int hookType) {
+    public Hook(Node rootNode, AssetManager assetManager, Vector3f position, String modelFile, int hookType)
+    {
         super(rootNode, assetManager, position, modelFile);
         //this.initRotations(hookType);
     }
     
-    public void open() {
+    public void open() 
+    {
         //this.node.setLocalRotation(this.openRotation);
     }
     
-    public void close() {
+    public void close() 
+    {
         //this.node.setLocalRotation(this.closeRotation);
     }
 
-    private void initRotations(int hookType) {
+    private void initRotations(int hookType)
+    {
         float rotation = FastMath.PI / 4;
         
-        if (hookType == LEFT_HOOK) {
+        if (hookType == LEFT_HOOK) 
+        {
             rotation = -rotation;
         }
         

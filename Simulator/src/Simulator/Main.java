@@ -12,7 +12,6 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.FogFilter;
-import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -50,7 +49,6 @@ public class Main extends SimpleApplication
     @Override
     public void simpleInitApp()
     {
-        //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
         
         JSONObject config = this.objectLoader.loadJson("resources/config.json");
@@ -58,8 +56,6 @@ public class Main extends SimpleApplication
         this.commandHandler = new CommandHandler(this.objectLoader);
         this.setSpeed(config.getInt("simulation_speed"));
         this.setDisplayStatView(false);
-        //long end = System.currentTimeMillis();
-        //System.out.println(end - start);
 
         flyCam.setEnabled(true);    //flycam lets you move the camera with wasd and mouse.
         flyCam.setMoveSpeed(200);   //set the movespeed if the flycam is enabled
@@ -69,7 +65,6 @@ public class Main extends SimpleApplication
         //Initialize the world with light, water, skybox and fog.
         initWorld();
         initLight();
-//        initInputs();
         initWater();
         initSkybox();
         initFog();
@@ -97,14 +92,6 @@ public class Main extends SimpleApplication
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
         }
-        
-        this.commandHandler.executeQueued();
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm)
-    {
-        
     }
     
     //This is important to properly close the connection

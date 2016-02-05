@@ -109,7 +109,7 @@ string JSONGenerator::agvAttachContainer(int agvId, int containerId)
 //type: "SeaShip"
 /*
     contIds:    List of containers of ship or train
-    shipId:     Id for new ship 
+    shipId:     Id for new ship
 */
 string JSONGenerator::spawnSeaShip(vector<int> contIds,int shipId)
 {
@@ -181,34 +181,6 @@ string JSONGenerator::spawnTruck(vector3f location, int contID, int truckId)
 	return toString(document);
 }
 
-
-//templates???
-//used for spawning trucks ships and tranes
-/*string JSONGenerator::spawnObject(Transport& transport)
-{
-	// document is the root of a json message
-	rapidjson::Document document = createJSONDocument();
-	// must pass an allocator when the object may need to allocate memory
-	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-	document.AddMember("Command", "spawnObject", allocator);
-	document.AddMember("objectId",objectId, allocator);
-	Value s;
-	s.SetString(vehicleType, strlen(vehicleType), allocator);    // can contain null character, length derived at compile time
-	document.AddMember("vehicleType", s, allocator);
-	document.AddMember("maximumSpeed", maximumSpeed, allocator);
-	rapidjson::Value spawnLocation(rapidjson::kObjectType);
-	spawnLocation.AddMember("X",coordinate.getX(),allocator);
-	spawnLocation.AddMember("Y",coordinate.getY(),allocator);
-	spawnLocation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnLocation",spawnLocation,allocator);
-	rapidjson::Value spawnRotation(rapidjson::kObjectType);
-	spawnRotation.AddMember("X",coordinate.getX(),allocator);
-	spawnRotation.AddMember("Y",coordinate.getY(),allocator);
-	spawnRotation.AddMember("Z",coordinate.getZ(),allocator);
-	document.AddMember("spawnRotation",spawnRotation,allocator);
-	return toString(document);
-}*/
-
 //JSON for crane
 //PUT THOSE OBJECTS IN CRANE CLASS
 //(int objectId, const char* vehicleType, vector3f coordinate, float maximumSpeed,
@@ -216,38 +188,6 @@ string JSONGenerator::spawnTruck(vector3f location, int contID, int truckId)
 //vector3f rotation???
 string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 {
-	/*
-	string objectStringTemplate =
-	"{\
-		\"grabber\": %s, \"id\":%d,\"position\":[%s],\"rotation\":[%s],\"speed\":%d,\"type\":%s\
-	}";
-	string templateGrabber = "{\
-		\"has_holder\": %s,\
-		\"holderSpeed\": %d,\
-		\"position\": [%s],\
-		\"speed\": %d,\
-		\"y_offset\":%d\
-	}";
-
-	string object, grabber, final_string;
-	sprintf(grabber ,templateGrabber,
-			has_holder ? "true" : "false",
-			holderSpeed,
-			grabberPos.toString(),
-			grabberSpeed,
-			grabber_y_offset
-		);
-	sprintf(object,
-			objectStringTemplate,
-			grabber,
-			objectId,
-		 	coordinate.toString(),
-			rotation.toString(),
-			vehicleType
-		);
-	return object;
-	*/
-
 	// document is the root of a json message
 	rapidjson::Document document = createJSONDocument();
 	// must pass an allocator when the object may need to allocate memory
@@ -255,7 +195,6 @@ string JSONGenerator::spawnCrane(Crane& crane, int craneId,vector3f rotation)
 	document.AddMember("id",craneId, allocator);
 	Value s;
 	s.SetString(crane.vehicleType.c_str(),strlen(crane.vehicleType.c_str()),allocator);    // can contain null character, length derived at compile time
-	//s = vehicleType.c_str();
 	document.AddMember("type", s ,allocator);
 	document.AddMember("speed", crane.unloaded_Speed, allocator);
 	rapidjson::Value spawnLocation(rapidjson::kArrayType);
@@ -359,11 +298,6 @@ string JSONGenerator::spawnObjects(vector<string>& spawnStrings)
 	return toString(document);
 }
 
-//setCamera
-//trainCam
-//spawnTrain
-//spawnTruck
-
 //generates JSON for moving a vehicle
 string JSONGenerator::moveTo(int vehicleId, vector<vector3f> coordinates, float totalDistance, int containerId)
 {
@@ -407,18 +341,3 @@ string JSONGenerator::generateCommandList(int containerId, vector<string>& comma
 	document.AddMember("commands", commandArray, allocator);
 	return toString(document);
 }
-
-/*string toCommandString(string commandString, int vehicleId){
-	int bufSize = commandString.length() + 50;
-	char buffer[bufSize];
-	int strLen = snprintf(buffer,bufSize, "{'cmdt': %d, 'cmd': %s}");
-	if(strLen > bufSize){
-		//buffer overflow
-		cout >> "buffer overflow" >> endl;
-	}
-	else{
-		cout >> "success" >> endl;
-	}
-	string finalCommandString = str(buffer);
-	return finalCommandString;
-}*/

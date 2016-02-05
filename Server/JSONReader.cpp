@@ -27,11 +27,6 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     document.Parse(transportJSON.c_str());
     //vector with all objects to spawn
     vector<string> allObjectsStrVector;
-    //`JSONReader::loadVehicle(char const*, GenericDocument<UTF8<char>,
-    //MemoryPoolAllocator<rapidjssimulator.writeToSim(genJSON);on::CrtAllocator>, CrtAllocator>&,
-    //Connections&, vector<Crane, allocator<Crane> >&)'
-    //loadVehicle("FreightShip", document,*simulator,freightShipCranes);
-    //loadVehicle("Storage", document,*simulator,storageCranes);
     int count = 0;
 
     vector<string> storageCraneObjects = loadCranes("Storage", document,allObjects.storageCranes,count);
@@ -57,24 +52,14 @@ void JSONReader::loadTransport(AllObjects& allObjects)
     //add all agvs to the spawnstrings vector
     vector<string> agvObjects = loadAGVs(document, allObjects.agvs);
     allObjectsStrVector.insert( allObjectsStrVector.end(), agvObjects.begin(), agvObjects.end() );
-    //loadVehicle("TruckCrane", document,*simulator,truckCranes);
-    //concentrate vectors
-    //allObjectsStrVector.push_back(testJSON);
     JSONGenerator generator;
     string allObjectsJSON = generator.spawnObjects(allObjectsStrVector);
-    //server->writeToSim();
     server->writeToSim(allObjectsJSON);
-    //send everything to the simulator
-
-
-    //JSONGenerator generator;
-    //cout << toString(freightShips) << endl;
 }
 
 vector<string> JSONReader::loadCranes(const char* key,Document& document, vector<Crane>& craneVector, int indexStart)
 {
     Value& transportJSON = document[key];
-    //int count = transportJSON["count"].GetInt();
     const Value& rotation = transportJSON["rotation"];
     float rotX, rotY, rotZ;
     rotX = (float) rotation[0].GetDouble();
@@ -100,9 +85,7 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         has_holder = grabber["has_holder"].GetBool();
     }
     JSONGenerator generator;
-    //vector3f tempVect;
     const Value& positions = transportJSON["positions"];
-    //vector<string> allObjectsJSON;
     vector<string> allSpawnObjects;
     for (SizeType i = 0; i < positions.Size(); i++)
     {
@@ -111,18 +94,9 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         x = position[0].GetDouble();
         y = position[1].GetDouble();
         z = position[2].GetDouble();
-        //tempVect = vector3f(x,y,z);
         //generate spawn json
         int vehicleId = indexStart + craneVector.size();
         Crane crane(key, vehicleId,x,y,z,speed, server);
-        /*
-        struct grabber {
-            //grabber() : () {}
-            float holderSpeed = 0, speed = 0, y_offset = 0;
-            bool has_holder = false;
-            vector3f position = vector3f(0,0,0);
-        } currentGrabber;
-        */
         crane.currentGrabber.holderSpeed = holderSpeed;
         crane.currentGrabber.speed = grabberSpeed;
         crane.currentGrabber.y_offset = grabber_y_offset;
@@ -131,9 +105,6 @@ vector<string> JSONReader::loadCranes(const char* key,Document& document, vector
         string craneSpawn = generator.spawnCrane(crane, vehicleId, rotationVect);
         allSpawnObjects.push_back(craneSpawn);
         craneVector.push_back(crane);
-        //simulator.writeToSim(final_JSON_string);
-        //spawn objects in simulator
-        //simulator.writeToSim(genJSON);
     }
     return allSpawnObjects;
 }
@@ -151,7 +122,6 @@ vector<string> JSONReader::loadAGVs(Document& document, vector<AGV>& AGVVector){
     JSONGenerator generator;
     vector3f tempVect;
     const Value& positions = transportJSON["positions"];
-    //vector<string> allObjectsJSON;
     vector<string> allSpawnObjects;
     for (SizeType i = 0; i < positions.Size(); i++)
     {
@@ -169,9 +139,6 @@ vector<string> JSONReader::loadAGVs(Document& document, vector<AGV>& AGVVector){
         string agvSpawn = generator.spawnAGV(agv, vehicleId, rotationVect);
         allSpawnObjects.push_back(agvSpawn);
         AGVVector.push_back(agv);
-        //simulator.writeToSim(final_JSON_string);
-        //spawn objects in simulator
-        //simulator.writeToSim(genJSON);
     }
     return allSpawnObjects;
 }

@@ -47,7 +47,6 @@ public class TrainParking
     
     public void setSpot(int spot, boolean free) {
         this.spots.put(spot, free);
-        //System.out.println(spots);
     }
     
     public Vector3f getPosition() {

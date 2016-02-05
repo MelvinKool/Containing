@@ -67,26 +67,7 @@ void Server::checkContainers()
         currentTime = timer.getTime();
         //SQL for current containers, with the time from the timer this gets the containers corresponding containers
         string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID AND arr.date <= \""+currentDate+"\" AND arr.date >= \""+previousDate+"\" AND arr.timeFrom <= \""+currentTime+"\" AND arr.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort ASC,arr.positionZ ASC,arr.positionX ASC,arr.positionY ASC;";
-        //string arrivals = "SELECT cont.containerID,ship.sort, arr.timeTill, arr.positionX, arr.positionY, arr.positionZ FROM Arrival as arr,Container as cont, ShippingType as ship WHERE cont.arrivalInfo = arr.shipmentID AND arr.shippingType = ship.shippingTypeID;";
         string departures = "SELECT cont.containerID, ship.sort, dep.timeTill FROM Departure as dep,Container as cont, ShippingType as ship WHERE cont.departureInfo = dep.shipmentID AND dep.shippingType = ship.shippingTypeID AND dep.date <= \""+currentDate+"\" AND dep.date >= \""+previousDate+"\" AND dep.timeFrom <= \""+currentTime+"\" AND dep.timeFrom >= \""+previousTime+"\" ORDER BY ship.sort;";
-
-        /* The SQL works, but the logics for leaving containers doesn't
-        //process leaving containers
-        MYSQL_RES* res1 = db.select(departures);
-        MYSQL_ROW row1;
-        while((row1 = mysql_fetch_row(res1)) != NULL)
-        {
-            try
-            {
-                processLeavingContainer(row1);
-            }
-            catch (string error)
-            {
-                //cout<<error<<endl;
-            }
-        }
-        mysql_free_result(res1);
-        */
 
         //process arriving containers
         MYSQL_RES* res2 = db.select(arrivals);
@@ -305,68 +286,6 @@ int Server::getFreeAGV()
 {
     int agvId = connections.requestFreeAgv();
     return agvId;
-
-    /* this would work if server knows which AGV are idling
-    static int i = 0;
-    int e = i, idClosestAGV = 0;
-    double distClosesestAGV = 999999999.9999;
-    if (i > 99)
-    {
-        i = 0;
-    }
-
-    for (int j = 0; j < 5; j++)
-    {
-        double distance = -1;
-        while (distance < 0)
-        {
-            AGV agv = allObjects.agvs[e];
-            if (agv.getWorkingState()) //if agv is busy, dont even try to give it a new order
-            {
-                if (e > 98)
-                {
-                    e = 0;
-                }
-                else
-                {
-                    e++;
-                }
-                continue;
-            }
-
-            try
-            {
-                distance = pathFinderUnloaded.route(agv.getCurrentLocation().toString(),destination.toString()).first;
-
-                if (distance < distClosesestAGV) //if there is a distance, see if it is shorter than previous
-                {
-                    distClosesestAGV = distance;
-                    idClosestAGV = e;
-                }
-            }
-            catch (string error)
-            {
-                distance = -1;
-
-                //needed till agv have correct locations and correct destination
-                distance = 291.6;
-                idClosestAGV = e;
-            }
-
-            if (e > 98)
-            {
-                e = 0;
-            }
-            else
-            {
-                e++;
-            }
-        }
-    }
-
-    i = i + 2;
-    return idClosestAGV;
-    */
 }
 
 //Distributes trucks over all truck stops

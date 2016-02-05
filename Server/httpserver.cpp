@@ -41,7 +41,6 @@ bool HttpServer::initSocket()
     {
         if((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
         {
-            //error
             perror("httpserver: server socket");
             continue;
         }

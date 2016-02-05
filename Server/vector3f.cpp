@@ -21,8 +21,8 @@ vector3f::vector3f(string s)
     string coords[3];
     for(int i = 0; i < 3; i++)
     {
-            getline(sSplitStream,temp,',');
-            coords[i] = temp;
+        getline(sSplitStream,temp,',');
+        coords[i] = temp;
     }
     string::size_type sz;
     float x = stof(coords[0],&sz);

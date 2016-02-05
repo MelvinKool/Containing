@@ -1,11 +1,13 @@
 #ifndef JSONGENERATOR_H
 #define JSONGENERATOR_H
+
 #include "Files/rapidjson/document.h"
 #include "Files/rapidjson/stringbuffer.h"
 #include "Files/rapidjson/writer.h"
 #include "vector3f.h"
 #include "crane.h"
 #include "agv.h"
+
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -14,7 +16,7 @@ using namespace std;
 
 class JSONGenerator
 {
-  public:
+public:
     std::string moveTo(int vehicleId, std::vector<vector3f> coordinates, float totalDistance, int containerId);
     std::string craneTransferContainer(int craneId, int containerId, int destAGV);
     std::string craneTransferContainer(int craneId, int containerId, int sortFieldID, vector3f targetVect);
@@ -37,11 +39,9 @@ class JSONGenerator
     	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
     	jsonValue.Accept(writer);
     	string stupidRapidJSONString = strbuf.GetString();
-        //stupidRapidJSONString.erase(std::remove(stupidRapidJSONString.begin(), stupidRapidJSONString.end(), '\\'), stupidRapidJSONString.end());
         return stupidRapidJSONString;
     }
-    //std::string toString(rapidjson::Value *jsonValue);
-  private:
+private:
     rapidjson::Document createJSONDocument();
 };
 

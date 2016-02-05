@@ -203,8 +203,6 @@ public class Crane extends WorldObject {
      */
     private void moveGrabberIfReady() 
     {            
-        //System.out.println("crane: trymove");
-
         if ((this.holderDone || !this.hasHolder) && this.craneDone) {
             this.grabber.grabberMotion.play();
             if (this.cmd == Cmd.GRABBING) {
@@ -254,7 +252,6 @@ public class Crane extends WorldObject {
      */
     private void delayAttachContainer() 
     {
-        //System.out.println("crane: grabbed");
         this.cmd = Cmd.GRABBER;
         this.grabber.resetPosition(this);
         if (this.targetContainer.getVehicle() instanceof AGV)
@@ -302,11 +299,13 @@ public class Crane extends WorldObject {
                         delayAttachContainer();
                     }
             }).start();
-        } else if (this.cmd == Cmd.GRABBER) 
+        } 
+        else if (this.cmd == Cmd.GRABBER) 
         { // lower container
             this.putContainer(this.containerTarget);
             this.cmd = Cmd.PUTTING;
-        } else if (this.cmd == Cmd.PUTTING) 
+        } 
+        else if (this.cmd == Cmd.PUTTING) 
         { // detach container
             this.grabber.fixPositionToTarget();
             Vector3f pos = targetContainer.node.getWorldTranslation();

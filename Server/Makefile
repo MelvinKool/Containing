@@ -1,7 +1,6 @@
 SOURCES=main.cpp server.cpp connections.cpp socket.cpp xmlparser.cpp \
 database.cpp JSONGenerator.cpp httpserver.cpp vector3f.cpp shortestPathDijkstra.cpp \
 transport.cpp agv.cpp crane.cpp JSONReader.cpp Timer.cpp
-# container.cpp  transfer.cpp
 
 #============================================
 ifeq ($(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5),0)
@@ -16,9 +15,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Server
 LIBS=$(shell mysql_config --libs)
 
-#for debugging
 debugger=gdb
-#for memory leaks test
 deleaker=valgrind
 deleakflags=--leak-check=full --show-leak-kinds=all
 
