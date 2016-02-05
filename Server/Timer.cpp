@@ -21,7 +21,7 @@ void Timer::start()
 {
     this->year   = 2004;
     this->month  = 12;
-    this->day    = 2;
+    this->day    = 0;
     this->hour   = 0;
     this->minute = 0;
 
@@ -101,7 +101,7 @@ void Timer::tick()
             }
         }
         this->mtx.unlock();
-        std::cout << this->getDate()+" "+this->getTime() << std::endl;
+        std::cout << this->getDate()+" "+this->getTime() << '\r' << std::flush;
         sleep(1);
     }
 }

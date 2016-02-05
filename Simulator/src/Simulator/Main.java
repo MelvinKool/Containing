@@ -3,9 +3,6 @@ package Simulator;
 import Simulator.cranes.Crane;
 import Simulator.vehicles.Train;
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -18,18 +15,11 @@ import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.SimpleWaterProcessor;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Main extends SimpleApplication
 {
@@ -62,8 +52,11 @@ public class Main extends SimpleApplication
     {
         //long start = System.currentTimeMillis();
         this.objectLoader = new ObjectLoader(this.rootNode, this.assetManager);
+        
+        JSONObject config = this.objectLoader.loadJson("resources/config.json");
+        
         this.commandHandler = new CommandHandler(this.objectLoader);
-        this.setSpeed(60);
+        this.setSpeed(config.getInt("simulation_speed"));
         this.setDisplayStatView(false);
         //long end = System.currentTimeMillis();
         //System.out.println(end - start);
@@ -83,7 +76,7 @@ public class Main extends SimpleApplication
         
         try 
         { 
-            connection = new Connection("127.0.0.1", 1337, this.objectLoader, commandHandler);
+            connection = new Connection(config.getString("server_ip"), config.getInt("server_port"), this.objectLoader, commandHandler);
         }
         catch (Exception e) { System.out.println(e); }
     }
@@ -97,8 +90,10 @@ public class Main extends SimpleApplication
             this.objectLoader.train = null;
         }
         
+        // execute queued commands
         this.commandHandler.executeQueued();
         
+        // execute queued commands for each crane
         for (Crane crane : this.objectLoader.cranes.values()) {
             crane.executeQueued();
         }
