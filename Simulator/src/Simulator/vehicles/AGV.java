@@ -5,7 +5,6 @@ import Simulator.TrainParking;
 import Simulator.WorldObject;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.PlayState;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -21,11 +20,11 @@ public class AGV extends WorldObject
 {
     private MotionPath motionPath;
     private MotionEvent motionEvent;
-    public List<Vector3f> wayPointList = new ArrayList<>(); // TDOD: make privatew
+    public List<Vector3f> wayPointList = new ArrayList<>(); // TODO: make privatew
     private float duration;
     private float totalDistance;
     private float agvSpeed;
-    private Vector3f vectorZero = new Vector3f(0,0,0);
+    private Vector3f vectorZero = new Vector3f(0,0,0);//create own vector3f.zero(). Because apparently Vecto3f.zero() is not always zero.
     private boolean busy;
 
     public Container container;
@@ -41,6 +40,7 @@ public class AGV extends WorldObject
     
     public void setPath(List<Vector3f> wayPoints, float distance)
     {
+        //TODO: why is this commented?
 //        if(wayPoints == null || distance == 0 || (motionEvent != null && motionEvent.getPlayState() == PlayState.Playing))
 //        {
 //            return;
@@ -84,10 +84,10 @@ public class AGV extends WorldObject
         {
             this.motionEvent.setLookAt(motionEvent.getPath().getWayPoint(motionEvent.getCurrentWayPoint()), vectorZero);
         }
-        this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
-        this.motionEvent.setInitialDuration(this.duration);
+        this.motionEvent.setDirectionType(MotionEvent.Direction.LookAt); //sets the direction where the front of the agv will point at.
+        this.motionEvent.setInitialDuration(this.duration);//set the duration the agv hast to do over the path.
         this.motionPath.addListener(this);
-        motionEvent.play();
+        motionEvent.play(); //start the motionEvent. Agv will start moving
     }
 	
     @Override
